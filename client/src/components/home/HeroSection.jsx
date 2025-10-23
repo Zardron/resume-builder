@@ -77,7 +77,7 @@ const HeroSection = () => {
             resumes faster, smarter, and better.
           </p>
           <div className="flex items-center gap-4 mt-8 text-sm">
-            <button className="bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white active:scale-95 rounded-md px-7 h-11 cursor-pointer transition">
+            <button className="bg-indigo-500 hover:bg-indigo-600 text-white active:scale-95 rounded-md px-7 h-11 cursor-pointer transition">
               Get started
             </button>
             <button className="flex items-center gap-2 border border-slate-400 dark:border-slate-400 active:scale-95 hover:bg-gray-100 dark:hover:bg-gray-800/50 transition text-slate-700 dark:text-slate-400 rounded-md px-6 h-11">

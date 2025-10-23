@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 
 const Banner = () => {
   return (
-    <div className="flex flex-wrap items-center justify-between w-full px-4 md:px-14 py-2 font-light text-md text-white text-center bg-gradient-to-br from-[#fa3768] to-[#c0284d]">
+    <div className="flex flex-wrap items-center justify-between w-full px-4 md:px-14 py-2 font-light text-md text-white text-center bg-gradient-to-br from-indigo-500 to-purple-600">
       <p>AI feature enabled – Build your resume in minutes.</p>
       <Link
         to="/login"
-        className="flex items-center gap-1 px-3 py-1 rounded-lg text-red-600 bg-violet-50 hover:bg-slate-100 transition active:scale-95 ml-3"
+        state={{ fromHome: true }}
+        className="flex items-center gap-1 px-3 py-1 rounded-lg text-white bg-white/20 hover:bg-white/30 transition active:scale-95 ml-3"
       >
         Explore now
         <svg

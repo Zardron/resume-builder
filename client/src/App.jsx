@@ -14,6 +14,7 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import Preview from "./pages/Preview";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import "animate.css";
 
 const App = () => {
   return (

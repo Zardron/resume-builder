@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 import InputField from "../components/InputField";
 import ThemeSwitcher from "../components/ThemeSwitcher";
@@ -7,11 +7,39 @@ import { useTheme } from "../ThemeContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isDark } = useTheme();
+  
+  // Check if user came from Home page
+  const fromHome = location.state?.fromHome || false;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [errors, setErrors] = useState({
+    email: false,
+    password: false,
+  });
+
+  const handleInputChange = (name, value) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: false }));
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const newErrors = {
+      email: !formData.email.trim() || !formData.email.includes('@'),
+      password: !formData.password.trim(),
+    };
+    
+    setErrors(newErrors);
+    
+  };
 
   return (
     <div className="relative dark:to-gray-800 flex items-center justify-center w-full h-screen p-24">
@@ -77,8 +105,8 @@ const Login = () => {
       <div className="absolute top-8 right-6">
         <ThemeSwitcher />
       </div>
-      <div className="flex h-[600px] max-w-5xl mx-auto bg-white dark:bg-gray-900 rounded-md shadow-lg border border-gray-200 dark:border-gray-700">
-        <div className="w-full hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-[#fa3768] to-[#c0284d] p-8 text-white rounded-l-md relative overflow-hidden">
+      <div className={`flex h-[600px] max-w-5xl mx-auto bg-white dark:bg-slate-900 rounded-md shadow-lg border border-gray-200 dark:border-slate-700 ${fromHome ? 'animate__animated animate__zoomIn' : ''}`}>
+        <div className="w-full hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 p-8 text-white rounded-l-md relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
           <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -122,7 +150,7 @@ const Login = () => {
         </div>
 
         <div className="w-full flex flex-col items-center justify-center">
-          <form className="md:w-96 w-80 flex flex-col items-center justify-center">
+          <form className="md:w-96 w-80 flex flex-col items-center justify-center" onSubmit={handleSubmit}>
             <h2 className="text-4xl text-gray-900 font-medium dark:text-white">
               Sign in
             </h2>
@@ -156,9 +184,8 @@ const Login = () => {
                 icon="email"
                 name="email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                hasError={errors.email}
+                onChange={(value) => handleInputChange('email', value)}
               />
             </div>
 
@@ -170,9 +197,8 @@ const Login = () => {
                 icon="password"
                 name="password"
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                hasError={errors.password}
+                onChange={(value) => handleInputChange('password', value)}
               />
             </div>
 
@@ -190,7 +216,7 @@ const Login = () => {
 
             <button
               type="submit"
-              className="mt-8 w-full h-11 rounded-md text-white bg-[var(--primary-color)] hover:opacity-90 transition-opacity"
+              className="mt-8 w-full h-11 rounded-md text-white bg-indigo-500 hover:bg-indigo-600 transition-colors"
             >
               Login
             </button>

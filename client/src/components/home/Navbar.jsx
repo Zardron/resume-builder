@@ -62,16 +62,16 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm font-normal">
-          <a className="hover:text-[var(--primary-color)] transition" href="#">
+          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
             Products
           </a>
-          <a className="hover:text-[var(--primary-color)] transition" href="#">
+          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
             Customer Stories
           </a>
-          <a className="hover:text-[var(--primary-color)] transition" href="#">
+          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
             Pricing
           </a>
-          <a className="hover:text-[var(--primary-color)] transition" href="#">
+          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
             Docs
           </a>
         </nav>
@@ -79,8 +79,9 @@ const Navbar = () => {
         <div className="flex items-center justify-end gap-2">
          <ThemeSwitcher />
           <Link
-            className="hidden md:flex bg-[var(--primary-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-[var(--secondary-color)] transition"
+            className="hidden md:flex bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-indigo-600 transition"
             to="/login"
+            state={{ fromHome: true }}
           >
             Sign in
           </Link>
@@ -140,28 +141,28 @@ const Navbar = () => {
           {/* Mobile Menu Links */}
           <div className="flex-1 flex flex-col p-4 space-y-4">
             <a
-              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-[var(--primary-color)] transition py-2 border-b border-gray-100 dark:border-gray-800"
+              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
               href="#"
               onClick={closeMenu}
             >
               Products
             </a>
             <a
-              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-[var(--primary-color)] transition py-2 border-b border-gray-100 dark:border-gray-800"
+              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
               href="#"
               onClick={closeMenu}
             >
               Customer Stories
             </a>
             <a
-              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-[var(--primary-color)] transition py-2 border-b border-gray-100 dark:border-gray-800"
+              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
               href="#"
               onClick={closeMenu}
             >
               Pricing
             </a>
             <a
-              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-[var(--primary-color)] transition py-2 border-b border-gray-100 dark:border-gray-800"
+              className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
               href="#"
               onClick={closeMenu}
             >
@@ -170,10 +171,11 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Footer */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="p-4 border-t border-gray-200 dark:border-slate-700">
             <Link
-              className="w-full bg-[var(--primary-color)] text-white px-4 py-3 rounded-md text-sm font-medium hover:bg-[var(--secondary-color)] transition text-center block"
+              className="w-full bg-indigo-500 text-white px-4 py-3 rounded-md text-sm font-medium hover:bg-indigo-600 transition text-center block"
               to="/login"
+              state={{ fromHome: true }}
               onClick={closeMenu}
             >
               Sign in

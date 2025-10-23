@@ -4,9 +4,20 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
   :root {
-    --primary-color: #fa3768;
-    --secondary-color: #c0284d;
+    --primary-color: #6366f1;
+    --secondary-color: #4f46e5;
+    --accent-color: #8b5cf6;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --ai-blue: #3b82f6;
+    --ai-purple: #8b5cf6;
+    --ai-teal: #06b6d4;
     color-scheme: light;
+  }
+
+  /* Ensure CSS variables are applied */
+  .bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, var(--primary-color), var(--accent-color)) !important;
   }
 
   html {
@@ -14,8 +25,34 @@
   }
 
   html.dark {
-    @apply bg-gray-900 text-gray-100;
+    @apply bg-slate-900 text-slate-100;
     color-scheme: dark;
+  }
+
+  /* Dark mode specific AI theme colors */
+  .dark {
+    --primary-color: #6366f1;
+    --secondary-color: #4f46e5;
+    --accent-color: #8b5cf6;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --ai-blue: #3b82f6;
+    --ai-purple: #8b5cf6;
+    --ai-teal: #06b6d4;
+  }
+
+  /* Enhanced dark mode AI theme */
+  .dark .bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, #6366f1, #8b5cf6) !important;
+  }
+
+  /* Dark mode button enhancements */
+  .dark .bg-indigo-500 {
+    background-color: #6366f1 !important;
+  }
+
+  .dark .hover\:bg-indigo-600:hover {
+    background-color: #4f46e5 !important;
   }
 
   * {
