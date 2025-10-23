@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../ThemeContext";
+import logo from '../assets/logo.png';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -72,12 +73,47 @@ const Register = () => {
         Back to Home
       </button>
       <div className="flex h-[600px] max-w-5xl mx-auto bg-white dark:bg-gray-900 rounded-md shadow-lg border border-gray-200 dark:border-gray-700">
-        <div className="w-full hidden md:inline-block overflow-hidden rounded-l-md">
-          <img
-            className="h-full w-full object-cover"
-            src={resumeImage}
-            alt="Resume Builder"
-          />
+        <div className="w-full hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-[#fa3768] to-[#c0284d] p-8 text-white rounded-l-md relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+          <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+          
+          <div className="flex flex-col items-center text-center space-y-8 relative z-10">
+            <div className="flex items-center gap-3">
+              <img
+                src={logo}
+                alt="Resume Builder Logo"
+                className="w-12 h-12 object-contain bg-white rounded-xl p-2 shadow-lg"
+              />
+              <h1 className="text-3xl font-bold">Resume Builder</h1>
+            </div>
+            
+            <div className="space-y-6">
+              <p className="text-lg opacity-95 leading-relaxed">
+                Join thousands of professionals building smarter resumes with
+                AI-powered tools and templates
+              </p>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="flex items-center gap-2 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>AI Suggestions</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>Smart Templates</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>Real-time Optimization</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>Professional Results</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="w-full flex flex-col items-center justify-center">
@@ -162,7 +198,6 @@ const Register = () => {
               />
             </div>
 
-
             <div className="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-md overflow-hidden pl-6 gap-2">
               <svg
                 width="13"
@@ -197,7 +232,10 @@ const Register = () => {
             </button>
             <p className="text-gray-500/90 text-sm mt-4">
               Already have an account?{" "}
-              <Link to="/login" className="text-[var(--primary-color)] hover:underline">
+              <Link
+                to="/login"
+                className="text-[var(--primary-color)] hover:underline"
+              >
                 Sign in
               </Link>
             </p>
