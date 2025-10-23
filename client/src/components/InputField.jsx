@@ -1,5 +1,5 @@
 import React from 'react'
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, User } from 'lucide-react';
 const InputField = ({type, placeholder, value, onChange, required, icon, name}) => {
 
 
@@ -9,6 +9,8 @@ const InputField = ({type, placeholder, value, onChange, required, icon, name}) 
       return <Mail className="w-4 h-4 text-gray-500/80 dark:text-gray-400/80" />;
       case 'password':
       return <Lock className="w-4 h-4 text-gray-500/80 dark:text-gray-400/80" />;
+      case 'user':
+      return <User className="w-4 h-4 text-gray-500/80 dark:text-gray-400/80" />;
       default:
         return null;
     }

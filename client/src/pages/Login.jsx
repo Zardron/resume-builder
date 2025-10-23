@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import InputField from "../components/InputField";
-import ThemeSwitcher from "../components/ThemeSwitcher" 
+import ThemeSwitcher from "../components/ThemeSwitcher";
 import { useTheme } from "../ThemeContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const isDark = useTheme();
+  const { isDark } = useTheme();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   return (
-    <div className="relative  dark:to-gray-800 flex items-center justify-center w-full h-screen p-24">
+    <div className="relative dark:to-gray-800 flex items-center justify-center w-full h-screen p-24">
       <svg
         className="size-full fixed top-0 left-0 -z-10 opacity-10 pointer-events-none"
         width="1440"
