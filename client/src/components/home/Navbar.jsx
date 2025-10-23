@@ -53,8 +53,12 @@ const Navbar = () => {
           isScrolled ? "py-2" : "py-6"
         } ${isMenuOpen ? "hidden md:flex" : "flex"}`}
       >
-        <a href="https://prebuiltui.com" className="flex items-center gap-1">
-          <img src={LOGO} alt="logo" className="w-8 h-8" />{" "}
+        <a href="https://prebuiltui.com" className="flex items-center gap-2">
+          <img
+            src={LOGO}
+            alt="logo"
+            className="w-8 h-8 object-contain bg-white rounded-lg p-1 shadow-lg"
+          />{" "}
           <span className="text-lg font-bold text-black dark:text-white">
             Resume Builder
           </span>
@@ -62,22 +66,34 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm font-normal">
-          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
+          <a
+            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+            href="#"
+          >
             Products
           </a>
-          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
+          <a
+            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+            href="#"
+          >
             Customer Stories
           </a>
-          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
+          <a
+            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+            href="#"
+          >
             Pricing
           </a>
-          <a className="hover:text-indigo-500 dark:hover:text-indigo-400 transition" href="#">
+          <a
+            className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+            href="#"
+          >
             Docs
           </a>
         </nav>
 
         <div className="flex items-center justify-end gap-2">
-         <ThemeSwitcher />
+          <ThemeSwitcher />
           <Link
             className="hidden md:flex bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-indigo-600 transition"
             to="/sign-in"

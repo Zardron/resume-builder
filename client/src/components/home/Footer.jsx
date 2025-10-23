@@ -46,11 +46,11 @@ const Footer = () => {
     <footer className="w-full bg-slate-50 dark:bg-gray-800 text-slate-700 dark:text-slate-300 mt-20">
       <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center">
         <div className="flex items-center space-x-3 mb-6">
-          <a href="https://prebuiltui.com" className="flex items-center gap-1">
+          <a href="https://prebuiltui.com" className="flex items-center gap-2">
             <img
               src={LOGO}
               alt="logo"
-              className="w-8 h-8 border border-slate-200 dark:border-none rounded-md bg-white dark:bg-transparent"
+              className="w-8 h-8 object-contain bg-white rounded-lg p-1 shadow-lg"
             />{" "}
             <span className="text-lg font-bold text-slate-800 dark:text-slate-100">
               Resume Builder
@@ -74,11 +74,14 @@ const Footer = () => {
               {link.svg}
             </a>
           ))}
-         </div>
+        </div>
       </div>
       <div className="border-t border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm font-normal text-slate-600 dark:text-slate-400">
-          <a href="/" className="hover:text-rose-500 dark:hover:text-rose-400 transition">
+          <a
+            href="/"
+            className="hover:text-rose-500 dark:hover:text-rose-400 transition"
+          >
             Resume Builder
           </a>{" "}
           ©2025 Zardron Angelo Pesquera. All rights reserved.

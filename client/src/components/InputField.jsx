@@ -35,6 +35,7 @@ const InputField = ({type, placeholder, value, onChange, required, icon, name, h
         type={type}
         placeholder={placeholder}
         className="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+        autoComplete="off"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         name={name}

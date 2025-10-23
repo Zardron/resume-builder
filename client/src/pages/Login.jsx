@@ -111,11 +111,11 @@ const Login = () => {
           <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
 
           <div className="flex flex-col items-center text-center space-y-8 relative z-10">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <img
                 src={logo}
                 alt="Resume Builder Logo"
-                className="w-12 h-12 object-contain bg-white rounded-xl p-2 shadow-lg"
+                className="w-10 h-10 object-contain bg-white rounded-xl p-1 shadow-lg"
               />
               <h1 className="text-3xl font-bold">Resume Builder</h1>
             </div>
