@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LOGO from "../../assets/logo.png"
 import { useTheme } from "../../ThemeContext";  
 import { Sun, Moon } from "lucide-react";
 
 const Navbar = () => {
    const [isMenuOpen, setIsMenuOpen] = useState(false);
+   const [isScrolled, setIsScrolled] = useState(false);
    const openMenu = () => setIsMenuOpen(true);
    const closeMenu = () => setIsMenuOpen(false);
 
    const { isDark, toggleTheme } = useTheme();
 
+   useEffect(() => {
+      const handleScroll = () => {
+         setIsScrolled(window.scrollY > 50);
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+   }, []);
+
   return (
-    <header className="flex items-center justify-between px-4 md:px-14 py-2 shadow w-full transition-colors">
+    <header className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all duration-300 ease-in-out sticky top-0 z-50 bg-white dark:bg-gray-900 ${
+      isScrolled ? "py-2" : "py-6"
+    }`}>
       <a href="https://prebuiltui.com" className="flex items-center gap-1">
         <img src={LOGO} alt="logo" className="w-8 h-8" />{" "}
         <span className="text-lg font-bold text-black dark:text-white">
