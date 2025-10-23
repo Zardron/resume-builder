@@ -37,7 +37,7 @@ const Testimonials = () => {
   ];
 
   const CreateCard = ({ card }) => (
-    <div className="p-4 rounded-lg mx-4 shadow hover:shadow-lg transition-all duration-200 w-72 shrink-0">
+    <div className="p-4 rounded-lg mx-4 shadow hover:shadow-lg transition-all duration-200 w-72 shrink-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
       <div className="flex gap-2">
         <img
           className="size-11 rounded-full"
@@ -63,20 +63,20 @@ const Testimonials = () => {
               />
             </svg>
           </div>
-          <span className="text-xs text-slate-500">{card.handle}</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400">{card.handle}</span>
         </div>
       </div>
-      <p className="text-sm py-4 text-gray-800">
+      <p className="text-sm py-4 text-gray-800 dark:text-gray-200">
         {card.testimonial}
       </p>
-      <div className="flex items-center justify-between text-slate-500 text-xs">
+      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs">
         <div className="flex items-center gap-1">
           <span>Posted on</span>
           <a
             href="https://x.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-sky-500"
+            className="hover:text-sky-500 dark:hover:text-sky-400"
           >
             <svg
               width="11"
@@ -100,10 +100,10 @@ const Testimonials = () => {
   return (
     <>
       <div className="mt-20">
-        <h1 className="text-3xl font-semibold text-center mx-auto mt-10">
+        <h1 className="text-3xl font-semibold text-center mx-auto mt-10 text-gray-900 dark:text-gray-100">
           What Our Users Say
         </h1>
-        <p className="text-sm text-slate-500 text-center mt-2 max-w-md mx-auto">
+        <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
           Join thousands of professionals who've transformed their careers with our AI-powered resume builder.
         </p>
       </div>

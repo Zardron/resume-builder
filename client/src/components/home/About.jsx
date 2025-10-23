@@ -61,10 +61,10 @@ const About = () => {
   return (
     <>
       <div className="mt-20">
-        <h1 className="text-3xl font-semibold text-center mx-auto mt-10">
+        <h1 className="text-3xl font-semibold text-center mx-auto mt-10 text-gray-900 dark:text-gray-100">
           About our Resume Builder
         </h1>
-        <p className="text-sm text-slate-500 text-center mt-2 max-w-md mx-auto">
+        <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
           Unlock your career potential with AI-powered tools that build resumes
           faster, smarter, and better.
         </p>
@@ -77,8 +77,8 @@ const About = () => {
             />
           </div>
           <div className="w-full md:w-1/2">
-            <h1 className="text-3xl font-semibold">Our Latest Features</h1>
-            <p className="text-sm text-slate-500 mt-2 mb-8">
+            <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">Our Latest Features</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8">
               Build standout resumes effortlessly — AI-powered, customizable,
               and built for professionals.
             </p>
@@ -86,14 +86,14 @@ const About = () => {
             <div className="flex flex-col gap-6 mt-6">
               {features.map((feature) => (
                 <div className="flex items-start gap-4">
-                  <div className="size-12 bg-violet-100 rounded-full flex-shrink-0 flex items-center justify-center">
+                  <div className="size-12 bg-violet-100 dark:bg-violet-900/30 rounded-full flex-shrink-0 flex items-center justify-center">
                     {feature.svg}
                   </div>
                   <div>
-                    <h3 className="text-base font-medium text-slate-600">
+                    <h3 className="text-base font-medium text-slate-600 dark:text-slate-300">
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       {feature.description}
                     </p>
                   </div>

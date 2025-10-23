@@ -77,27 +77,27 @@ const features = [
 const Features = () => {
   return (
     <div>
-      <h1 class="text-3xl font-semibold text-center mx-auto">
+      <h1 className="text-3xl font-semibold text-center mx-auto text-gray-900 dark:text-gray-100">
         Powerful Features
       </h1>
-      <p class="text-sm text-slate-500 text-center mt-2 max-w-md mx-auto">
+      <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
         Everything you need to create, manage, and enhance your resume, quickly
         and professionally.
       </p>
 
       <div className="container mx-auto flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 mt-10">
-          <div className="size-[520px] top-0 left-1/2 -translate-x-1/2 rounded-full absolute blur-[300px] -z-10 bg-[#FBFFE1]/70"></div>
+          <div className="size-[520px] top-0 left-1/2 -translate-x-1/2 rounded-full absolute blur-[300px] -z-10 bg-[#FBFFE1]/70 dark:bg-[#1f2937]/30"></div>
           {features.map((feature) => (
             <div className="flex flex-col items-center justify-center max-w-80">
-              <div className="p-4 aspect-square bg-violet-100 rounded-full">
+              <div className="p-4 aspect-square bg-violet-100 dark:bg-violet-900/30 rounded-full">
                 {feature.svg}
               </div>
               <div className="mt-5 space-y-2 text-center">
-                <h3 className="text-base font-semibold text-slate-700">
+                <h3 className="text-base font-semibold text-slate-700 dark:text-slate-200">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
                   {feature.description}
                 </p>
               </div>
