@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import LOGO from "../../assets/logo.png"
-import { useTheme } from "../../ThemeContext";  
-import { Sun, Moon } from "lucide-react";
 import { Link } from "react-router-dom";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 const Navbar = () => {
    const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,8 +9,6 @@ const Navbar = () => {
    const menuRef = useRef(null);
    const openMenu = () => setIsMenuOpen(true);
    const closeMenu = () => setIsMenuOpen(false);
-
-   const { isDark, toggleTheme } = useTheme();
 
    useEffect(() => {
       const handleScroll = () => {
@@ -61,7 +58,6 @@ const Navbar = () => {
           <span className="text-lg font-bold text-black dark:text-white">
             Resume Builder
           </span>
-          image.png
         </a>
 
         {/* Desktop Navigation */}
@@ -81,16 +77,7 @@ const Navbar = () => {
         </nav>
 
         <div className="flex items-center justify-end gap-2">
-          <button
-            onClick={toggleTheme}
-            className="size-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition border border-slate-300 dark:border-slate-600 rounded-md dark:text-gray-200"
-          >
-            {isDark ? (
-              <Sun size={20} className="text-yellow-500" />
-            ) : (
-              <Moon size={20} className="text-gray-600" />
-            )}
-          </button>
+         <ThemeSwitcher />
           <Link
             className="hidden md:flex bg-[var(--primary-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-[var(--secondary-color)] transition"
             to="/login"
