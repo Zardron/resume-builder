@@ -80,7 +80,7 @@ const Navbar = () => {
          <ThemeSwitcher />
           <Link
             className="hidden md:flex bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-indigo-600 transition"
-            to="/login"
+            to="/sign-in"
             state={{ fromHome: true }}
           >
             Sign in
@@ -174,7 +174,7 @@ const Navbar = () => {
           <div className="p-4 border-t border-gray-200 dark:border-slate-700">
             <Link
               className="w-full bg-indigo-500 text-white px-4 py-3 rounded-md text-sm font-medium hover:bg-indigo-600 transition text-center block"
-              to="/login"
+              to="/sign-in"
               state={{ fromHome: true }}
               onClick={closeMenu}
             >

@@ -10,7 +10,6 @@ const Login = () => {
   const location = useLocation();
   const { isDark } = useTheme();
   
-  // Check if user came from Home page
   const fromHome = location.state?.fromHome || false;
   const [formData, setFormData] = useState({
     email: "",
@@ -223,7 +222,7 @@ const Login = () => {
             <p className="text-gray-500/90 text-sm mt-4">
               Don’t have an account?{" "}
               <Link
-                to="/register"
+                to="/sign-up"
                 className="text-[var(--primary-color)] hover:underline"
               >
                 Sign up
