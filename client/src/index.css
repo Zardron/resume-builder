@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+  :root {
+    --primary-color: #fa3768;
+    --secondary-color: #c0284d;
+    color-scheme: light;
+  }
+
+  html {
+    @apply bg-white;
+  }
+
+  html.dark {
+    @apply bg-gray-900;
+    color-scheme: dark;
+  }
+
+  * {
+    font-family: 'Outfit', sans-serif;
+  }
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-inner {
+  animation: marqueeScroll 25s linear infinite;
+}
+
