@@ -88,8 +88,8 @@ const Features = () => {
       <div className="container mx-auto flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 mt-10">
           <div className="size-[520px] top-0 left-1/2 -translate-x-1/2 rounded-full absolute blur-[300px] -z-10 bg-[#6366f1]/10 dark:bg-white/10"></div>
-          {features.map((feature) => (
-            <div className="flex flex-col items-center justify-center max-w-80">
+          {features.map((feature, index) => (
+            <div key={index} className="flex flex-col items-center justify-center max-w-80">
               <div className="p-4 aspect-square bg-violet-100 dark:bg-violet-900/30 rounded-full">
                 {feature.svg}
               </div>

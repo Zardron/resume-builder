@@ -84,8 +84,8 @@ const About = () => {
             </p>
 
             <div className="flex flex-col gap-6 mt-6">
-              {features.map((feature) => (
-                <div className="flex items-start gap-4">
+              {features.map((feature, index) => (
+                <div key={index} className="flex items-start gap-4">
                   <div className="size-12 bg-violet-100 dark:bg-violet-900/30 rounded-full flex-shrink-0 flex items-center justify-center">
                     {feature.svg}
                   </div>

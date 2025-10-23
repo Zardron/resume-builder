@@ -63,8 +63,9 @@ const Footer = () => {
         </p>
 
         <div className="flex items-center space-x-6 mt-6">
-          {socialLinks.map((link) => (
+          {socialLinks.map((link, index) => (
             <a
+              key={index}
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
