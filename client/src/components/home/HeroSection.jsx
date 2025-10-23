@@ -1,7 +1,10 @@
 import React from "react";
 import HERO_IMAGE from "../../assets/hero-img.png";
+import { useTheme } from "../../ThemeContext";
 
 const HeroSection = () => {
+  const { isDark } = useTheme();
+  
   return (
     <div className="relative">
       <svg
@@ -13,7 +16,7 @@ const HeroSection = () => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          stroke="#1D293D"
+          stroke={isDark ? "#FFFFFF" : "#1D293D"}
           strokeOpacity=".7"
           d="M-15.227 702.342H1439.7"
         />
@@ -21,18 +24,18 @@ const HeroSection = () => {
           cx="711.819"
           cy="372.562"
           r="308.334"
-          stroke="#1D293D"
+          stroke={isDark ? "#FFFFFF" : "#1D293D"}
           strokeOpacity=".7"
         />
         <circle
           cx="16.942"
           cy="20.834"
           r="308.334"
-          stroke="#1D293D"
+          stroke={isDark ? "#FFFFFF" : "#1D293D"}
           strokeOpacity=".7"
         />
         <path
-          stroke="#1D293D"
+          stroke={isDark ? "#FFFFFF" : "#1D293D"}
           strokeOpacity=".7"
           d="M-15.227 573.66H1439.7M-15.227 164.029H1439.7"
         />
@@ -40,7 +43,7 @@ const HeroSection = () => {
           cx="782.595"
           cy="411.166"
           r="308.334"
-          stroke="#1D293D"
+          stroke={isDark ? "#FFFFFF" : "#1D293D"}
           strokeOpacity=".7"
         />
       </svg>

@@ -50,7 +50,7 @@ const Footer = () => {
             <img
               src={LOGO}
               alt="logo"
-              className="w-8 h-8 border border-slate-200 dark:border-slate-600 rounded-md bg-white dark:bg-gray-700"
+              className="w-8 h-8 border border-slate-200 dark:border-none rounded-md bg-white dark:bg-transparent"
             />{" "}
             <span className="text-lg font-bold text-slate-800 dark:text-slate-100">
               Resume Builder
