@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Banner from "../components/home/Banner";
-import Navbar from "../components/home/Navbar";
+import Navbar from "../components/Navbar";
 import HeroSection from "../components/home/HeroSection";
 import Features from "../components/home/Features";
 import About from "../components/home/About";
-import Footer from "../components/home/Footer";
+import Footer from "../components/Footer";
 import Testimonials from "../components/home/Testimonials";
 import { ChevronsUp } from "lucide-react";
 

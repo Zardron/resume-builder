@@ -11,6 +11,7 @@
   --accent-color: #8b5cf6;
   --success-color: #10b981;
   --warning-color: #f59e0b;
+  --error-color: #ef4444;
   --ai-blue: #3b82f6;
   --ai-purple: #8b5cf6;
   --ai-teal: #06b6d4;
@@ -24,6 +25,7 @@
   --accent-color: #8b5cf6;
   --success-color: #10b981;
   --warning-color: #f59e0b;
+  --error-color: #ef4444;
   --ai-blue: #3b82f6;
   --ai-purple: #8b5cf6;
   --ai-teal: #06b6d4;
@@ -35,7 +37,7 @@
 }
 
 html {
-  @apply bg-white text-gray-900;
+  @apply bg-gray-50 text-gray-900;
 }
 
 html.dark {

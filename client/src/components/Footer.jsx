@@ -1,5 +1,5 @@
 import React from 'react'
-import LOGO from "../../assets/logo.png"
+import LOGO from "../assets/logo.png"
 
 const socialLinks = [
   {
@@ -43,7 +43,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-slate-50 dark:bg-gray-800 text-slate-700 dark:text-slate-300 mt-20">
+    <footer className="w-full bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-slate-300 mt-20">
       <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center">
         <div className="flex items-center space-x-3 mb-6">
           <a href="https://prebuiltui.com" className="flex items-center gap-2">
