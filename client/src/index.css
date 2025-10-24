@@ -7,6 +7,8 @@
 /* CSS CUSTOM PROPERTIES */
 :root {
   --primary-color: #6366f1;
+  --gradient-primary-color: #6365f17f;
+  --gradient-accent-color: #8a5cf66f;
   --secondary-color: #4f46e5;
   --accent-color: #8b5cf6;
   --success-color: #10b981;
@@ -21,6 +23,8 @@
 /* Dark mode color variables */
 .dark {
   --primary-color: #6366f1;
+  --gradient-primary-color: #6365f17a;
+  --gradient-accent-color: #8b5cf67a;
   --secondary-color: #4f46e5;
   --accent-color: #8b5cf6;
   --success-color: #10b981;
