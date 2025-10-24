@@ -6,12 +6,12 @@ const Dashboard = () => {
   return (
     <>
       <div className="mx-auto px-16 py-8">
-        <div className="w-full flex items-center justify-center mb-4">
-          <span className="text-sm text-gray-900 dark:text-gray-100 text-center">
+        <div className="w-full flex items-center justify-center mb-10">
+          <span className="text-lg text-gray-900 dark:text-gray-100 text-center">
             <span className="font-bold text-gray-900 dark:text-gray-100">
               Welcome to your Smart Resume Builder Dashboard.
             </span>
-            <p className="text-sm font-lighter text-gray-900 dark:text-gray-100">
+            <p className="text-sm font-thin text-gray-900 dark:text-gray-100">
               Craft a professional, standout resume in minutes — powered by AI.
             </p>
           </span>
@@ -35,7 +35,7 @@ const Dashboard = () => {
         <hr className="w-full border-gray-200 dark:border-gray-700 my-4" />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-          <button className="group w-full relative h-48 flex flex-col items-center justify-center rounded-lg border border-[var(--primary-color)] dark:border-gray-700 hover:shadow-sm hover:shadow-gray-500 dark:hover:shadow-gray-700 hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300 cursor-pointer">
+          <button className="group w-full relative h-48 flex flex-col items-center justify-center rounded-lg border border-[var(--primary-color)] dark:border-white/50 hover:shadow-xs hover:shadow-gray-500 dark:hover:shadow-black hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300 cursor-pointer">
             <File className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full text-white border border-white" />
             <p className="text-xs group-hover:text-[var(--primary-color)] transition-all duration-300 mt-2">
               Zardron's Resume
@@ -52,7 +52,7 @@ const Dashboard = () => {
             </div>
           </button>
 
-          <button className="group w-full relative h-48 flex flex-col items-center justify-center rounded-lg border border-[var(--primary-color)] dark:border-gray-700 hover:shadow-sm hover:shadow-gray-500 dark:hover:shadow-gray-700 hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300 cursor-pointer">
+          <button className="group w-full relative h-48 flex flex-col items-center justify-center rounded-lg border border-[var(--primary-color)] dark:border-white/50 hover:shadow-xs hover:shadow-gray-500 dark:hover:shadow-black hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300 cursor-pointer">
             <File className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full text-white border border-white" />
             <p className="text-xs group-hover:text-[var(--primary-color)] transition-all duration-300 mt-2">
               Alaine's Resume
@@ -69,7 +69,7 @@ const Dashboard = () => {
             </div>
           </button>
 
-          <button className="group w-full relative h-48 flex flex-col items-center justify-center rounded-lg border border-[var(--primary-color)] dark:border-gray-700 hover:shadow-sm hover:shadow-gray-500 dark:hover:shadow-gray-700 hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300 cursor-pointer">
+          <button className="group w-full relative h-48 flex flex-col items-center justify-center rounded-lg border border-[var(--primary-color)] dark:border-white/50 hover:shadow-xs hover:shadow-gray-500 dark:hover:shadow-black hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300 cursor-pointer">
             <File className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full text-white border border-white" />
             <p className="text-xs group-hover:text-[var(--primary-color)] transition-all duration-300 mt-2">
               Zaine's Resume
