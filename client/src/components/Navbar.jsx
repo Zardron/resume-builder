@@ -50,9 +50,7 @@ const Navbar = () => {
       )}
 
       <header
-        className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all duration-300 ease-in-out sticky top-0 z-50 bg-white dark:bg-gray-900 ${
-          isScrolled ? "py-2" : "py-6"
-        } ${isMenuOpen ? "hidden md:flex" : "flex"}`}
+        className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all duration-300 ease-in-out sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${isMenuOpen ? "hidden md:flex" : "flex"}`}
       >
         <a href="https://prebuiltui.com" className="flex items-center gap-2">
           <img
