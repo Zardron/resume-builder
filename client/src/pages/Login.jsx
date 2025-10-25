@@ -4,6 +4,7 @@ import logo from "../assets/logo.png";
 import InputField from "../components/InputField";
 import ThemeSwitcher from "../util/ThemeSwitcher";    
 import { useTheme } from "../ThemeContext";
+import { ArrowLeftIcon } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -55,54 +56,49 @@ const Login = () => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
           d="M-15.227 702.342H1439.7"
         />
         <circle
           cx="711.819"
           cy="372.562"
           r="308.334"
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
         />
         <circle
           cx="16.942"
           cy="20.834"
           r="308.334"
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
         />
         <path
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
           d="M-15.227 573.66H1439.7M-15.227 164.029H1439.7"
         />
         <circle
           cx="782.595"
           cy="411.166"
           r="308.334"
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
         />
       </svg>
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-6 z-10 flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-gray-900 rounded-md shadow-md transition-all duration-200 font-medium cursor-pointer"
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300"
         >
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-        Back to Home
+          {" "}
+          <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" /> Back
+          to dashboard
+        </Link>
       </button>
 
       <div className="absolute top-8 right-6">

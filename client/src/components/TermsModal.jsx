@@ -25,6 +25,10 @@ const TermsModal = ({
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
     setHasScrolledToBottom(isAtBottom);
+    
+    if (!isAtBottom && modalTermsAccepted) {
+      setModalTermsAccepted(false);
+    }
   };
 
   const openTermsModal = () => {

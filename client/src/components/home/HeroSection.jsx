@@ -17,35 +17,35 @@ const HeroSection = () => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
           d="M-15.227 702.342H1439.7"
         />
         <circle
           cx="711.819"
           cy="372.562"
           r="308.334"
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
         />
         <circle
           cx="16.942"
           cy="20.834"
           r="308.334"
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
         />
         <path
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
           d="M-15.227 573.66H1439.7M-15.227 164.029H1439.7"
         />
         <circle
           cx="782.595"
           cy="411.166"
           r="308.334"
-          stroke={isDark ? "#FFFFFF" : "#1D293D"}
-          strokeOpacity=".7"
+          stroke={isDark ? "#FFFFFF" : "#2563eb"}
+          strokeOpacity="1"
         />
       </svg>
       <section className="flex flex-col max-md:gap-20 md:flex-row pb-20 items-center justify-between mt-20 px-4 md:px-16 lg:px-24 xl:px-32">
