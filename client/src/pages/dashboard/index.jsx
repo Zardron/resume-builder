@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { File, PlusIcon, PencilIcon, TrashIcon} from "lucide-react";
 import { Link } from "react-router-dom";
+import ConfirmationModal from "../../util/ConfirmationModal";
 
 
 
 const Dashboard = () => {
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+  const handleDeleteResume = () => {
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    console.log("Resume deleted successfully!");
+  };
+
   return (
     <>
       <div className="mx-auto px-16 py-8">
@@ -58,7 +69,10 @@ const Dashboard = () => {
 
             <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
               <PencilIcon className="size-4 text-[var(--ai-blue)] transition-all duration-300 hover:scale-110" />
-              <TrashIcon className="size-4 text-red-500 transition-all duration-300 hover:scale-110" />
+              <TrashIcon
+                onClick={handleDeleteResume}
+                className="size-4 text-red-500 transition-all duration-300 hover:scale-110"
+              />
             </div>
           </button>
 
@@ -75,7 +89,10 @@ const Dashboard = () => {
 
             <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
               <PencilIcon className="size-4 text-[var(--ai-blue)] transition-all duration-300 cursor-pointer hover:scale-110" />
-              <TrashIcon className="size-4 text-red-500 transition-all duration-300 cursor-pointer hover:scale-110" />
+              <TrashIcon
+                onClick={handleDeleteResume}
+                className="size-4 text-red-500 transition-all duration-300 cursor-pointer hover:scale-110"
+              />
             </div>
           </button>
 
@@ -92,11 +109,25 @@ const Dashboard = () => {
 
             <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
               <PencilIcon className="size-4 text-[var(--ai-blue)] transition-all duration-300 cursor-pointer hover:scale-110" />
-              <TrashIcon className="size-4 text-red-500 transition-all duration-300 cursor-pointer hover:scale-110" />
+              <TrashIcon
+                onClick={handleDeleteResume}
+                className="size-4 text-red-500 transition-all duration-300 cursor-pointer hover:scale-110"
+              />
             </div>
           </button>
         </div>
       </div>
+
+      {showConfirmationModal && (
+        <ConfirmationModal
+          title="Delete Resume"
+          message="Are you sure you want to delete this resume?"
+          cancelButtonText="Cancel"
+          confirmButtonText="Delete"
+          setShowConfirmationModal={setShowConfirmationModal}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </>
   );
 };
