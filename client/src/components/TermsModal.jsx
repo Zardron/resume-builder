@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const TermsModal = ({ 
   showTermsModal, 
@@ -9,6 +9,17 @@ const TermsModal = ({
 }) => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const [modalTermsAccepted, setModalTermsAccepted] = useState(false);
+  const scrollContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (!showTermsModal) {
+      setHasScrolledToBottom(false);
+      setModalTermsAccepted(false);
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTop = 0;
+      }
+    }
+  }, [showTermsModal]);
 
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -33,6 +44,10 @@ const TermsModal = ({
     }
   };
 
+  const handleCloseModal = () => {
+    setShowTermsModal(false);
+  };
+
   const handleAccept = () => {
     if (modalTermsAccepted) {
       setTermsAccepted(true);
@@ -53,7 +68,7 @@ const TermsModal = ({
                 Terms and Conditions
               </h3>
               <button
-                onClick={() => setShowTermsModal(false)}
+                onClick={handleCloseModal}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
                 <svg
@@ -73,6 +88,7 @@ const TermsModal = ({
             </div>
 
             <div 
+              ref={scrollContainerRef}
               className="p-6 overflow-y-auto max-h-[60vh]"
               onScroll={handleScroll}
             >
@@ -239,7 +255,7 @@ const TermsModal = ({
                 </div>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => setShowTermsModal(false)}
+                    onClick={handleCloseModal}
                     className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
                     Cancel
