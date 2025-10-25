@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import LOGO from "../assets/logo.png"
 import { Link } from "react-router-dom";
-import ThemeSwitcher from "./ThemeSwitcher";
+import ThemeSwitcher from "../util/ThemeSwitcher";
 
 const Navbar = () => {
    const [isLoggedIn, setIsLoggedIn] = useState(true)

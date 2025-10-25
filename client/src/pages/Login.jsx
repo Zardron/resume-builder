@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 import InputField from "../components/InputField";
-import ThemeSwitcher from "../components/ThemeSwitcher";
+import ThemeSwitcher from "../util/ThemeSwitcher";    
 import { useTheme } from "../ThemeContext";
 
 const Login = () => {

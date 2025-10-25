@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../ThemeContext";
 import logo from '../assets/logo.png';
-import ThemeSwitcher from "../components/ThemeSwitcher";
+import ThemeSwitcher from "../util/ThemeSwitcher";
 import InputField from "../components/InputField";
 import TermsModal from "../components/TermsModal";
 

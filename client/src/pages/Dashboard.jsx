@@ -1,8 +1,13 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import { File, PlusIcon, UploadCloudIcon, PencilIcon, TrashIcon} from "lucide-react";
+import { Link } from "react-router-dom";
+import { RandomIdGenerator } from "../util/RandomIdGenerator";
+
+
 
 const Dashboard = () => {
+  const randomId = RandomIdGenerator();
+  
   return (
     <>
       <div className="mx-auto px-16 py-8">
@@ -17,12 +22,15 @@ const Dashboard = () => {
           </span>
         </div>
         <div className="w-full flex items-center justify-center gap-4">
-          <button className="w-full bg-white dark:bg-gray-800 sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg border border-gray-300 dark:border-white/50 hover:shadow-md hover:border-dashed transition-all duration-300 cursor-pointer">
+          <Link
+            className="w-full bg-white dark:bg-gray-800 max-w-36 h-48 flex flex-col items-center justify-center rounded-lg border border-gray-300 dark:border-white/50 hover:shadow-md hover:border-dashed transition-all duration-300 cursor-pointer"
+            to={`/dashboard/builder/${randomId}`}
+          >
             <PlusIcon className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full text-white" />
             <p className="text-xs group-hover:text-indigo-600 transition-all duration-300 mt-2">
               Create Resume
             </p>
-          </button>
+          </Link>
 
           <button className="w-full bg-white dark:bg-gray-800 sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg border border-gray-300 dark:border-white/50 hover:shadow-md hover:border-dashed transition-all duration-300 cursor-pointer">
             <UploadCloudIcon className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-r from-[var(--accent-color)] to-[var(--primary-color)] rounded-full text-white" />
