@@ -79,7 +79,7 @@ const HeroSection = () => {
           </p>
           <div className="flex items-center gap-4 mt-8 text-sm">
             <Link to="/sign-up" state={{ fromHome: true }}>
-              <button className="bg-indigo-500 hover:bg-indigo-600 text-white active:scale-95 rounded-md px-7 h-11 cursor-pointer transition">
+              <button className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] text-white active:scale-95 rounded-md px-7 h-11 cursor-pointer transition">
                 Get started
               </button>
             </Link>

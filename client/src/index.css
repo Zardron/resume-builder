@@ -6,32 +6,32 @@
 
 /* CSS CUSTOM PROPERTIES */
 :root {
-  --primary-color: #6366f1;
-  --gradient-primary-color: #6365f17f;
-  --gradient-accent-color: #8a5cf66f;
-  --secondary-color: #4f46e5;
-  --accent-color: #8b5cf6;
+  --primary-color: #2563eb;
+  --gradient-primary-color: #2563eb7f;
+  --gradient-accent-color: #0ea5e97f;
+  --secondary-color: #1d4ed8;
+  --accent-color: #0ea5e9;
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --error-color: #ef4444;
   --ai-blue: #3b82f6;
-  --ai-purple: #8b5cf6;
+  --ai-cyan: #0ea5e9;
   --ai-teal: #06b6d4;
   color-scheme: light;
 }
 
 /* Dark mode color variables */
 .dark {
-  --primary-color: #6366f1;
-  --gradient-primary-color: #6365f17a;
-  --gradient-accent-color: #8b5cf67a;
-  --secondary-color: #4f46e5;
-  --accent-color: #8b5cf6;
+  --primary-color: #3b82f6;
+  --gradient-primary-color: #3b82f67a;
+  --gradient-accent-color: #0ea5e97a;
+  --secondary-color: #2563eb;
+  --accent-color: #0ea5e9;
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --error-color: #ef4444;
   --ai-blue: #3b82f6;
-  --ai-purple: #8b5cf6;
+  --ai-cyan: #0ea5e9;
   --ai-teal: #06b6d4;
 }
 
@@ -56,16 +56,16 @@ html.dark {
 
 /* Dark mode gradient override */
 .dark .bg-gradient-to-br {
-  background-image: linear-gradient(to bottom right, #6366f1, #8b5cf6) !important;
+  background-image: linear-gradient(to bottom right, #3b82f6, #0ea5e9) !important;
 }
 
 /* DARK MODE ENHANCEMENTS */
-.dark .bg-indigo-500 {
-  background-color: #6366f1 !important;
+.dark .bg-blue-500 {
+  background-color: #3b82f6 !important;
 }
 
-.dark .hover\:bg-indigo-600:hover {
-  background-color: #4f46e5 !important;
+.dark .hover\:bg-blue-600:hover {
+  background-color: #2563eb !important;
 }
 
 /* ANIMATIONS */

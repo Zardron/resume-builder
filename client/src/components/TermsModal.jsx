@@ -246,7 +246,7 @@ const TermsModal = ({
                   </button>
                   <button
                     onClick={handleAccept}
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 transition-colors rounded-md"
+                    className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] transition-all duration-300 rounded-md"
                   >
                     Accept
                   </button>

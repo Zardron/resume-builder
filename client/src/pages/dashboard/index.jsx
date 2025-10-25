@@ -36,7 +36,7 @@ const Dashboard = () => {
             state={{ builder: "new-resume" }}
           >
             <PlusIcon className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full text-white" />
-            <p className="text-xs group-hover:text-indigo-600 transition-all duration-300 mt-2">
+            <p className="text-xs group-hover:text-blue-600 transition-all duration-300 mt-2">
               Create Resume
             </p>
           </Link>
@@ -47,7 +47,7 @@ const Dashboard = () => {
             state={{ builder: "existing-resume" }}
           >
             <PlusIcon className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-r from-[var(--accent-color)] to-[var(--primary-color)] rounded-full text-white" />
-            <p className="text-xs group-hover:text-indigo-600 transition-all duration-300 mt-2">
+            <p className="text-xs group-hover:text-blue-600 transition-all duration-300 mt-2">
               Upload Existing
             </p>
           </Link>

@@ -132,7 +132,7 @@ const Register = () => {
           fromHome ? "animate__animated animate__zoomIn animate__faster" : ""
         }`}
       >
-        <div className="w-full hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 p-8 text-white rounded-l-md relative overflow-hidden">
+        <div className="w-full hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-cyan-500 p-8 text-white rounded-l-md relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
           <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -297,13 +297,13 @@ const Register = () => {
 
             <button
               type="submit"
-              className="mt-8 w-full h-11 rounded-md text-white bg-indigo-500 hover:bg-indigo-600 transition-colors"
+              className="mt-8 w-full h-11 rounded-md text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] transition-all duration-300"
             >
               Sign up
             </button>
             <p className="text-gray-500/90 text-sm mt-4">
               Already have an account?{" "}
-              <Link to="/sign-in" className="text-indigo-500 hover:underline">
+              <Link to="/sign-in" className="text-blue-500 hover:underline">
                 Sign in
               </Link>
             </p>

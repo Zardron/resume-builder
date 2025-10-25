@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Banner = () => {
   return (
-    <div className="flex flex-wrap items-center justify-between w-full px-4 md:px-14 py-2 font-light text-md text-white text-center bg-gradient-to-br from-indigo-500 to-purple-600">
+    <div className="flex flex-wrap items-center justify-between w-full px-4 md:px-14 py-2 font-light text-md text-white text-center bg-gradient-to-br from-blue-500 to-cyan-500">
       <p>AI feature enabled – Build your resume in minutes.</p>
       <Link
         to="/sign-in"

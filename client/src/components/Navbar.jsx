@@ -67,25 +67,25 @@ const Navbar = () => {
         {!isLoggedIn && (
           <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm font-normal">
             <a
-              className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
               href="#"
             >
               Products
             </a>
             <a
-              className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
               href="#"
             >
               Customer Stories
             </a>
             <a
-              className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
               href="#"
             >
               Pricing
             </a>
             <a
-              className="hover:text-indigo-500 dark:hover:text-indigo-400 transition"
+              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
               href="#"
             >
               Docs
@@ -113,7 +113,7 @@ const Navbar = () => {
             </Link>
           ) : (
             <Link
-              className="hidden md:flex bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-indigo-600 transition"
+              className="hidden md:flex bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-300"
               to="/sign-in"
               state={{ fromHome: true }}
             >
@@ -191,28 +191,28 @@ const Navbar = () => {
           {!isLoggedIn && (
             <div className="flex-1 flex flex-col p-4 space-y-4">
               <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
+                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
                 href="#"
                 onClick={closeMenu}
               >
                 Products
               </a>
               <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
+                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
                 href="#"
                 onClick={closeMenu}
               >
                 Customer Stories
               </a>
               <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
+                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
                 href="#"
                 onClick={closeMenu}
               >
                 Pricing
               </a>
               <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-indigo-500 dark:hover:text-indigo-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
+                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
                 href="#"
                 onClick={closeMenu}
               >
@@ -234,7 +234,7 @@ const Navbar = () => {
               </Link>
             ) : (
               <Link
-                className="w-full bg-indigo-500 text-white px-4 py-3 rounded-md text-sm font-medium hover:bg-indigo-600 transition text-center block"
+                className="w-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] text-white px-4 py-3 rounded-md text-sm font-medium transition-all duration-300 text-center block"
                 to="/sign-in"
                 state={{ fromHome: true }}
                 onClick={closeMenu}
