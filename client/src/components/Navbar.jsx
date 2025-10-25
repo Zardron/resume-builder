@@ -6,7 +6,7 @@ import ThemeSwitcher from "../util/ThemeSwitcher";
 const Navbar = () => {
    const [isLoggedIn, setIsLoggedIn] = useState(true)
    const [isMenuOpen, setIsMenuOpen] = useState(false);
-   const [isScrolled, setIsScrolled] = useState(false);
+   const [isScrolled, setIsScrolled] = useState(false); 
    const menuRef = useRef(null);
    const openMenu = () => setIsMenuOpen(true);
    const closeMenu = () => setIsMenuOpen(false);
@@ -52,7 +52,7 @@ const Navbar = () => {
       <header
         className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all duration-300 ease-in-out sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${isMenuOpen ? "hidden md:flex" : "flex"}`}
       >
-        <a href="https://prebuiltui.com" className="flex items-center gap-2">
+        <Link to={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-2">
           <img
             src={LOGO}
             alt="logo"
@@ -61,7 +61,7 @@ const Navbar = () => {
           <span className="text-lg font-bold text-black dark:text-white">
             Resume Builder
           </span>
-        </a>
+        </Link>
 
         {/* Desktop Navigation */}
         {!isLoggedIn && (
