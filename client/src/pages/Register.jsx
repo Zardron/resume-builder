@@ -183,11 +183,11 @@ const Register = () => {
             <h2 className="text-4xl text-gray-900 font-medium dark:text-white">
               Sign up
             </h2>
-            <p className="text-sm text-gray-500/90 mt-3 dark:text-gray-400 mb-6">
+            <p className="text-sm text-gray-500/90 mt-3 dark:text-gray-400">
               Welcome to our platform! Please sign up to continue
             </p>
 
-            <div className="w-full my-2">
+            <div className="w-full flex flex-col gap-4 mt-8">
               <InputField
                 type="text"
                 placeholder="Full Name"
@@ -198,9 +198,7 @@ const Register = () => {
                 hasError={errors.fullName}
                 onChange={(value) => handleInputChange("fullName", value)}
               />
-            </div>
-
-            <div className="w-full my-2">
+           
               <InputField
                 type="email"
                 placeholder="Email address"
@@ -211,9 +209,7 @@ const Register = () => {
                 hasError={errors.email}
                 onChange={(value) => handleInputChange("email", value)}
               />
-            </div>
-
-            <div className="w-full my-2">
+        
               <InputField
                 type="password"
                 placeholder="Password"
@@ -224,9 +220,7 @@ const Register = () => {
                 hasError={errors.password}
                 onChange={(value) => handleInputChange("password", value)}
               />
-            </div>
-
-            <div className="w-full my-2">
+         
               <InputField
                 type="password"
                 placeholder="Confirm Password"

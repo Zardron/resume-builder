@@ -262,7 +262,10 @@ const TermsModal = ({
                   </button>
                   <button
                     onClick={handleAccept}
-                    className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] transition-all duration-300 rounded-md"
+                    disabled={!modalTermsAccepted}
+                    className={`px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] transition-all duration-300 rounded-md ${
+                      !modalTermsAccepted ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                   >
                     Accept
                   </button>
