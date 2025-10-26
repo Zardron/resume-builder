@@ -1,8 +1,17 @@
 import { Mail, Phone, MapPin, Linkedin, Globe, Award, Briefcase, GraduationCap, Code2, Star, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
+import { 
+    getSectionFontSize, 
+    getNameFontSize, 
+    getSectionHeaderFontSize, 
+    getDateFontSize, 
+    getCompanyFontSize, 
+    getLocationFontSize 
+} from "../../utils/fontSizeUtils";
 
 const ClassicTemplate = ({ 
     data, 
     accentColor, 
+    sectionFontSizes = {},
     showHeader = true,
     showProfessionalSummary = true,
     showExperience = true,
@@ -89,17 +98,17 @@ const ClassicTemplate = ({
             <header className="mb-4">
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                        <h1 className={`${fontSizes.title} font-bold text-gray-900 mb-1 capitalize`}>
+                        <h1 className={`${getNameFontSize(sectionFontSizes)} font-bold text-gray-900 mb-1 capitalize`}>
                             {data.personal_info?.name || "Your Name"}
                         </h1>
                         {data.personal_info?.profession && (
-                            <p className={`${fontSizes.heading} text-gray-600 font-medium mb-3`}>
+                            <p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-600 font-medium mb-3`}>
                                 {data.personal_info.profession}
                             </p>
                         )}
                         <div className="w-12 h-1 rounded-full mb-3" style={{ backgroundColor: accentColor }}></div>
                         
-                        <div className="flex flex-wrap gap-3 text-xs">
+                        <div className={`flex flex-wrap gap-3 ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>
                             {data.personal_info?.email && (
                                 <div className="flex items-center gap-2">
                                     <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
@@ -162,13 +171,13 @@ const ClassicTemplate = ({
                         <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                             <Star className={`${fontSizes.icon} text-white`} />
                         </div>
-                        <h2 className={`${fontSizes.heading} font-bold text-gray-900 uppercase tracking-wide`}>
+                        <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
                             Professional Summary
                         </h2>
                     </div>
                     <div className="pl-6">
                         <div className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
-                            <p className={`text-gray-700 leading-relaxed ${fontSizes.body}`}>{data.professional_summary}</p>
+                            <p className={`text-gray-700 leading-relaxed ${getSectionFontSize(sectionFontSizes, 'summary')}`}>{data.professional_summary}</p>
                         </div>
                     </div>
                 </section>
@@ -181,7 +190,7 @@ const ClassicTemplate = ({
                         <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                             <Briefcase className="size-2 text-white" />
                         </div>
-                        <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                        <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
                             Professional Experience
                         </h2>
                     </div>
@@ -191,15 +200,18 @@ const ClassicTemplate = ({
                             <div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
                                 <div className="flex justify-between items-start mb-1">
                                     <div>
-                                        <h3 className="text-xs font-bold text-gray-900">{exp.position}</h3>
-                                        <p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{exp.company}</p>
+                                        <h3 className={`${getSectionFontSize(sectionFontSizes, 'experience')} font-bold text-gray-900`}>{exp.position}</h3>
+                                        <p className={`${getCompanyFontSize(sectionFontSizes)} font-semibold`} style={{ color: accentColor }}>{exp.company}</p>
+                                        {exp.location && (
+                                            <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-600 mb-1`}>{exp.location}</p>
+                                        )}
                                     </div>
-                                    <div className="text-xs text-gray-600 font-medium">
+                                    <div className={`${getDateFontSize(sectionFontSizes)} text-gray-600 font-medium`}>
                                         {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </div>
                                 </div>
                                 {exp.description && (
-                                    <div className="text-gray-700 leading-relaxed text-xs whitespace-pre-line">
+                                    <div className={`text-gray-700 leading-relaxed ${getSectionFontSize(sectionFontSizes, 'job_descriptions')} whitespace-pre-line`}>
                                         {exp.description}
                                     </div>
                                 )}

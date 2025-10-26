@@ -1,8 +1,17 @@
 import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Award, Briefcase, GraduationCap, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
+import { 
+    getSectionFontSize, 
+    getNameFontSize, 
+    getSectionHeaderFontSize, 
+    getDateFontSize, 
+    getCompanyFontSize, 
+    getLocationFontSize 
+} from "../../utils/fontSizeUtils";
 
 const MinimalImageTemplate = ({ 
     data, 
     accentColor, 
+    sectionFontSizes = {},
     showHeader = true,
     showProfessionalSummary = true,
     showExperience = true,
@@ -47,6 +56,7 @@ const MinimalImageTemplate = ({
             }));
     };
 
+
     return (
         <div className="max-w-6xl mx-auto bg-white text-gray-900 font-sans">
             <div className="grid grid-cols-12">
@@ -83,19 +93,19 @@ const MinimalImageTemplate = ({
                                 {data.personal_info?.phone && (
                                     <div className="flex items-center gap-2">
                                         <Phone size={12} style={{ color: accentColor }} />
-                                        <span className="text-gray-700">{data.personal_info.phone}</span>
+                                        <span className={`text-gray-700 ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>{data.personal_info.phone}</span>
                                     </div>
                                 )}
                                 {data.personal_info?.email && (
                                     <div className="flex items-center gap-2">
                                         <Mail size={12} style={{ color: accentColor }} />
-                                        <span className="text-gray-700">{data.personal_info.email}</span>
+                                        <span className={`text-gray-700 ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>{data.personal_info.email}</span>
                                     </div>
                                 )}
                                 {data.personal_info?.address && (
                                     <div className="flex items-center gap-2">
                                         <MapPin size={12} style={{ color: accentColor }} />
-                                        <span className="text-gray-700">{data.personal_info.address}</span>
+                                        <span className={`text-gray-700 ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>{data.personal_info.address}</span>
                                     </div>
                                 )}
                                 {/* Dynamic social links */}
@@ -104,7 +114,7 @@ const MinimalImageTemplate = ({
                                     return (
                                         <div key={index} className="flex items-center gap-2">
                                             <IconComponent size={12} style={{ color: accentColor }} />
-                                            <span className="text-gray-700 break-all">{socialLink.value}</span>
+                                            <span className={`text-gray-700 break-all ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>{socialLink.value}</span>
                                         </div>
                                     );
                                 })}
@@ -169,11 +179,11 @@ const MinimalImageTemplate = ({
                     {/* Header */}
                     {showHeader && (
                     <header className="mb-4">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-1 capitalize">
+                        <h1 className={`${getNameFontSize(sectionFontSizes)} font-bold text-gray-900 mb-1 capitalize`}>
                             {data.personal_info?.name || "Your Name"}
                         </h1>
                         {data.personal_info?.profession && (
-                            <p className="text-lg text-gray-600 font-medium mb-3">
+                            <p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-600 font-medium mb-3`}>
                                 {data.personal_info.profession}
                             </p>
                         )}
@@ -194,7 +204,7 @@ const MinimalImageTemplate = ({
                             </div>
                             <div className="pl-6">
                                 <div className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
-                                    <p className="text-gray-700 leading-relaxed text-xs">
+                                    <p className="text-gray-700 leading-relaxed text-[10px]">
                                         {data.professional_summary}
                                     </p>
                                 </div>
@@ -218,15 +228,18 @@ const MinimalImageTemplate = ({
                                     <div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
                                         <div className="flex justify-between items-start mb-1">
                                             <div>
-                                                <h3 className="text-xs font-bold text-gray-900 mb-1">{exp.position}</h3>
-                                                <p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{exp.company}</p>
+                                                <h3 className={`${getSectionFontSize(sectionFontSizes, 'experience')} font-bold text-gray-900 mb-1`}>{exp.position}</h3>
+                                                <p className={`${getCompanyFontSize(sectionFontSizes)} font-semibold mb-1`} style={{ color: accentColor }}>{exp.company}</p>
+                                                {exp.location && (
+                                                    <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-600 mb-1`}>{exp.location}</p>
+                                                )}
                                             </div>
-                                            <div className="text-xs text-gray-600 font-medium">
+                                            <div className={`${getDateFontSize(sectionFontSizes)} text-gray-600 font-medium`}>
                                                 {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                             </div>
                                         </div>
                                         {exp.description && (
-                                            <div className="text-gray-700 leading-relaxed text-xs whitespace-pre-line">
+                                            <div className={`text-gray-700 leading-relaxed ${getSectionFontSize(sectionFontSizes, 'job_descriptions')} whitespace-pre-line`}>
                                                 {exp.description}
                                             </div>
                                         )}

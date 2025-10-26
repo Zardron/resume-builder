@@ -1,5 +1,5 @@
 import React from "react";
-import { Mail, Lock, User, FileText, PencilIcon, Phone, MapPin, Briefcase, Linkedin, Globe, Loader2, Check, Twitter, Github, Instagram, Youtube, Facebook, MessageCircle} from "lucide-react";
+import { Mail, Lock, User, FileText, PencilIcon, Phone, MapPin, Briefcase, Linkedin, Globe, Loader2, Check, Twitter, Github, Instagram, Youtube, Facebook, MessageCircle, Building2, Calendar} from "lucide-react";
 const InputField = ({
   type,
   placeholder,
@@ -78,6 +78,14 @@ const InputField = ({
       case "telegram":
         return (
           <MessageCircle className="w-4 h-4 text-gray-500/80 dark:text-gray-300" />
+        );
+      case "building":
+        return (
+          <Building2 className="w-4 h-4 text-gray-500/80 dark:text-gray-300" />
+        );
+      case "calendar":
+        return (
+          <Calendar className="w-4 h-4 text-gray-500/80 dark:text-gray-300" />
         );
       default:
         return null;

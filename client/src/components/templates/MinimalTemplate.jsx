@@ -1,8 +1,17 @@
 import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Minus, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
+import { 
+    getSectionFontSize, 
+    getNameFontSize, 
+    getSectionHeaderFontSize, 
+    getDateFontSize, 
+    getCompanyFontSize, 
+    getLocationFontSize 
+} from "../../utils/fontSizeUtils";
 
 const MinimalTemplate = ({ 
     data, 
     accentColor, 
+    sectionFontSizes = {},
     showHeader = true,
     showProfessionalSummary = true,
     showExperience = true,
@@ -47,6 +56,7 @@ const MinimalTemplate = ({
             }));
     };
 
+
     // Remove content limits - let paper height determine what's visible
 
     // Calculate height based on paper size
@@ -66,16 +76,16 @@ const MinimalTemplate = ({
             <header className="mb-4">
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                        <h1 className="text-3xl font-light text-gray-900 mb-1 tracking-wide capitalize">
+                        <h1 className={`${getNameFontSize(sectionFontSizes)} font-light text-gray-900 mb-1 tracking-wide capitalize`}>
                             {data.personal_info?.name || "Your Name"}
                         </h1>
                         {data.personal_info?.profession && (
-                            <p className="text-lg text-gray-600 font-light tracking-wide mb-3">
+                            <p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-600 font-light tracking-wide mb-3`}>
                                 {data.personal_info.profession}
                             </p>
                         )}
                         
-                        <div className="flex flex-wrap gap-3 text-xs">
+                        <div className={`flex flex-wrap gap-3 ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>
                             {data.personal_info?.email && (
                                 <div className="flex items-center gap-2">
                                     <Mail className="size-3" style={{ color: accentColor }} />
@@ -155,15 +165,18 @@ const MinimalTemplate = ({
                             <div key={index} className="relative">
                                 <div className="flex justify-between items-start mb-1">
                                     <div>
-                                        <h3 className="text-xs font-medium text-gray-900">{exp.position}</h3>
-                                        <p className="text-xs font-medium text-gray-600">{exp.company}</p>
+                                        <h3 className={`${getSectionFontSize(sectionFontSizes, 'experience')} font-medium text-gray-900`}>{exp.position}</h3>
+                                        <p className={`${getCompanyFontSize()} font-medium text-gray-600`}>{exp.company}</p>
+                                        {exp.location && (
+                                            <p className={`${getLocationFontSize()} text-gray-500`}>{exp.location}</p>
+                                        )}
                                     </div>
-                                    <span className="text-xs text-gray-500 font-light">
+                                    <span className={`${getDateFontSize()} text-gray-500 font-light`}>
                                         {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
                                 {exp.description && (
-                                    <div className="text-gray-700 leading-relaxed text-xs whitespace-pre-line">
+                                    <div className={`text-gray-700 leading-relaxed ${getSectionFontSize(sectionFontSizes, 'job_descriptions')} whitespace-pre-line`}>
                                         {exp.description}
                                     </div>
                                 )}
