@@ -66,8 +66,8 @@ const MinimalTemplate = ({
             <header className="mb-4">
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                        <h1 className="text-3xl font-light text-gray-900 mb-1 tracking-wide">
-                            {data.personal_info?.full_name || "Your Name"}
+                        <h1 className="text-3xl font-light text-gray-900 mb-1 tracking-wide capitalize">
+                            {data.personal_info?.name || "Your Name"}
                         </h1>
                         {data.personal_info?.profession && (
                             <p className="text-lg text-gray-600 font-light tracking-wide mb-3">

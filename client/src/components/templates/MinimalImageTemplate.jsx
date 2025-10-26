@@ -169,7 +169,7 @@ const MinimalImageTemplate = ({
                     {/* Header */}
                     {showHeader && (
                     <header className="mb-4">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-1 capitalize">
                             {data.personal_info?.name || "Your Name"}
                         </h1>
                         {data.personal_info?.profession && (

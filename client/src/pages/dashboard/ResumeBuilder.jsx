@@ -22,6 +22,7 @@ import ClassicTemplate from "../../components/templates/ClassicTemplate";
 import ModernTemplate from "../../components/templates/ModernTemplate";
 import MinimalTemplate from "../../components/templates/MinimalTemplate";
 import MinimalImageTemplate from "../../components/templates/MinimalImageTemplate";
+import ProfessionalSummary from "./forms/ProfessionalSummary";
 
 const sections = [
   {
@@ -31,7 +32,7 @@ const sections = [
   },
   {
     id: "summary",
-    name: "Summary",
+    name: "Professional Summary",
     icon: FileText,
   },
   {
@@ -360,6 +361,22 @@ const ResumeBuilder = () => {
                             setRemoveBackground={setRemoveBackground}
                             onValidationChange={(validationFn) =>
                               handleValidationChange("personal", validationFn)
+                            }
+                          />
+                        </div>
+                      )}
+                      {activeSection.id === "summary" && (
+                        <div>
+                          <ProfessionalSummary
+                            data={resumeData}
+                            onChange={(data) => {
+                              setResumeData((prev) => ({
+                                ...prev,
+                                professional_summary: data.professionalSummary,
+                              }))
+                            }}
+                            onValidationChange={(validationFn) =>
+                              handleValidationChange("summary", validationFn)
                             }
                           />
                         </div>

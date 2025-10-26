@@ -89,7 +89,7 @@ const ClassicTemplate = ({
             <header className="mb-4">
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                        <h1 className={`${fontSizes.title} font-bold text-gray-900 mb-1`}>
+                        <h1 className={`${fontSizes.title} font-bold text-gray-900 mb-1 capitalize`}>
                             {data.personal_info?.name || "Your Name"}
                         </h1>
                         {data.personal_info?.profession && (
