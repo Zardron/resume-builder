@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Award, Briefcase, GraduationCap, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Award, Briefcase, GraduationCap, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle, Languages, Heart } from "lucide-react";
 import { 
     getSectionFontSize, 
     getNameFontSize, 
@@ -147,15 +147,15 @@ const MinimalImageTemplate = ({
                             </section>
                         )}
 
-                        {/* Skills */}
+                        {/* Technical Skills */}
                         {data.skills && data.skills.length > 0 && (
-                            <section>
+                            <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                         <Award className="size-3 text-white" />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
-                                        Skills
+                                        Technical Skills
                                     </h2>
                                 </div>
                                 <div className="flex flex-wrap gap-1">
@@ -167,6 +167,85 @@ const MinimalImageTemplate = ({
                                         >
                                             {skill}
                                         </span>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Soft Skills */}
+                        {data.soft_skills && data.soft_skills.length > 0 && (
+                            <section className="mb-4">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                        <Star className="size-3 text-white" />
+                                    </div>
+                                    <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
+                                        Soft Skills
+                                    </h2>
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                    {data.soft_skills.map((skill, index) => (
+                                        <span
+                                            key={index}
+                                            className="px-2 py-1 text-xs font-medium text-white rounded"
+                                            style={{ backgroundColor: accentColor }}
+                                        >
+                                            {skill}
+                                        </span>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Languages */}
+                        {data.languages && data.languages.length > 0 && (
+                            <section className="mb-4">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                        <Languages className="size-3 text-white" />
+                                    </div>
+                                    <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
+                                        Languages
+                                    </h2>
+                                </div>
+                                <div className="space-y-2 text-xs">
+                                    {data.languages.map((lang, index) => (
+                                        <div key={index} className="bg-white rounded-lg p-2 shadow-sm border border-gray-200">
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-medium text-gray-800">{lang.language}</span>
+                                                <span className="text-gray-600 capitalize">{lang.proficiency}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Certifications */}
+                        {data.certifications && data.certifications.length > 0 && (
+                            <section className="mb-4">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                        <Award className="size-3 text-white" />
+                                    </div>
+                                    <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
+                                        Certifications
+                                    </h2>
+                                </div>
+                                <div className="space-y-2 text-xs">
+                                    {data.certifications.map((cert, index) => (
+                                        <div key={index} className="bg-white rounded-lg p-2 shadow-sm border border-gray-200">
+                                            <p className="font-bold text-gray-800 mb-1">{cert.name}</p>
+                                            <p className="text-gray-600 mb-1">{cert.issuer}</p>
+                                            {cert.credential_id && (
+                                                <p className="text-xs text-gray-500">ID: {cert.credential_id}</p>
+                                            )}
+                                            {cert.date && (
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    {formatDate(cert.date)}
+                                                </p>
+                                            )}
+                                        </div>
                                     ))}
                                 </div>
                             </section>
@@ -251,7 +330,7 @@ const MinimalImageTemplate = ({
 
                     {/* Projects */}
                     {showProjects && data.project && data.project.length > 0 && (
-                        <section>
+                        <section className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                     <Award className="size-2 text-white" />
@@ -272,6 +351,71 @@ const MinimalImageTemplate = ({
                                         {project.description && (
                                             <div className="text-gray-700 leading-relaxed text-xs">
                                                 {project.description}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Achievements */}
+                    {data.achievements && data.achievements.length > 0 && (
+                        <section className="mb-4">
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                    <Award className="size-2 text-white" />
+                                </div>
+                                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                                    Achievements
+                                </h2>
+                            </div>
+                            <div className="pl-6 space-y-2">
+                                {data.achievements.map((achievement, index) => (
+                                    <div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <h3 className="text-xs font-bold text-gray-900">{achievement.title}</h3>
+                                                {achievement.description && (
+                                                    <p className="text-xs text-gray-700 mt-1">{achievement.description}</p>
+                                                )}
+                                            </div>
+                                            <div className="text-xs text-gray-600 font-medium">
+                                                {achievement.date && formatDate(achievement.date)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Volunteer Work */}
+                    {data.volunteer_work && data.volunteer_work.length > 0 && (
+                        <section className="mb-4">
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                    <Heart className="size-2 text-white" />
+                                </div>
+                                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                                    Volunteer Work
+                                </h2>
+                            </div>
+                            <div className="pl-6 space-y-2">
+                                {data.volunteer_work.map((volunteer, index) => (
+                                    <div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
+                                        <div className="flex justify-between items-start mb-1">
+                                            <div>
+                                                <h3 className="text-xs font-bold text-gray-900">{volunteer.position}</h3>
+                                                <p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{volunteer.organization}</p>
+                                            </div>
+                                            <div className="text-xs text-gray-600 font-medium">
+                                                {formatDate(volunteer.start_date)} - {volunteer.is_current ? "Present" : formatDate(volunteer.end_date)}
+                                            </div>
+                                        </div>
+                                        {volunteer.description && (
+                                            <div className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
+                                                {volunteer.description}
                                             </div>
                                         )}
                                     </div>

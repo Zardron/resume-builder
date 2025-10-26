@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe, Code, Briefcase, GraduationCap, Star, Sparkles, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Code, Briefcase, GraduationCap, Star, Sparkles, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle, Languages, Heart } from "lucide-react";
 import { 
     getSectionFontSize, 
     getNameFontSize, 
@@ -269,7 +269,7 @@ const ModernTemplate = ({
 						</section>
 					)}
 
-				{/* Skills */}
+				{/* Technical Skills */}
 				{showSkills && data.skills && data.skills.length > 0 && (
 						<section>
 							<div className="flex items-center gap-2 mb-2">
@@ -277,7 +277,7 @@ const ModernTemplate = ({
 									<Star className="size-2 text-white" />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
-									Core Skills
+									Technical Skills
 								</h2>
 							</div>
 
@@ -293,6 +293,159 @@ const ModernTemplate = ({
 										</span>
 									))}
 								</div>
+							</div>
+						</section>
+					)}
+
+				{/* Soft Skills */}
+				{data.soft_skills && data.soft_skills.length > 0 && (
+						<section>
+							<div className="flex items-center gap-2 mb-2">
+								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+									<Sparkles className="size-2 text-white" />
+								</div>
+								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+									Soft Skills
+								</h2>
+							</div>
+
+							<div className="pl-6">
+								<div className="flex flex-wrap gap-1">
+									{data.soft_skills.map((skill, index) => (
+										<span
+											key={index}
+											className="px-2 py-1 text-xs font-medium text-white rounded"
+											style={{ backgroundColor: accentColor }}
+										>
+											{skill}
+										</span>
+									))}
+								</div>
+							</div>
+						</section>
+					)}
+
+				{/* Languages */}
+				{data.languages && data.languages.length > 0 && (
+						<section>
+							<div className="flex items-center gap-2 mb-2">
+								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+									<Languages className="size-2 text-white" />
+								</div>
+								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+									Languages
+								</h2>
+							</div>
+
+							<div className="pl-6">
+								<div className="space-y-1">
+									{data.languages.map((lang, index) => (
+										<div key={index} className="flex justify-between items-center">
+											<span className="text-xs font-medium text-gray-900">{lang.language}</span>
+											<span className="text-xs text-gray-600 capitalize">{lang.proficiency}</span>
+										</div>
+									))}
+								</div>
+							</div>
+						</section>
+					)}
+
+				{/* Certifications */}
+				{data.certifications && data.certifications.length > 0 && (
+						<section>
+							<div className="flex items-center gap-2 mb-2">
+								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+									<Star className="size-2 text-white" />
+								</div>
+								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+									Certifications
+								</h2>
+							</div>
+
+							<div className="pl-6 space-y-2">
+								{data.certifications.map((cert, index) => (
+									<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
+										<div className="flex justify-between items-start">
+											<div>
+												<h3 className="text-xs font-bold text-gray-900">{cert.name}</h3>
+												<p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{cert.issuer}</p>
+												{cert.credential_id && (
+													<p className="text-xs text-gray-600">ID: {cert.credential_id}</p>
+												)}
+											</div>
+											<div className="text-xs text-gray-600 font-medium">
+												{cert.date && formatDate(cert.date)}
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</section>
+					)}
+
+				{/* Achievements */}
+				{data.achievements && data.achievements.length > 0 && (
+						<section>
+							<div className="flex items-center gap-2 mb-2">
+								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+									<Sparkles className="size-2 text-white" />
+								</div>
+								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+									Achievements
+								</h2>
+							</div>
+
+							<div className="pl-6 space-y-2">
+								{data.achievements.map((achievement, index) => (
+									<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
+										<div className="flex justify-between items-start">
+											<div>
+												<h3 className="text-xs font-bold text-gray-900">{achievement.title}</h3>
+												{achievement.description && (
+													<p className="text-xs text-gray-700 mt-1">{achievement.description}</p>
+												)}
+											</div>
+											<div className="text-xs text-gray-600 font-medium">
+												{achievement.date && formatDate(achievement.date)}
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</section>
+					)}
+
+				{/* Volunteer Work */}
+				{data.volunteer_work && data.volunteer_work.length > 0 && (
+						<section>
+							<div className="flex items-center gap-2 mb-2">
+								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+									<Heart className="size-2 text-white" />
+								</div>
+								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+									Volunteer Work
+								</h2>
+							</div>
+
+							<div className="pl-6 space-y-2">
+								{data.volunteer_work.map((volunteer, index) => (
+									<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
+										<div className="flex justify-between items-start mb-1">
+											<div>
+												<h3 className="text-xs font-bold text-gray-900">{volunteer.position}</h3>
+												<p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{volunteer.organization}</p>
+											</div>
+											<div className="text-xs text-gray-600 font-medium">
+												{formatDate(volunteer.start_date)} - {volunteer.is_current ? "Present" : formatDate(volunteer.end_date)}
+											</div>
+										</div>
+										{volunteer.description && (
+											<div className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
+												{volunteer.description}
+											</div>
+										)}
+									</div>
+								))}
 							</div>
 						</section>
 					)}

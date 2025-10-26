@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Minus, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Minus, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle, Languages, Heart } from "lucide-react";
 import { 
     getSectionFontSize, 
     getNameFontSize, 
@@ -166,12 +166,12 @@ const MinimalTemplate = ({
                                 <div className="flex justify-between items-start mb-1">
                                     <div>
                                         <h3 className={`${getSectionFontSize(sectionFontSizes, 'experience')} font-medium text-gray-900`}>{exp.position}</h3>
-                                        <p className={`${getCompanyFontSize()} font-medium text-gray-600`}>{exp.company}</p>
+                                        <p className={`${getCompanyFontSize(sectionFontSizes)} font-medium text-gray-600`}>{exp.company}</p>
                                         {exp.location && (
-                                            <p className={`${getLocationFontSize()} text-gray-500`}>{exp.location}</p>
+                                            <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-500`}>{exp.location}</p>
                                         )}
                                     </div>
-                                    <span className={`${getDateFontSize()} text-gray-500 font-light`}>
+                                    <span className={`${getDateFontSize(sectionFontSizes)} text-gray-500 font-light`}>
                                         {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
@@ -239,13 +239,13 @@ const MinimalTemplate = ({
                     </section>
                 )}
 
-                {/* Skills */}
+                {/* Technical Skills */}
                 {showSkills && data.skills && data.skills.length > 0 && (
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-1 h-4 rounded-full" style={{ backgroundColor: accentColor }}></div>
                             <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
-                                Skills
+                                Technical Skills
                             </h2>
                         </div>
 
@@ -253,6 +253,141 @@ const MinimalTemplate = ({
                             <div className="text-gray-700 text-xs leading-relaxed">
                                 {data.skills.slice(0, 10).join(" • ")}
                             </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* Soft Skills */}
+                {data.soft_skills && data.soft_skills.length > 0 && (
+                    <section className="mb-3">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1 h-4 rounded-full" style={{ backgroundColor: accentColor }}></div>
+                            <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                                Soft Skills
+                            </h2>
+                        </div>
+
+                        <div className="pl-3">
+                            <div className="text-gray-700 text-xs leading-relaxed">
+                                {data.soft_skills.slice(0, 8).join(" • ")}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* Languages */}
+                {data.languages && data.languages.length > 0 && (
+                    <section className="mb-3">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1 h-4 rounded-full" style={{ backgroundColor: accentColor }}></div>
+                            <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                                Languages
+                            </h2>
+                        </div>
+
+                        <div className="pl-3">
+                            <div className="space-y-1">
+                                {data.languages.map((lang, index) => (
+                                    <div key={index} className="flex justify-between items-center">
+                                        <span className="text-xs font-medium text-gray-900">{lang.language}</span>
+                                        <span className="text-xs text-gray-500 capitalize">{lang.proficiency}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* Certifications */}
+                {data.certifications && data.certifications.length > 0 && (
+                    <section className="mb-3">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1 h-4 rounded-full" style={{ backgroundColor: accentColor }}></div>
+                            <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                                Certifications
+                            </h2>
+                        </div>
+
+                        <div className="pl-3 space-y-2">
+                            {data.certifications.map((cert, index) => (
+                                <div key={index} className="relative">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h3 className="text-xs font-medium text-gray-900">{cert.name}</h3>
+                                            <p className="text-xs text-gray-600">{cert.issuer}</p>
+                                            {cert.credential_id && (
+                                                <p className="text-xs text-gray-500">ID: {cert.credential_id}</p>
+                                            )}
+                                        </div>
+                                        <span className="text-xs text-gray-500 font-light">
+                                            {cert.date && formatDate(cert.date)}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Achievements */}
+                {data.achievements && data.achievements.length > 0 && (
+                    <section className="mb-3">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1 h-4 rounded-full" style={{ backgroundColor: accentColor }}></div>
+                            <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                                Achievements
+                            </h2>
+                        </div>
+
+                        <div className="pl-3 space-y-2">
+                            {data.achievements.map((achievement, index) => (
+                                <div key={index} className="relative">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h3 className="text-xs font-medium text-gray-900">{achievement.title}</h3>
+                                            {achievement.description && (
+                                                <p className="text-xs text-gray-600 mt-1">{achievement.description}</p>
+                                            )}
+                                        </div>
+                                        <span className="text-xs text-gray-500 font-light">
+                                            {achievement.date && formatDate(achievement.date)}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Volunteer Work */}
+                {data.volunteer_work && data.volunteer_work.length > 0 && (
+                    <section className="mb-3">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1 h-4 rounded-full" style={{ backgroundColor: accentColor }}></div>
+                            <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                                Volunteer Work
+                            </h2>
+                        </div>
+
+                        <div className="pl-3 space-y-2">
+                            {data.volunteer_work.map((volunteer, index) => (
+                                <div key={index} className="relative">
+                                    <div className="flex justify-between items-start mb-1">
+                                        <div>
+                                            <h3 className="text-xs font-medium text-gray-900">{volunteer.position}</h3>
+                                            <p className="text-xs text-gray-600">{volunteer.organization}</p>
+                                        </div>
+                                        <span className="text-xs text-gray-500 font-light">
+                                            {formatDate(volunteer.start_date)} - {volunteer.is_current ? "Present" : formatDate(volunteer.end_date)}
+                                        </span>
+                                    </div>
+                                    {volunteer.description && (
+                                        <div className="text-xs text-gray-600 leading-relaxed whitespace-pre-line">
+                                            {volunteer.description}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </section>
                 )}

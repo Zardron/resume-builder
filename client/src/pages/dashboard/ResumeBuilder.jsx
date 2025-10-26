@@ -30,6 +30,9 @@ import MinimalTemplate from "../../components/templates/MinimalTemplate";
 import MinimalImageTemplate from "../../components/templates/MinimalImageTemplate";
 import ProfessionalSummary from "./forms/ProfessionalSummary";
 import ExperienceForm from "./forms/ExperienceForm";
+import SkillsAndLanguagesForm from "./forms/SkillsAndLanguagesForm";
+import AdditionalSectionsForm from "./forms/AdditionalSectionsForm";
+import ColorPicker from "../../util/ColorPicker";
 
 const sections = [
   {
@@ -59,8 +62,13 @@ const sections = [
   },
   {
     id: "skills",
-    name: "Projects",
+    name: "Skills & Languages",
     icon: Sparkles,
+  },
+  {
+    id: "additional",
+    name: "Additional Sections",
+    icon: Plus,
   },
 ];
 
@@ -82,10 +90,16 @@ const ResumeBuilder = () => {
     experience: [],
     education: [],
     projects: [],
+    skills: [],
+    soft_skills: [],
+    languages: [],
+    certifications: [],
+    achievements: [],
+    volunteer_work: [],
     template: "classic",
     accent_color: "#3B82F6",
     font_size: "medium",
-        section_font_sizes: { ...DEFAULT_FONT_SIZES },
+    section_font_sizes: { ...DEFAULT_FONT_SIZES },
     public: false,
   });
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
@@ -99,6 +113,7 @@ const ResumeBuilder = () => {
   const typingTimeoutRef = useRef(null);
   const [isTemplateSelected, setIsTemplateSelected] = useState(false);
   const [showFontSizeDropdown, setShowFontSizeDropdown] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const formSectionRef = useRef(null);
 
   console.log(resumeData);
@@ -321,20 +336,38 @@ const ResumeBuilder = () => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-4">
-                  <button
-                    onClick={() => setIsTemplateSelected(!isTemplateSelected)}
-                    className="flex items-center gap-1 p-2 rounded-md text-sm font-medium text-white transition-all bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] cursor-pointer hover:opacity-80"
-                  >
-                    {isTemplateSelected ? (
-                      <>
-                        <ArrowLeftIcon className="size-4" /> Back to Form
-                      </>
-                    ) : (
-                      <>
-                        <LayoutTemplateIcon className="size-4" /> Templates
-                      </>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setIsTemplateSelected(!isTemplateSelected)}
+                      className="flex items-center gap-1 p-2 rounded-md text-sm font-medium text-white transition-all bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] cursor-pointer hover:opacity-80"
+                    >
+                      {isTemplateSelected ? (
+                        <>
+                          <ArrowLeftIcon className="size-4" /> Back to Form
+                        </>
+                      ) : (
+                        <>
+                          <LayoutTemplateIcon className="size-4" /> Templates
+                        </>
+                      )}
+                    </button>
+                    {!isTemplateSelected && (
+                      <button 
+                        onClick={() => setShowColorPicker(!showColorPicker)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
+                          showColorPicker 
+                            ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 border-blue-300 dark:border-blue-600' 
+                            : 'text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-600'
+                        }`}
+                      >
+                        <div 
+                          className="w-4 h-4 rounded border border-gray-300 dark:border-gray-600"
+                          style={{ backgroundColor: resumeData.accent_color || "#3B82F6" }}
+                        ></div>
+                        Theme Color
+                      </button>
                     )}
-                  </button>
+                  </div>
                   {!isTemplateSelected && (
                   <div className="flex items-center">
                     {activeSectionIndex !== 0 && (
@@ -364,6 +397,17 @@ const ResumeBuilder = () => {
 
                 {/* Section Content */}
                 <div className="space-y-6">
+                  {showColorPicker && (
+                    <ColorPicker
+                      selectedColor={resumeData.accent_color}
+                      onColorSelect={(color) => {
+                        setResumeData((prev) => ({
+                          ...prev,
+                          accent_color: color,
+                        }));
+                      }}
+                    />
+                  )}
                   {isTemplateSelected ? (
                     <TemplateSelector
                       selectedTemplate={resumeData.template}
@@ -433,6 +477,42 @@ const ResumeBuilder = () => {
                             }}
                             onValidationChange={(validationFn) =>
                               handleValidationChange("experience", validationFn)
+                            }
+                          />
+                        </div>
+                      )}
+                      {activeSection.id === "skills" && (
+                        <div>
+                          <SkillsAndLanguagesForm
+                            data={resumeData}
+                            onChange={(data) => {
+                              setResumeData((prev) => ({
+                                ...prev,
+                                skills: data.skills,
+                                soft_skills: data.soft_skills,
+                                languages: data.languages,
+                              }));
+                            }}
+                            onValidationChange={(validationFn) =>
+                              handleValidationChange("skills", validationFn)
+                            }
+                          />
+                        </div>
+                      )}
+                      {activeSection.id === "additional" && (
+                        <div>
+                          <AdditionalSectionsForm
+                            data={resumeData}
+                            onChange={(data) => {
+                              setResumeData((prev) => ({
+                                ...prev,
+                                certifications: data.certifications,
+                                achievements: data.achievements,
+                                volunteer_work: data.volunteer_work,
+                              }));
+                            }}
+                            onValidationChange={(validationFn) =>
+                              handleValidationChange("additional", validationFn)
                             }
                           />
                         </div>
