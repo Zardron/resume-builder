@@ -69,7 +69,7 @@ const Footer = () => {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-600 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition"
+              className="text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 transition"
               title={link.name}
             >
               {link.svg}
@@ -81,7 +81,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm font-normal text-slate-600 dark:text-slate-400">
           <a
             href="/"
-            className="hover:text-rose-500 dark:hover:text-rose-400 transition"
+            className="hover:text-blue-500 dark:hover:text-blue-400 transition"
           >
             Resume Builder
           </a>{" "}

@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Award, Briefcase, GraduationCap, User } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Award, Briefcase, GraduationCap, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
 
 const MinimalImageTemplate = ({ 
     data, 
@@ -20,37 +20,52 @@ const MinimalImageTemplate = ({
         });
     };
 
-    // Remove content limits - let paper height determine what's visible
-
-    // Calculate height based on paper size
-    const getPaperHeight = () => {
-        const heights = {
-            short: '880px',       // Matches modal preview height
-            A4: '935px',          // Matches modal preview height
-            legal: '1120px'       // Matches modal preview height
+    // Function to get the appropriate icon for social platforms
+    const getSocialIcon = (platform) => {
+        const iconMap = {
+            linkedin: Linkedin,
+            website: Globe,
+            github: Github,
+            twitter: Twitter,
+            instagram: Instagram,
+            youtube: Youtube,
+            facebook: Facebook,
+            telegram: MessageCircle,
         };
-        return heights[paperSize] || heights.A4;
+        return iconMap[platform] || Globe;
+    };
+
+    // Function to get social links from personal_info
+    const getSocialLinks = () => {
+        const socialPlatforms = ['linkedin', 'website', 'github', 'twitter', 'instagram', 'youtube', 'facebook', 'telegram'];
+        return socialPlatforms
+            .filter(platform => data.personal_info?.[platform] && data.personal_info[platform].trim() !== '')
+            .map(platform => ({
+                platform,
+                value: data.personal_info[platform],
+                icon: getSocialIcon(platform)
+            }));
     };
 
     return (
-        <div className="max-w-6xl mx-auto bg-white text-gray-900 font-sans" style={{ height: getPaperHeight() }}>
-            <div className="grid grid-cols-12 h-full">
+        <div className="max-w-6xl mx-auto bg-white text-gray-900 font-sans">
+            <div className="grid grid-cols-12">
                 
                 {/* Left Sidebar */}
-                <aside className="col-span-4 bg-gray-100 border-r border-gray-300 h-full">
-                    <div className="p-4 h-full">
+                <aside className="col-span-4 bg-gray-100 border-r border-gray-300">
+                    <div className="p-4">
                         {/* Profile Image */}
                         <div className="text-center mb-4">
-                            {data.personal_info?.profile_image && typeof data.personal_info.profile_image === 'string' ? (
-                                <img src={data.personal_info.profile_image} alt="Profile" className="w-24 h-24 object-cover rounded-full mx-auto border-4 border-white shadow-lg" />
-                            ) : (
-                                data.personal_info?.profile_image && typeof data.personal_info.profile_image === 'object' ? (
-                                    <img src={URL.createObjectURL(data.personal_info.profile_image)} alt="Profile" className="w-24 h-24 object-cover rounded-full mx-auto border-4 border-white shadow-lg" />
+                            {data.personal_info?.image || data.personal_info?.profile_image ? (
+                                typeof (data.personal_info.image || data.personal_info.profile_image) === 'string' ? (
+                                    <img src={data.personal_info.image || data.personal_info.profile_image} alt="Profile" className="w-24 h-24 object-cover rounded-full mx-auto border-4 border-white shadow-lg" />
                                 ) : (
-                                    <div className="w-24 h-24 rounded-full mx-auto border-4 border-gray-300 bg-gray-200 flex items-center justify-center shadow-lg">
-                                        <User className="size-12 text-gray-400" />
-                                    </div>
+                                    <img src={URL.createObjectURL(data.personal_info.image || data.personal_info.profile_image)} alt="Profile" className="w-24 h-24 object-cover rounded-full mx-auto border-4 border-white shadow-lg" />
                                 )
+                            ) : (
+                                <div className="w-24 h-24 rounded-full mx-auto border-4 border-gray-300 bg-gray-200 flex items-center justify-center shadow-lg">
+                                    <User className="size-12 text-gray-400" />
+                                </div>
                             )}
                         </div>
 
@@ -77,24 +92,22 @@ const MinimalImageTemplate = ({
                                         <span className="text-gray-700">{data.personal_info.email}</span>
                                     </div>
                                 )}
-                                {data.personal_info?.location && (
+                                {data.personal_info?.address && (
                                     <div className="flex items-center gap-2">
                                         <MapPin size={12} style={{ color: accentColor }} />
-                                        <span className="text-gray-700">{data.personal_info.location}</span>
+                                        <span className="text-gray-700">{data.personal_info.address}</span>
                                     </div>
                                 )}
-                                {data.personal_info?.linkedin && (
-                                    <div className="flex items-center gap-2">
-                                        <Linkedin size={12} style={{ color: accentColor }} />
-                                        <span className="text-gray-700 break-all">{data.personal_info.linkedin}</span>
-                                    </div>
-                                )}
-                                {data.personal_info?.website && (
-                                    <div className="flex items-center gap-2">
-                                        <Globe size={12} style={{ color: accentColor }} />
-                                        <span className="text-gray-700 break-all">{data.personal_info.website}</span>
-                                    </div>
-                                )}
+                                {/* Dynamic social links */}
+                                {getSocialLinks().map((socialLink, index) => {
+                                    const IconComponent = socialLink.icon;
+                                    return (
+                                        <div key={index} className="flex items-center gap-2">
+                                            <IconComponent size={12} style={{ color: accentColor }} />
+                                            <span className="text-gray-700 break-all">{socialLink.value}</span>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </section>
 
@@ -157,7 +170,7 @@ const MinimalImageTemplate = ({
                     {showHeader && (
                     <header className="mb-4">
                         <h1 className="text-3xl font-bold text-gray-900 mb-1">
-                            {data.personal_info?.full_name || "Your Name"}
+                            {data.personal_info?.name || "Your Name"}
                         </h1>
                         {data.personal_info?.profession && (
                             <p className="text-lg text-gray-600 font-medium mb-3">

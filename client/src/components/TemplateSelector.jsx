@@ -9,7 +9,10 @@ import TemplatePreviewModal from "./TemplatePreviewModal";
 const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, onColorSelect }) => {
   const [showCustomColorPicker, setShowCustomColorPicker] = useState(false);
   const [hue, setHue] = useState(240);
+  const [saturation, setSaturation] = useState(100);
+  const [lightness, setLightness] = useState(50);
   const hueSliderRef = useRef(null);
+  const colorFieldRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTemplateForPreview, setSelectedTemplateForPreview] = useState(null);
@@ -48,6 +51,41 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   };
 
+  // Helper function to convert HEX to HSL
+  const hexToHsl = (hex) => {
+    // Remove # if present
+    hex = hex.replace('#', '');
+    
+    // Parse RGB values
+    const r = parseInt(hex.substr(0, 2), 16) / 255;
+    const g = parseInt(hex.substr(2, 2), 16) / 255;
+    const b = parseInt(hex.substr(4, 2), 16) / 255;
+    
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    
+    if (max === min) {
+      h = s = 0; // achromatic
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    
+    return {
+      h: Math.round(h * 360),
+      s: Math.round(s * 100),
+      l: Math.round(l * 100)
+    };
+  };
+
   // Handle hue slider click
   const handleHueClick = (e) => {
     console.log('Hue click event triggered:', e); // Debug log
@@ -65,10 +103,42 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
       setHue(newHue);
       
       // Update the color
-      const newColor = hslToHex(newHue, 100, 50);
+      const newColor = hslToHex(newHue, saturation, lightness);
       onColorSelect && onColorSelect(newColor);
     } else {
       console.log('hueSliderRef.current is null'); // Debug log
+    }
+  };
+
+  // Handle main color field click
+  const handleColorFieldClick = (e) => {
+    console.log('Color field click event triggered:', e); // Debug log
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (colorFieldRef.current) {
+      const rect = colorFieldRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Calculate saturation (0-100) based on x position
+      const saturationPercentage = Math.max(0, Math.min(1, x / rect.width));
+      const newSaturation = Math.round(saturationPercentage * 100);
+      
+      // Calculate lightness (0-100) based on y position (inverted)
+      const lightnessPercentage = Math.max(0, Math.min(1, 1 - (y / rect.height)));
+      const newLightness = Math.round(lightnessPercentage * 100);
+      
+      console.log('Color field clicked:', { x, y, newSaturation, newLightness, rect }); // Debug log
+      
+      setSaturation(newSaturation);
+      setLightness(newLightness);
+      
+      // Update the color
+      const newColor = hslToHex(hue, newSaturation, newLightness);
+      onColorSelect && onColorSelect(newColor);
+    } else {
+      console.log('colorFieldRef.current is null'); // Debug log
     }
   };
 
@@ -83,10 +153,10 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
       setHue(newHue);
       
       // Update the color
-      const newColor = hslToHex(newHue, 100, 50);
+      const newColor = hslToHex(newHue, saturation, lightness);
       onColorSelect && onColorSelect(newColor);
     }
-  }, [onColorSelect]);
+  }, [onColorSelect, saturation, lightness]);
 
   const handleMouseDown = useCallback((e) => {
     console.log('Mouse down event triggered:', e); // Debug log
@@ -178,12 +248,15 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
   const sampleData = {
     personal_info: {
       full_name: "John Doe",
+      name: "John Doe",
       email: "john.doe@email.com",
       phone: "+1 (555) 123-4567",
       location: "San Francisco, CA",
       linkedin: "linkedin.com/in/johndoe",
       website: "johndoe.com",
-      profile_image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxjaXJjbGUgY3g9Ijc1IiBjeT0iNjAiIHI9IjMwIiBmaWxsPSIjOUI5QjlCIi8+CjxwYXRoIGQ9Ik0zNy41IDEyMEMzNy41IDEwNS41IDU0LjUgOTAgNzUgOTBTMTEyLjUgMTA1LjUgMTEyLjUgMTIwVjEzMEgzNy41VjEyMFoiIGZpbGw9IiM5QjlCOUIiLz4KPC9zdmc+"
+      profession: "Software Engineer",
+      image: null, // No image to show default avatar
+      profile_image: null // No image to show default avatar
     },
     professional_summary: "Experienced software engineer with 5+ years of expertise in full-stack development, specializing in React, Node.js, and cloud technologies.",
     experience: [
@@ -357,11 +430,23 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
                   <div className="space-y-1">
                     {/* Main Color Field */}
                     <div className="relative">
-                      <div className="w-full h-16 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden cursor-crosshair">
+                      <div 
+                        ref={colorFieldRef}
+                        onClick={handleColorFieldClick}
+                        className="w-full h-16 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden cursor-crosshair"
+                      >
                         <div 
                           className="w-full h-full"
                           style={{ 
-                            background: `linear-gradient(to right, white, ${selectedColor || '#3B82F6'}), linear-gradient(to bottom, transparent, black)` 
+                            background: `linear-gradient(to right, white, hsl(${hue}, 100%, 50%)), linear-gradient(to bottom, transparent, black)` 
+                          }}
+                        ></div>
+                        {/* Color indicator */}
+                        <div 
+                          className="absolute w-3 h-3 bg-white border-2 border-gray-400 rounded-full shadow-sm pointer-events-none transform -translate-x-1/2 -translate-y-1/2"
+                          style={{ 
+                            left: `${saturation}%`, 
+                            top: `${100 - lightness}%` 
                           }}
                         ></div>
                       </div>
@@ -404,7 +489,7 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
                     </label>
                     <div 
                       className="w-full h-8 rounded-lg border-2 border-gray-300 dark:border-gray-600"
-                      style={{ backgroundColor: selectedColor || '#3B82F6' }}
+                      style={{ backgroundColor: hslToHex(hue, saturation, lightness) }}
                     ></div>
                   </div>
                   
@@ -413,8 +498,17 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
                     <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">Hex</label>
                     <input
                       type="text"
-                      value={selectedColor || '#3B82F6'}
-                      onChange={(e) => onColorSelect && onColorSelect(e.target.value)}
+                      value={hslToHex(hue, saturation, lightness)}
+                      onChange={(e) => {
+                        const hexValue = e.target.value;
+                        if (hexValue.match(/^#[0-9A-Fa-f]{6}$/)) {
+                          const hsl = hexToHsl(hexValue);
+                          setHue(hsl.h);
+                          setSaturation(hsl.s);
+                          setLightness(hsl.l);
+                          onColorSelect && onColorSelect(hexValue);
+                        }
+                      }}
                       className="w-full px-1 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-mono"
                     />
                   </div>

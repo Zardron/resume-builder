@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Minus } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Minus, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle } from "lucide-react";
 
 const MinimalTemplate = ({ 
     data, 
@@ -18,6 +18,33 @@ const MinimalTemplate = ({
             year: "numeric",
             month: "short"
         });
+    };
+
+    // Function to get the appropriate icon for social platforms
+    const getSocialIcon = (platform) => {
+        const iconMap = {
+            linkedin: Linkedin,
+            website: Globe,
+            github: Github,
+            twitter: Twitter,
+            instagram: Instagram,
+            youtube: Youtube,
+            facebook: Facebook,
+            telegram: MessageCircle,
+        };
+        return iconMap[platform] || Globe;
+    };
+
+    // Function to get social links from personal_info
+    const getSocialLinks = () => {
+        const socialPlatforms = ['linkedin', 'website', 'github', 'twitter', 'instagram', 'youtube', 'facebook', 'telegram'];
+        return socialPlatforms
+            .filter(platform => data.personal_info?.[platform] && data.personal_info[platform].trim() !== '')
+            .map(platform => ({
+                platform,
+                value: data.personal_info[platform],
+                icon: getSocialIcon(platform)
+            }));
     };
 
     // Remove content limits - let paper height determine what's visible
@@ -48,7 +75,7 @@ const MinimalTemplate = ({
                             </p>
                         )}
                         
-                        <div className="space-y-1 text-xs">
+                        <div className="flex flex-wrap gap-3 text-xs">
                             {data.personal_info?.email && (
                                 <div className="flex items-center gap-2">
                                     <Mail className="size-3" style={{ color: accentColor }} />
@@ -67,29 +94,31 @@ const MinimalTemplate = ({
                                     <span className="text-gray-700">{data.personal_info.location}</span>
                                 </div>
                             )}
-                            {data.personal_info?.linkedin && (
-                                <div className="flex items-center gap-2">
-                                    <Linkedin className="size-3" style={{ color: accentColor }} />
-                                    <span className="text-gray-700 break-all">{data.personal_info.linkedin}</span>
-                                </div>
-                            )}
-                            {data.personal_info?.website && (
-                                <div className="flex items-center gap-2">
-                                    <Globe className="size-3" style={{ color: accentColor }} />
-                                    <span className="text-gray-700 break-all">{data.personal_info.website}</span>
-                                </div>
-                            )}
+                            {/* Dynamic social links */}
+                            {getSocialLinks().map((socialLink, index) => {
+                                const IconComponent = socialLink.icon;
+                                return (
+                                    <div key={index} className="flex items-center gap-2">
+                                        <IconComponent className="size-3" style={{ color: accentColor }} />
+                                        <span className="text-gray-700 break-all">{socialLink.value}</span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-                    {data.personal_info?.profile_image && (
-                        <div className="ml-6">
+                    <div className="ml-6">
+                        {data.personal_info?.image ? (
                             <img 
-                                src={data.personal_info.profile_image} 
+                                src={typeof data.personal_info.image === 'string' ? data.personal_info.image : URL.createObjectURL(data.personal_info.image)} 
                                 alt="Profile" 
-                                className="w-16 h-16 rounded-full object-cover border border-gray-300"
+                                className="w-24 h-24 rounded-full object-cover border border-gray-300"
                             />
-                        </div>
-                    )}
+                        ) : (
+                            <div className="w-24 h-24 rounded-full border border-gray-300 bg-gray-100 flex items-center justify-center">
+                                <User className="size-12 text-gray-400" />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </header>
             )}

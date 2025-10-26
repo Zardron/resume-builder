@@ -79,6 +79,7 @@ const ResumeBuilder = () => {
     public: false,
   });
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
+  const [completedSections, setCompletedSections] = useState(new Set());
   const [removeBackground, setRemoveBackground] = useState(false);
   const [validationFunctions, setValidationFunctions] = useState({});
   const [isTitleConfirmed, setIsTitleConfirmed] = useState(false);
@@ -88,6 +89,8 @@ const ResumeBuilder = () => {
   const typingTimeoutRef = useRef(null);
   const [isTemplateSelected, setIsTemplateSelected] = useState(false);
   const formSectionRef = useRef(null);
+
+  console.log(resumeData);
 
   const handleInputChange = (name, value) => {
     setResumeData({ ...resumeData, [name]: value });
@@ -140,10 +143,15 @@ const ResumeBuilder = () => {
       }
     }
 
-    // Proceed to next section
-    setActiveSectionIndex((prevIndex) =>
-      Math.min(prevIndex + 1, sections.length - 1)
-    );
+    // Mark current section as completed
+    setCompletedSections(prev => new Set([...prev, currentSection.id]));
+
+    // Proceed to next section using the formula from screenshot
+    setActiveSectionIndex((prevIndex) => Math.min(prevIndex + 1, sections.length - 1));
+  };
+
+  const handlePreviousClick = () => {
+    setActiveSectionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
   const handleValidationChange = useCallback((sectionId, validationFn) => {
@@ -178,49 +186,9 @@ const ResumeBuilder = () => {
 
   const activeSection = sections[activeSectionIndex];
 
-  // Function to calculate actual completion percentage based on filled fields
-  const calculateCompletionPercentage = () => {
-    let completedFields = 0;
-    let totalFields = 0;
-
-    // Count personal info fields
-    const personalFields = ['name', 'email', 'phone', 'address', 'profession'];
-    personalFields.forEach(field => {
-      totalFields++;
-      if (resumeData.personal_info[field] && resumeData.personal_info[field].trim() !== '') {
-        completedFields++;
-      }
-    });
-
-    // Count summary field
-    totalFields++;
-    if (resumeData.professional_summary && resumeData.professional_summary.trim() !== '') {
-      completedFields++;
-    }
-
-    // Count experience entries
-    totalFields++;
-    if (resumeData.experience && resumeData.experience.length > 0) {
-      completedFields++;
-    }
-
-    // Count education entries
-    totalFields++;
-    if (resumeData.education && resumeData.education.length > 0) {
-      completedFields++;
-    }
-
-    // Count projects entries
-    totalFields++;
-    if (resumeData.projects && resumeData.projects.length > 0) {
-      completedFields++;
-    }
-
-    // Count skills (assuming this will be added later)
-    totalFields++;
-    // For now, skills completion is 0 since it's not implemented yet
-
-    return Math.round((completedFields / totalFields) * 100);
+  // Function to calculate progress percentage using the formula from screenshot
+  const calculateProgressPercentage = () => {
+    return Math.round((activeSectionIndex * 100) / (sections.length - 1));
   };
 
   // Function to render the appropriate template
@@ -304,14 +272,14 @@ const ResumeBuilder = () => {
                       Step {activeSectionIndex + 1} of {sections.length}
                     </span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {calculateCompletionPercentage()}% Complete
+                      {calculateProgressPercentage()}% Complete
                     </span>
                   </div>
                   <div className="relative w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div
                       className="absolute top-0 left-0 h-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full transition-all duration-500 ease-out"
                       style={{
-                        width: `${calculateCompletionPercentage()}%`,
+                        width: `${calculateProgressPercentage()}%`,
                       }}
                     />
                   </div>
@@ -334,11 +302,7 @@ const ResumeBuilder = () => {
                   <div className="flex items-center">
                     {activeSectionIndex !== 0 && (
                       <button
-                        onClick={() =>
-                          setActiveSectionIndex((prevIndex) =>
-                            Math.max(prevIndex - 1, 0)
-                          )
-                        }
+                        onClick={handlePreviousClick}
                         className="flex items-center gap-1 p-3 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all"
                         disabled={activeSectionIndex === 0}
                       >
@@ -385,12 +349,13 @@ const ResumeBuilder = () => {
                         <div>
                           <PersonalInfoForm
                             data={resumeData.personal_info}
-                            onChange={(data) =>
+                            onChange={(data) => {
+                              console.log("PersonalInfoForm onChange received:", data);
                               setResumeData((prev) => ({
                                 ...prev,
                                 personal_info: data,
                               }))
-                            }
+                            }}
                             removeBackground={removeBackground}
                             setRemoveBackground={setRemoveBackground}
                             onValidationChange={(validationFn) =>

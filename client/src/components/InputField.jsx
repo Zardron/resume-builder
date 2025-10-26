@@ -109,7 +109,7 @@ const InputField = ({
         placeholder={placeholder}
         className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 outline-none text-sm w-full h-full px-4 py-3"
         autoComplete="off"
-        value={value}
+        value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
         name={name}

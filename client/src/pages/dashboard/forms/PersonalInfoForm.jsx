@@ -49,7 +49,7 @@ const PersonalInfoForm = ({
       placeholder: "Full Name",
       type: "text",
       name: "name",
-      value: data?.name,
+      value: data?.name ?? '',
       onChange: (value) => onImageChange("name", value),
     },
     {
@@ -59,7 +59,7 @@ const PersonalInfoForm = ({
       placeholder: "Email",
       type: "email",
       name: "email",
-      value: data?.email,
+      value: data?.email ?? '',
       onChange: (value) => onImageChange("email", value),
     },
     {
@@ -69,7 +69,7 @@ const PersonalInfoForm = ({
       placeholder: "Phone",
       type: "tel",
       name: "phone",
-      value: data?.phone,
+      value: data?.phone ?? '',
       onChange: (value) => onImageChange("phone", value),
     },
     {
@@ -79,7 +79,7 @@ const PersonalInfoForm = ({
       placeholder: "Address",
       type: "text",
       name: "address",
-      value: data?.address,
+      value: data?.address ?? '',
       onChange: (value) => onImageChange("address", value),
     },
     {
@@ -89,7 +89,7 @@ const PersonalInfoForm = ({
       placeholder: "Profession",
       type: "text",
       name: "profession",
-      value: data?.profession,
+      value: data?.profession ?? '',
       onChange: (value) => onImageChange("profession", value),
     },
     {
@@ -99,7 +99,7 @@ const PersonalInfoForm = ({
       placeholder: "LinkedIn",
       type: "text",
       name: "linkedin",
-      value: data?.linkedin,
+      value: data?.linkedin ?? '',
       onChange: (value) => onImageChange("linkedin", value),
     },
     {
@@ -109,7 +109,7 @@ const PersonalInfoForm = ({
       placeholder: "Personal Website",
       type: "url",
       name: "website",
-      value: data?.website,
+      value: data?.website ?? '',
       onChange: (value) => onImageChange("website", value),
     },
     // Add selected social links dynamically
@@ -120,7 +120,7 @@ const PersonalInfoForm = ({
       placeholder: platform.placeholder,
       type: platform.id === 'telegram' ? 'text' : 'url',
       name: platform.id,
-      value: data?.[platform.id] || '',
+      value: data?.[platform.id] ?? '',
       onChange: (value) => onImageChange(platform.id, value),
       isSocialLink: true,
       platformId: platform.id,
@@ -178,10 +178,13 @@ const PersonalInfoForm = ({
   }, []); // Empty dependency array - only run on mount
 
   const onImageChange = (field, value) => {
+    console.log("onImageChange called:", { field, value, data });
     if (field === "image" && value) {
       setIsLoading(true);
       setTimeout(() => {
-        onChange({ ...data, [field]: value });
+        const newData = { ...data, [field]: value };
+        console.log("Calling onChange with:", newData);
+        onChange(newData);
         setIsLoading(false);
       }, 500);
     } else {
@@ -301,7 +304,7 @@ const PersonalInfoForm = ({
                 
                 <div className="flex-1">
                   <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
-                    {data.image.name}
+                    {data.image?.name || 'Profile Image'}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Click to change photo
