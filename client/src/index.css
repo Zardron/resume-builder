@@ -1,5 +1,6 @@
 /* IMPORTS */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -80,5 +81,78 @@ html.dark {
 
 .marquee-inner {
   animation: marqueeScroll 25s linear infinite;
+}
+
+/* Modal Animation Styles */
+.modal-backdrop {
+  transition: opacity 0.3s ease-out;
+}
+
+.modal-container {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, opacity;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* Modal scrollable content */
+.modal-scrollable {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.modal-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-scrollable::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.modal-scrollable::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.modal-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Force scrollbar visibility */
+.force-scrollbar {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100%;
+}
+
+/* Modal template preview scrolling */
+.template-preview-scroll {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.template-preview-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.template-preview-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.template-preview-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.template-preview-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
