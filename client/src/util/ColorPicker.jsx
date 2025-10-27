@@ -7,6 +7,7 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
   const [hue, setHue] = useState(240);
   const [saturation, setSaturation] = useState(100);
   const [lightness, setLightness] = useState(50);
+  const [hexInput, setHexInput] = useState('');
   const hueSliderRef = useRef(null);
   const colorFieldRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -103,8 +104,19 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
       setHue(hsl.h);
       setSaturation(hsl.s);
       setLightness(hsl.l);
+      setHexInput(selectedColor.replace('#', '').toUpperCase());
+    } else {
+      // Clear hexInput when selectedColor is null or empty
+      setHexInput('');
     }
   }, [selectedColor]);
+
+  // Update hex input when HSL values change (from color picker interaction)
+  useEffect(() => {
+    if (showCustomPicker) {
+      setHexInput(hslToHex(hue, saturation, lightness).replace('#', '').toUpperCase());
+    }
+  }, [hue, saturation, lightness, showCustomPicker]);
 
   // Handle hue slider click
   const handleHueClick = (e) => {
@@ -231,7 +243,7 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
         
         <button
           onClick={() => setShowColorPicker(!showColorPicker)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer"
         >
           <div 
             className="w-6 h-6 rounded border border-gray-300 dark:border-gray-600"
@@ -257,7 +269,7 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
                   setShowColorPicker(false);
                   setShowCustomPicker(false);
                 }}
-                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-sm"
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-sm cursor-pointer"
               >
                 ✕
               </button>
@@ -285,7 +297,7 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
                 {/* Custom Color Button */}
                 <button
                   onClick={() => setShowCustomPicker(!showCustomPicker)}
-                  className="w-10 h-10 rounded-lg border-2 border-dashed border-gray-400 dark:border-gray-500 hover:border-gray-600 dark:hover:border-gray-400 transition-all hover:scale-110 flex items-center justify-center bg-gray-100 dark:bg-gray-700"
+                  className="w-10 h-10 rounded-lg border-2 border-dashed border-gray-400 dark:border-gray-500 hover:border-gray-600 dark:hover:border-gray-400 transition-all hover:scale-110 flex items-center justify-center bg-gray-100 dark:bg-gray-700 cursor-pointer"
                   title="Custom Color"
                 >
                   <Palette className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -368,28 +380,44 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
                 {/* Hex Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Hex Code</label>
-                  <input
-                    type="text"
-                    value={hslToHex(hue, saturation, lightness)}
-                    onChange={(e) => {
-                      const hexValue = e.target.value;
-                      if (hexValue.match(/^#[0-9A-Fa-f]{6}$/)) {
-                        const hsl = hexToHsl(hexValue);
-                        setHue(hsl.h);
-                        setSaturation(hsl.s);
-                        setLightness(hsl.l);
-                        onColorSelect && onColorSelect(hexValue);
-                      }
-                    }}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-mono"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 font-mono">#</span>
+                    <input
+                      type="text"
+                      value={hexInput}
+                      onChange={(e) => {
+                        let hexValue = e.target.value;
+                        // Only allow hexadecimal characters and convert to uppercase
+                        hexValue = hexValue.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
+                        // Limit to 6 characters
+                        if (hexValue.length <= 6) {
+                          setHexInput(hexValue);
+                          if (hexValue.length === 6) {
+                            // Complete hex code - update color
+                            const fullHex = `#${hexValue}`;
+                            const hsl = hexToHsl(fullHex);
+                            setHue(hsl.h);
+                            setSaturation(hsl.s);
+                            setLightness(hsl.l);
+                            onColorSelect && onColorSelect(fullHex);
+                          } else if (hexValue.length === 0) {
+                            // Empty input - clear the color
+                            onColorSelect && onColorSelect(null);
+                          }
+                        }
+                      }}
+                      className="w-full pl-7 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-mono"
+                      placeholder="3B82F6"
+                      maxLength={6}
+                    />
+                  </div>
                 </div>
                 
                 {/* Action Buttons */}
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowColorPicker(false)}
-                    className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                    className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors cursor-pointer"
                   >
                     Apply
                   </button>
@@ -400,7 +428,7 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
                       setLightness(50);
                       onColorSelect && onColorSelect("#3B82F6");
                     }}
-                    className="px-3 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+                    className="px-3 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors cursor-pointer"
                   >
                     Reset
                   </button>

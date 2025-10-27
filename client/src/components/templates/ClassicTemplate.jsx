@@ -5,7 +5,8 @@ import {
     getSectionHeaderFontSize, 
     getDateFontSize, 
     getCompanyFontSize, 
-    getLocationFontSize 
+    getLocationFontSize,
+    getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
 
 const ClassicTemplate = ({ 
@@ -88,6 +89,10 @@ const ClassicTemplate = ({
     };
 
     const fontSizes = getFontSizes();
+    
+    // Determine text color based on background
+    const textColor = getTextColorForBackground(accentColor);
+    const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
 
     console.log(data);
 
@@ -112,7 +117,7 @@ const ClassicTemplate = ({
                             {data.personal_info?.email && (
                                 <div className="flex items-center gap-2">
                                     <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <Mail className={`${fontSizes.icon} text-white`} />
+                                        <Mail className={`${fontSizes.icon} ${textColorClass}`} />
                                     </div>
                                     <span className="text-gray-700">{data.personal_info.email}</span>
                                 </div>
@@ -120,7 +125,7 @@ const ClassicTemplate = ({
                             {data.personal_info?.phone && (
                                 <div className="flex items-center gap-2">
                                     <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <Phone className={`${fontSizes.icon} text-white`} />
+                                        <Phone className={`${fontSizes.icon} ${textColorClass}`} />
                                     </div>
                                     <span className="text-gray-700">{data.personal_info.phone}</span>
                                 </div>
@@ -128,7 +133,7 @@ const ClassicTemplate = ({
                             {data.personal_info?.address && (
                                 <div className="flex items-center gap-2">
                                     <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <MapPin className={`${fontSizes.icon} text-white`} />
+                                        <MapPin className={`${fontSizes.icon} ${textColorClass}`} />
                                     </div>
                                     <span className="text-gray-700">{data.personal_info?.address}</span>
                                 </div>
@@ -139,7 +144,7 @@ const ClassicTemplate = ({
                                 return (
                                     <div key={index} className="flex items-center gap-2">
                                         <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                            <IconComponent className={`${fontSizes.icon} text-white`} />
+                                            <IconComponent className={`${fontSizes.icon} ${textColorClass}`} />
                                         </div>
                                         <span className="text-gray-700 break-all">{socialLink.value}</span>
                                     </div>
@@ -169,7 +174,7 @@ const ClassicTemplate = ({
                 <section className="mb-3">
                     <div className={`flex items-center gap-2 ${fontSizes.spacing}`}>
                         <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                            <Star className={`${fontSizes.icon} text-white`} />
+                                                         <Star className={`${fontSizes.icon} ${textColorClass}`} />
                         </div>
                         <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
                             Professional Summary
@@ -188,8 +193,8 @@ const ClassicTemplate = ({
                 <section className="mb-3">
                     <div className="flex items-center gap-2 mb-2">
                         <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                            <Briefcase className="size-2 text-white" />
-                        </div>
+                                                         <Briefcase className={`size-2 ${textColorClass}`} />
+                             </div>
                         <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
                             Professional Experience
                         </h2>
@@ -226,7 +231,7 @@ const ClassicTemplate = ({
                 <section className="mb-3">
                     <div className="flex items-center gap-2 mb-2">
                         <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                            <Code2 className="size-2 text-white" />
+                            <Code2 className={`size-2 ${textColorClass}`} />
                         </div>
                         <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                             Key Projects
@@ -250,7 +255,7 @@ const ClassicTemplate = ({
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                <GraduationCap className="size-2 text-white" />
+                                <GraduationCap className={`size-2 ${textColorClass}`} />
                             </div>
                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                 Education
@@ -283,7 +288,7 @@ const ClassicTemplate = ({
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                <Award className="size-2 text-white" />
+                                <Award className={`size-2 ${textColorClass}`} />
                             </div>
                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                 Technology Stack
@@ -295,7 +300,7 @@ const ClassicTemplate = ({
                                 {data.skills.map((skill, index) => (
                                     <span 
                                         key={index} 
-                                        className="px-2 py-1 text-xs font-medium text-white rounded"
+                                        className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
                                         style={{ backgroundColor: accentColor }}
                                     >
                                         {skill}
@@ -311,7 +316,7 @@ const ClassicTemplate = ({
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                <Star className="size-2 text-white" />
+                                <Star className={`size-2 ${textColorClass}`} />
                             </div>
                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                 Soft Skills
@@ -323,7 +328,7 @@ const ClassicTemplate = ({
                                 {data.soft_skills.map((skill, index) => (
                                     <span 
                                         key={index} 
-                                        className="px-2 py-1 text-xs font-medium text-white rounded"
+                                        className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
                                         style={{ backgroundColor: accentColor }}
                                     >
                                         {skill}
@@ -339,7 +344,7 @@ const ClassicTemplate = ({
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                <Languages className="size-2 text-white" />
+                                <Languages className={`size-2 ${textColorClass}`} />
                             </div>
                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                 Languages
@@ -364,7 +369,7 @@ const ClassicTemplate = ({
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                <Award className="size-2 text-white" />
+                                <Award className={`size-2 ${textColorClass}`} />
                             </div>
                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                 Certifications
@@ -397,7 +402,7 @@ const ClassicTemplate = ({
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                <Star className="size-2 text-white" />
+                                <Star className={`size-2 ${textColorClass}`} />
                             </div>
                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                 Achievements
@@ -429,7 +434,7 @@ const ClassicTemplate = ({
                     <section className="mb-3">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                <Heart className="size-2 text-white" />
+                                <Heart className={`size-2 ${textColorClass}`} />
                             </div>
                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                 Volunteer Work

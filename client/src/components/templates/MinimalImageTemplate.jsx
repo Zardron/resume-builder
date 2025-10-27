@@ -5,7 +5,8 @@ import {
     getSectionHeaderFontSize, 
     getDateFontSize, 
     getCompanyFontSize, 
-    getLocationFontSize 
+    getLocationFontSize,
+    getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
 
 const MinimalImageTemplate = ({ 
@@ -56,6 +57,9 @@ const MinimalImageTemplate = ({
             }));
     };
 
+    // Determine text color based on background
+    const textColor = getTextColorForBackground(accentColor);
+    const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
 
     return (
         <div className="max-w-6xl mx-auto bg-white text-gray-900 font-sans">
@@ -83,7 +87,7 @@ const MinimalImageTemplate = ({
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                    <Mail className="size-3 text-white" />
+                                    <Mail className={`size-3 ${textColorClass}`} />
                                 </div>
                                 <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
                                     Contact
@@ -126,7 +130,7 @@ const MinimalImageTemplate = ({
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <GraduationCap className="size-3 text-white" />
+                                        <GraduationCap className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
                                         Education
@@ -152,7 +156,7 @@ const MinimalImageTemplate = ({
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <Award className="size-3 text-white" />
+                                        <Award className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
                                         Technical Skills
@@ -162,7 +166,7 @@ const MinimalImageTemplate = ({
                                     {data.skills.map((skill, index) => (
                                         <span
                                             key={index}
-                                            className="px-2 py-1 text-xs font-medium text-white rounded"
+                                            className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
                                             style={{ backgroundColor: accentColor }}
                                         >
                                             {skill}
@@ -177,7 +181,7 @@ const MinimalImageTemplate = ({
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <Star className="size-3 text-white" />
+                                        <Star className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
                                         Soft Skills
@@ -187,7 +191,7 @@ const MinimalImageTemplate = ({
                                     {data.soft_skills.map((skill, index) => (
                                         <span
                                             key={index}
-                                            className="px-2 py-1 text-xs font-medium text-white rounded"
+                                            className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
                                             style={{ backgroundColor: accentColor }}
                                         >
                                             {skill}
@@ -202,7 +206,7 @@ const MinimalImageTemplate = ({
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <Languages className="size-3 text-white" />
+                                        <Languages className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
                                         Languages
@@ -226,7 +230,7 @@ const MinimalImageTemplate = ({
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <Award className="size-3 text-white" />
+                                        <Award className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
                                         Certifications
@@ -275,7 +279,7 @@ const MinimalImageTemplate = ({
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                    <Award className="size-2 text-white" />
+                                    <Award className="size-2 ${textColorClass}" />
                                 </div>
                                 <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                     Professional Summary
@@ -296,7 +300,7 @@ const MinimalImageTemplate = ({
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                    <Briefcase className="size-2 text-white" />
+                                    <Briefcase className="size-2 ${textColorClass}" />
                                 </div>
                                 <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                     Professional Experience
@@ -333,7 +337,7 @@ const MinimalImageTemplate = ({
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                    <Award className="size-2 text-white" />
+                                    <Award className="size-2 ${textColorClass}" />
                                 </div>
                                 <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                     Key Projects
@@ -364,7 +368,7 @@ const MinimalImageTemplate = ({
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                    <Award className="size-2 text-white" />
+                                    <Award className="size-2 ${textColorClass}" />
                                 </div>
                                 <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                     Achievements
@@ -395,7 +399,7 @@ const MinimalImageTemplate = ({
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                    <Heart className="size-2 text-white" />
+                                    <Heart className="size-2 ${textColorClass}" />
                                 </div>
                                 <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                                     Volunteer Work

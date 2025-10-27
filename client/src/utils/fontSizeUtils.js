@@ -216,6 +216,48 @@ export const getSkillsFontSize = (sectionFontSizes) => {
 };
 
 /**
+ * Calculate text color based on background color brightness
+ * Returns 'black' or 'white' depending on the luminance of the background color
+ * @param {string} backgroundColor - Hex color (e.g., '#FFFFFF' or '#000000')
+ * @returns {string} - 'black' or 'white'
+ */
+export const getTextColorForBackground = (backgroundColor) => {
+    // Handle null, undefined, or invalid colors
+    if (!backgroundColor || backgroundColor === '#FFFFFF' || backgroundColor === '#FFF' || backgroundColor === 'white' || backgroundColor === '#ffffff') {
+        return 'black';
+    }
+    
+    if (backgroundColor === '#000000' || backgroundColor === '#000' || backgroundColor === 'black' || backgroundColor === '#000000') {
+        return 'white';
+    }
+    
+    // Remove # if present
+    let hex = backgroundColor.replace('#', '');
+    
+    // Handle 3-digit hex codes
+    if (hex.length === 3) {
+        hex = hex.split('').map(char => char + char).join('');
+    }
+    
+    // Convert to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    // Calculate relative luminance using the formula from WCAG 2.0
+    // https://www.w3.org/TR/WCAG20/#relativeluminancedef
+    const getLuminance = (val) => {
+        val = val / 255;
+        return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+    };
+    
+    const luminance = 0.2126 * getLuminance(r) + 0.7152 * getLuminance(g) + 0.0722 * getLuminance(b);
+    
+    // If luminance is greater than 0.5, use black text, otherwise use white text
+    return luminance > 0.5 ? 'black' : 'white';
+};
+
+/**
  * Default font size configuration
  * This can be easily modified to change default sizes across all templates
  */

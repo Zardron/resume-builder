@@ -5,7 +5,8 @@ import {
     getSectionHeaderFontSize, 
     getDateFontSize, 
     getCompanyFontSize, 
-    getLocationFontSize 
+    getLocationFontSize,
+    getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
 
 const ModernTemplate = ({ 
@@ -89,19 +90,23 @@ const ModernTemplate = ({
 	};
 
 	const fontSizes = getFontSizes();
+	
+	// Determine text color based on background
+	const textColor = getTextColorForBackground(accentColor);
+	const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
 
 	return (
 		<div className="max-w-4xl mx-auto bg-white text-gray-900 font-sans">
 			{/* Header */}
 			{showHeader && (
-			<header className={`text-white ${fontSizes.padding} mb-4`} style={{ backgroundColor: accentColor }}>
+			<header className={`${textColorClass} ${fontSizes.padding} mb-4`} style={{ backgroundColor: accentColor }}>
 				<div className="flex items-start justify-between mb-4">
 					<div className="flex-1">
-						<h1 className={`${getNameFontSize(sectionFontSizes)} font-bold text-white mb-1 capitalize`}>
+						<h1 className={`${getNameFontSize(sectionFontSizes)} font-bold ${textColorClass} mb-1 capitalize`}>
 							{data.personal_info?.name || "Your Name"}
 						</h1>
 						{data.personal_info?.profession && (
-							<p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-300 font-light mb-3`}>
+							<p className={`${getSectionFontSize(sectionFontSizes, 'title')} ${textColor === 'black' ? 'text-gray-700' : 'text-gray-300'} font-light mb-3`}>
 								{data.personal_info.profession}
 							</p>
 						)}
@@ -109,20 +114,20 @@ const ModernTemplate = ({
 						<div className={`flex flex-wrap gap-3 ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>
 							{data.personal_info?.email && (
 								<div className="flex items-center gap-2">
-									<Mail className={`${fontSizes.icon} text-white`} />
-									<span className="text-gray-200">{data.personal_info.email}</span>
+									<Mail className={`${fontSizes.icon} ${textColorClass}`} />
+									<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'}>{data.personal_info.email}</span>
 								</div>
 							)}
 							{data.personal_info?.phone && (
 								<div className="flex items-center gap-2">
-									<Phone className={`${fontSizes.icon} text-white`} />
-									<span className="text-gray-200">{data.personal_info.phone}</span>
+									<Phone className={`${fontSizes.icon} ${textColorClass}`} />
+									<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'}>{data.personal_info.phone}</span>
 								</div>
 							)}
 							{data.personal_info?.address && (
 								<div className="flex items-center gap-2">
-									<MapPin className={`${fontSizes.icon} text-white`} />
-									<span className="text-gray-200">{data.personal_info.address}</span>
+									<MapPin className={`${fontSizes.icon} ${textColorClass}`} />
+									<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'}>{data.personal_info.address}</span>
 								</div>
 							)}
 							{/* Dynamic social links */}
@@ -130,8 +135,8 @@ const ModernTemplate = ({
 								const IconComponent = socialLink.icon;
 								return (
 									<div key={index} className="flex items-center gap-2">
-										<IconComponent className={`${fontSizes.icon} text-white`} />
-										<span className="text-gray-200 break-all">{socialLink.value}</span>
+										<IconComponent className={`${fontSizes.icon} ${textColorClass}`} />
+										<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'} break-all>{socialLink.value}</span>
 									</div>
 								);
 							})}
@@ -145,9 +150,9 @@ const ModernTemplate = ({
                                 className="w-24 h-24 rounded-full object-cover border-2 border-white"
                             />
                         ) : (
-                            <div className="w-24 h-24 rounded-full border-2 border-white bg-white/20 flex items-center justify-center">
-                                <User className="size-12 text-white/60" />
-                            </div>
+                                                         <div className="w-24 h-24 rounded-full border-2 border-white bg-white/20 flex items-center justify-center">
+                                 <User className={`size-12 ${textColor === 'black' ? 'text-gray-400' : 'text-white/60'}`} />
+                             </div>
                         )}
                     </div>
 				</div>
@@ -160,7 +165,7 @@ const ModernTemplate = ({
 					<section className="mb-3">
 						<div className="flex items-center gap-2 mb-2">
 							<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-								<Sparkles className="size-2 text-white" />
+								<Sparkles className={`size-2 ${textColorClass}`} />
 							</div>
 							<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 								Professional Summary
@@ -179,7 +184,7 @@ const ModernTemplate = ({
 					<section className="mb-3">
 						<div className="flex items-center gap-2 mb-2">
 							<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-								<Briefcase className="size-2 text-white" />
+								<Briefcase className={`size-2 ${textColorClass}`} />
 							</div>
 							<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 								Professional Experience
@@ -217,7 +222,7 @@ const ModernTemplate = ({
 					<section className="mb-3">
 						<div className="flex items-center gap-2 mb-2">
 							<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-								<Code className="size-2 text-white" />
+								<Code className={`size-2 ${textColorClass}`} />
 							</div>
 							<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 								Key Projects
@@ -245,7 +250,7 @@ const ModernTemplate = ({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<GraduationCap className="size-2 text-white" />
+									<GraduationCap className={`size-2 ${textColorClass}`} />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 									Education
@@ -274,7 +279,7 @@ const ModernTemplate = ({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<Star className="size-2 text-white" />
+									<Star className={`size-2 ${textColorClass}`} />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 									Technical Skills
@@ -286,7 +291,7 @@ const ModernTemplate = ({
 									{data.skills.map((skill, index) => (
 										<span
 											key={index}
-											className="px-2 py-1 text-xs font-medium text-white rounded"
+											className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
 											style={{ backgroundColor: accentColor }}
 										>
 											{skill}
@@ -302,7 +307,7 @@ const ModernTemplate = ({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<Sparkles className="size-2 text-white" />
+									<Sparkles className={`size-2 ${textColorClass}`} />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 									Soft Skills
@@ -314,7 +319,7 @@ const ModernTemplate = ({
 									{data.soft_skills.map((skill, index) => (
 										<span
 											key={index}
-											className="px-2 py-1 text-xs font-medium text-white rounded"
+											className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
 											style={{ backgroundColor: accentColor }}
 										>
 											{skill}
@@ -330,7 +335,7 @@ const ModernTemplate = ({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<Languages className="size-2 text-white" />
+									<Languages className={`size-2 ${textColorClass}`} />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 									Languages
@@ -355,7 +360,7 @@ const ModernTemplate = ({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<Star className="size-2 text-white" />
+									<Star className={`size-2 ${textColorClass}`} />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 									Certifications
@@ -388,7 +393,7 @@ const ModernTemplate = ({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<Sparkles className="size-2 text-white" />
+									<Sparkles className={`size-2 ${textColorClass}`} />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 									Achievements
@@ -420,7 +425,7 @@ const ModernTemplate = ({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<Heart className="size-2 text-white" />
+									<Heart className={`size-2 ${textColorClass}`} />
 								</div>
 								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
 									Volunteer Work

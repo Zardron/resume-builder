@@ -158,7 +158,7 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
                       e.stopPropagation();
                       handlePreviewTemplate(template);
                     }}
-                    className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                    className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors cursor-pointer"
                   >
                     <Eye className="w-4 h-4" />
                     Preview Template
