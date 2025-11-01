@@ -217,61 +217,80 @@ const ModernTemplate = ({
 					</section>
 				)}
 
-				{/* Projects */}
-				{showProjects && data.project && data.project.length > 0 && (
-					<section className="mb-3">
+			{/* Projects */}
+			{showProjects && data.projects && data.projects.length > 0 && (
+				<section className="mb-3">
+					<div className="flex items-center gap-2 mb-2">
+						<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+							<Code className={`size-2 ${textColorClass}`} />
+						</div>
+						<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+							Key Projects
+						</h2>
+					</div>
+
+					<div className="pl-6 grid gap-2 md:grid-cols-2">
+						{data.projects.map((p, index) => (
+							<div key={index} className="border border-gray-200 rounded p-2">
+								<h3 className="text-xs font-bold text-gray-900 mb-1">{p.title}</h3>
+								{p.technologies && (
+									<p className="text-xs mb-1 font-semibold" style={{ color: accentColor }}>
+										{p.technologies}
+									</p>
+								)}
+								{p.description && (
+									<div className="text-gray-700 leading-relaxed text-xs">
+										{p.description}
+									</div>
+								)}
+								{p.link && (
+									<a href={p.link} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline mt-1 block" style={{ color: accentColor }}>
+										View Project
+									</a>
+								)}
+							</div>
+						))}
+					</div>
+				</section>
+			)}
+
+				<div className="space-y-4">
+				{/* Education */}
+				{showEducation && data.education && data.education.length > 0 && (
+					<section>
 						<div className="flex items-center gap-2 mb-2">
 							<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-								<Code className={`size-2 ${textColorClass}`} />
+								<GraduationCap className={`size-2 ${textColorClass}`} />
 							</div>
-							<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
-								Key Projects
+							<h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
+								Education
 							</h2>
 						</div>
 
-						<div className="pl-6 grid gap-2 md:grid-cols-2">
-							{data.project.map((p, index) => (
-								<div key={index} className="border border-gray-200 rounded p-2">
-									<h3 className="text-xs font-bold text-gray-900 mb-1">{p.name}</h3>
-									{p.description && (
-										<div className="text-gray-700 leading-relaxed text-xs">
-											{p.description}
+						<div className="pl-6 space-y-2">
+							{data.education.map((edu, index) => (
+								<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
+									<div className="flex justify-between items-start mb-1">
+										<div>
+											<h3 className={`${getSectionFontSize(sectionFontSizes, 'education')} font-bold text-gray-900`}>{edu.degree}</h3>
+											<p className={`${getCompanyFontSize(sectionFontSizes)} font-semibold`} style={{ color: accentColor }}>{edu.institution}</p>
+											{edu.location && (
+												<p className={`${getLocationFontSize(sectionFontSizes)} text-gray-600 mb-1`}>{edu.location}</p>
+											)}
+										</div>
+										<div className={`${getDateFontSize(sectionFontSizes)} text-gray-600 font-medium`}>
+											{formatDate(edu.start_date)} - {edu.is_current ? "Present" : formatDate(edu.end_date)}
+										</div>
+									</div>
+									{edu.description && (
+										<div className={`text-gray-700 leading-relaxed ${getSectionFontSize(sectionFontSizes, 'job_descriptions')} whitespace-pre-line`}>
+											{edu.description}
 										</div>
 									)}
 								</div>
 							))}
 						</div>
 					</section>
-				)}
-
-				<div className="space-y-4">
-				{/* Education */}
-				{showEducation && data.education && data.education.length > 0 && (
-						<section>
-							<div className="flex items-center gap-2 mb-2">
-								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-									<GraduationCap className={`size-2 ${textColorClass}`} />
-								</div>
-								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
-									Education
-								</h2>
-							</div>
-
-							<div className="pl-6 space-y-2">
-								{data.education.map((edu, index) => (
-									<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
-										<h3 className="text-xs font-bold text-gray-900 mb-1">
-											{edu.degree} {edu.field && `in ${edu.field}`}
-										</h3>
-										<p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{edu.institution}</p>
-										<div className="flex justify-between items-center text-xs text-gray-600">
-											<span className="font-medium">{formatDate(edu.graduation_date)}</span>
-											{edu.gpa && <span className="font-medium">GPA: {edu.gpa}</span>}
-										</div>
-									</div>
-								))}
-							</div>
-						</section>
 					)}
 
 				{/* Technical Skills */}

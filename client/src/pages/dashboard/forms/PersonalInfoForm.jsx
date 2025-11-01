@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import InputField from "../../../components/InputField";
+import EmailInputField from "../../../components/EmailInputField";
 import { UploadIcon, X, SparklesIcon, Loader2, Plus, Trash2 } from "lucide-react";
 
 const PersonalInfoForm = ({
@@ -56,7 +57,7 @@ const PersonalInfoForm = ({
       label: "Email",
       icon: "email",
       width: "w-1/2",
-      placeholder: "Email",
+      placeholder: "your.name@gmail.com",
       type: "email",
       name: "email",
       value: data?.email ?? '',
@@ -66,11 +67,13 @@ const PersonalInfoForm = ({
       label: "Phone",
       icon: "phone",
       width: "w-1/2",
-      placeholder: "Phone",
+      placeholder: "0917 123 4567 or +63 917 123 4567",
       type: "tel",
       name: "phone",
       value: data?.phone ?? '',
       onChange: (value) => onImageChange("phone", value),
+      autoComplete: "tel",
+      inputMode: "numeric",
     },
     {
       label: "Address",
@@ -177,6 +180,45 @@ const PersonalInfoForm = ({
     }
   }, []); // Empty dependency array - only run on mount
 
+  // Format Philippine phone number - only allows numbers
+  const formatPhilippinePhone = (value) => {
+    // Remove all non-digit characters (letters, special characters, etc.)
+    const cleaned = value.replace(/\D/g, '');
+    
+    // Return empty if no digits
+    if (!cleaned) return '';
+    
+    // Limit to maximum digits for Philippine numbers
+    // +63 format: 12 digits (63 + 10 digits)
+    // 0 format: 11 digits
+    const maxLength = cleaned.startsWith('63') ? 12 : 11;
+    const limited = cleaned.slice(0, maxLength);
+    
+    // If starts with 63, format as +63 XXX XXX XXXX
+    if (limited.startsWith('63')) {
+      const number = limited.substring(2);
+      if (number.length === 0) return '+63';
+      if (number.length <= 3) return `+63 ${number}`;
+      if (number.length <= 6) return `+63 ${number.slice(0, 3)} ${number.slice(3)}`;
+      return `+63 ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 10)}`;
+    }
+    
+    // If starts with 0, format as 0XXX XXX XXXX
+    if (limited.startsWith('0')) {
+      if (limited.length <= 4) return limited;
+      if (limited.length <= 7) return `${limited.slice(0, 4)} ${limited.slice(4)}`;
+      return `${limited.slice(0, 4)} ${limited.slice(4, 7)} ${limited.slice(7, 11)}`;
+    }
+    
+    // If starts with 9, assume it's missing the 0, format as 09XX XXX XXXX
+    if (limited.startsWith('9') && limited.length >= 10) {
+      return `0${limited.slice(0, 3)} ${limited.slice(3, 6)} ${limited.slice(6, 10)}`;
+    }
+    
+    // For any other case, just return the cleaned digits only
+    return limited;
+  };
+
   const onImageChange = (field, value) => {
     console.log("onImageChange called:", { field, value, data });
     if (field === "image" && value) {
@@ -187,6 +229,10 @@ const PersonalInfoForm = ({
         onChange(newData);
         setIsLoading(false);
       }, 500);
+    } else if (field === "phone") {
+      // Format phone number for Philippines
+      const formattedPhone = formatPhilippinePhone(value);
+      onChange({ ...data, [field]: formattedPhone });
     } else {
       onChange({ ...data, [field]: value });
     }
@@ -223,16 +269,34 @@ const PersonalInfoForm = ({
                   </button>
                 )}
               </div>
-              <InputField
-                type={item.type}
-                icon={item.icon}
-                width="w-full"
-                placeholder={item.placeholder}
-                value={item.value}
-                onChange={item.onChange}
-                hasError={validationErrors[item.name]}
-                name={item.name}
-              />
+              {item.type === "email" ? (
+                <EmailInputField
+                  placeholder={item.placeholder}
+                  value={item.value}
+                  onChange={item.onChange}
+                  hasError={validationErrors[item.name]}
+                  name={item.name}
+                  width="w-full"
+                />
+              ) : (
+                <InputField
+                  type={item.type}
+                  icon={item.icon}
+                  width="w-full"
+                  placeholder={item.placeholder}
+                  value={item.value}
+                  onChange={item.onChange}
+                  hasError={validationErrors[item.name]}
+                  name={item.name}
+                  autoComplete={item.autoComplete}
+                  inputMode={item.inputMode}
+                />
+              )}
+              {item.name === "phone" && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  📱 Philippine format: 0917 123 4567 or +63 917 123 4567
+                </p>
+              )}
             </div>
           );
         })}

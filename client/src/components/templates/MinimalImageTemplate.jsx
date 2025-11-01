@@ -139,12 +139,17 @@ const MinimalImageTemplate = ({
                                 <div className="space-y-3 text-xs">
                                     {data.education.map((edu, index) => (
                                         <div key={index} className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
-                                            <p className="font-bold text-gray-800 mb-1">{edu.degree}</p>
-                                            <p className="text-gray-600 mb-1">{edu.institution}</p>
-                                            <p className="text-xs text-gray-500">
-                                                {formatDate(edu.graduation_date)}
+                                            <p className={`${getSectionFontSize(sectionFontSizes, 'education')} font-bold text-gray-800 mb-1`}>{edu.degree}</p>
+                                            <p className={`${getCompanyFontSize(sectionFontSizes)} text-gray-600 mb-1`}>{edu.institution}</p>
+                                            {edu.location && <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-500 mb-1`}>{edu.location}</p>}
+                                            <p className={`${getDateFontSize(sectionFontSizes)} text-gray-500`}>
+                                                {formatDate(edu.start_date)} - {edu.is_current ? "Present" : formatDate(edu.end_date)}
                                             </p>
-                                            {edu.gpa && <p className="text-xs text-gray-500 mt-1">GPA: {edu.gpa}</p>}
+                                            {edu.description && (
+                                                <p className={`${getSectionFontSize(sectionFontSizes, 'job_descriptions')} text-gray-700 mt-2 leading-relaxed whitespace-pre-line`}>
+                                                    {edu.description}
+                                                </p>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -333,7 +338,7 @@ const MinimalImageTemplate = ({
                     )}
 
                     {/* Projects */}
-                    {showProjects && data.project && data.project.length > 0 && (
+                    {showProjects && data.projects && data.projects.length > 0 && (
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
@@ -344,18 +349,23 @@ const MinimalImageTemplate = ({
                                 </h2>
                             </div>
                             <div className="pl-6 grid gap-2 md:grid-cols-2">
-                                {data.project.map((project, index) => (
+                                {data.projects.map((project, index) => (
                                     <div key={index} className="border border-gray-200 rounded p-2">
-                                        <h3 className="text-xs font-bold text-gray-900 mb-1">{project.name}</h3>
-                                        {project.type && (
+                                        <h3 className="text-xs font-bold text-gray-900 mb-1">{project.title}</h3>
+                                        {project.technologies && (
                                             <p className="text-xs mb-2 font-semibold" style={{ color: accentColor }}>
-                                                {project.type}
+                                                {project.technologies}
                                             </p>
                                         )}
                                         {project.description && (
-                                            <div className="text-gray-700 leading-relaxed text-xs">
+                                            <div className="text-gray-700 leading-relaxed text-xs mb-1">
                                                 {project.description}
                                             </div>
+                                        )}
+                                        {project.link && (
+                                            <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline" style={{ color: accentColor }}>
+                                                View Project
+                                            </a>
                                         )}
                                     </div>
                                 ))}

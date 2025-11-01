@@ -187,7 +187,7 @@ const MinimalTemplate = ({
             )}
 
             {/* Projects */}
-            {showProjects && data.project && data.project.length > 0 && (
+            {showProjects && data.projects && data.projects.length > 0 && (
                 <section className="mb-3">
                     <div className="flex items-center gap-2 mb-2">
                         <div className="w-1 h-4 rounded-full" style={{ backgroundColor: accentColor }}></div>
@@ -197,10 +197,22 @@ const MinimalTemplate = ({
                     </div>
 
                     <div className="pl-3 space-y-2">
-                        {data.project.map((proj, index) => (
+                        {data.projects.map((proj, index) => (
                             <div key={index} className="relative">
-                                <h3 className="text-xs font-medium text-gray-900 mb-1">{proj.name}</h3>
-                                <p className="text-gray-600 text-xs leading-relaxed">{proj.description}</p>
+                                <h3 className="text-xs font-medium text-gray-900 mb-1">{proj.title}</h3>
+                                {proj.technologies && (
+                                    <p className="text-xs mb-1 font-medium" style={{ color: accentColor }}>
+                                        {proj.technologies}
+                                    </p>
+                                )}
+                                {proj.description && (
+                                    <p className="text-gray-600 text-xs leading-relaxed">{proj.description}</p>
+                                )}
+                                {proj.link && (
+                                    <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline mt-1 inline-block" style={{ color: accentColor }}>
+                                        View Project
+                                    </a>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -223,16 +235,21 @@ const MinimalTemplate = ({
                                 <div key={index} className="relative">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <h3 className="text-xs font-medium text-gray-900 mb-1">
-                                                {edu.degree} {edu.field && `in ${edu.field}`}
+                                            <h3 className={`${getSectionFontSize(sectionFontSizes, 'education')} font-medium text-gray-900 mb-1`}>
+                                                {edu.degree}
                                             </h3>
-                                            <p className="text-gray-600 text-xs">{edu.institution}</p>
-                                            {edu.gpa && <p className="text-xs text-gray-500 mt-1">GPA: {edu.gpa}</p>}
+                                            <p className={`${getCompanyFontSize(sectionFontSizes)} text-gray-600`}>{edu.institution}</p>
+                                            {edu.location && <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-500 mt-1`}>{edu.location}</p>}
                                         </div>
-                                        <span className="text-xs text-gray-500 font-light">
-                                            {formatDate(edu.graduation_date)}
+                                        <span className={`${getDateFontSize(sectionFontSizes)} text-gray-500 font-light`}>
+                                            {formatDate(edu.start_date)} - {edu.is_current ? "Present" : formatDate(edu.end_date)}
                                         </span>
                                     </div>
+                                    {edu.description && (
+                                        <p className={`${getSectionFontSize(sectionFontSizes, 'job_descriptions')} text-gray-700 mt-2 leading-relaxed whitespace-pre-line`}>
+                                            {edu.description}
+                                        </p>
+                                    )}
                                 </div>
                             ))}
                         </div>

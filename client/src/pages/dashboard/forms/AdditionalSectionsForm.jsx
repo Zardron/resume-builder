@@ -129,7 +129,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="award"
                     width="w-full"
-                    placeholder="e.g., AWS Certified Solutions Architect"
+                    placeholder="AWS Certified Solutions Architect"
                     value={cert.name || ""}
                     onChange={(value) => updateCertification(index, "name", value)}
                   />
@@ -142,7 +142,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="building"
                     width="w-full"
-                    placeholder="e.g., Amazon Web Services"
+                    placeholder="Amazon Web Services"
                     value={cert.issuer || ""}
                     onChange={(value) => updateCertification(index, "issuer", value)}
                   />
@@ -168,7 +168,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="hash"
                     width="w-full"
-                    placeholder="e.g., AWS-123456"
+                    placeholder="AWS-123456"
                     value={cert.credential_id || ""}
                     onChange={(value) => updateCertification(index, "credential_id", value)}
                   />
@@ -218,7 +218,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="star"
                     width="w-full"
-                    placeholder="e.g., Employee of the Year 2023"
+                    placeholder="Employee of the Year 2023"
                     value={achievement.title || ""}
                     onChange={(value) => updateAchievement(index, "title", value)}
                   />
@@ -231,7 +231,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     value={achievement.description || ""}
                     onChange={(e) => updateAchievement(index, "description", e.target.value)}
                     placeholder="Describe the achievement and its impact..."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
                     rows="3"
                   />
                 </div>
@@ -293,7 +293,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="building"
                     width="w-full"
-                    placeholder="e.g., Red Cross, Local Food Bank"
+                    placeholder="Red Cross, Local Food Bank"
                     value={volunteer.organization || ""}
                     onChange={(value) => updateVolunteerWork(index, "organization", value)}
                   />
@@ -306,7 +306,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="user"
                     width="w-full"
-                    placeholder="e.g., Volunteer Coordinator, Event Organizer"
+                    placeholder="Volunteer Coordinator, Event Organizer"
                     value={volunteer.position || ""}
                     onChange={(value) => updateVolunteerWork(index, "position", value)}
                   />
@@ -319,7 +319,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     value={volunteer.description || ""}
                     onChange={(e) => updateVolunteerWork(index, "description", e.target.value)}
                     placeholder="Describe your volunteer work and impact..."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
                     rows="3"
                   />
                 </div>

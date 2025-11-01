@@ -227,7 +227,7 @@ const ClassicTemplate = ({
             )}
 
             {/* Projects */}
-            {showProjects && data.project && data.project.length > 0 && (
+            {showProjects && data.projects && data.projects.length > 0 && (
                 <section className="mb-3">
                     <div className="flex items-center gap-2 mb-2">
                         <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
@@ -239,10 +239,22 @@ const ClassicTemplate = ({
                     </div>
 
                     <div className="pl-6 grid gap-2 md:grid-cols-2">
-                            {data.project.map((proj, index) => (
+                            {data.projects.map((proj, index) => (
                             <div key={index} className="border border-gray-200 rounded p-2">
-                                <h3 className="text-xs font-bold text-gray-900 mb-1">{proj.name}</h3>
-                                <p className="text-gray-700 leading-relaxed text-xs">{proj.description}</p>
+                                <h3 className="text-xs font-bold text-gray-900 mb-1">{proj.title}</h3>
+                                {proj.technologies && (
+                                    <p className="text-xs mb-1 font-semibold" style={{ color: accentColor }}>
+                                        {proj.technologies}
+                                    </p>
+                                )}
+                                {proj.description && (
+                                    <p className="text-gray-700 leading-relaxed text-xs">{proj.description}</p>
+                                )}
+                                {proj.link && (
+                                    <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline" style={{ color: accentColor }}>
+                                        View Project
+                                    </a>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -257,7 +269,7 @@ const ClassicTemplate = ({
                             <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                 <GraduationCap className={`size-2 ${textColorClass}`} />
                             </div>
-                            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                            <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
                                 Education
                             </h2>
                         </div>
@@ -265,18 +277,23 @@ const ClassicTemplate = ({
                         <div className="pl-6 space-y-2">
                             {data.education.map((edu, index) => (
                                 <div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
-                                    <div className="flex justify-between items-start">
+                                    <div className="flex justify-between items-start mb-1">
                                         <div>
-                                            <h3 className="text-xs font-bold text-gray-900 mb-1">
-                                                {edu.degree} {edu.field && `in ${edu.field}`}
-                                            </h3>
-                                            <p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{edu.institution}</p>
-                                            {edu.gpa && <p className="text-xs text-gray-600 font-medium">GPA: {edu.gpa}</p>}
+                                            <h3 className={`${getSectionFontSize(sectionFontSizes, 'education')} font-bold text-gray-900`}>{edu.degree}</h3>
+                                            <p className={`${getCompanyFontSize(sectionFontSizes)} font-semibold`} style={{ color: accentColor }}>{edu.institution}</p>
+                                            {edu.location && (
+                                                <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-600 mb-1`}>{edu.location}</p>
+                                            )}
                                         </div>
-                                        <div className="text-xs text-gray-600 font-medium">
-                                            <p>{formatDate(edu.graduation_date)}</p>
+                                        <div className={`${getDateFontSize(sectionFontSizes)} text-gray-600 font-medium`}>
+                                            {formatDate(edu.start_date)} - {edu.is_current ? "Present" : formatDate(edu.end_date)}
                                         </div>
                                     </div>
+                                    {edu.description && (
+                                        <div className={`text-gray-700 leading-relaxed ${getSectionFontSize(sectionFontSizes, 'job_descriptions')} whitespace-pre-line`}>
+                                            {edu.description}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

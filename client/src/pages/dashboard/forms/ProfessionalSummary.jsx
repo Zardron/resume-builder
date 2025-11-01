@@ -160,7 +160,7 @@ const ProfessionalSummary = ({
               <textarea
                 ref={textareaRef}
                 placeholder="Write a compelling professional summary highlighting your key strengths and career objectives..."
-                className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 outline-none text-sm w-full px-4 py-4 overflow-hidden"
+                className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 placeholder:text-xs outline-none text-sm w-full px-4 py-4 overflow-hidden"
                 value={data?.professional_summary || ''}
                 onChange={(e) => handleChange(e.target.value)}
                 rows={7}

@@ -141,7 +141,7 @@ const SkillsAndLanguagesForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="code"
                     width="w-full"
-                    placeholder="e.g., JavaScript, Python, Project Management, Adobe Photoshop"
+                    placeholder="JavaScript, Python, Project Management, Adobe Photoshop"
                     value={skill}
                     onChange={(value) => updateSkill(index, value)}
                     hasError={validationErrors.skills}
@@ -187,7 +187,7 @@ const SkillsAndLanguagesForm = ({ data, onChange, onValidationChange }) => {
                     type="text"
                     icon="user"
                     width="w-full"
-                    placeholder="e.g., Leadership, Communication, Problem Solving, Teamwork"
+                    placeholder="Leadership, Communication, Problem Solving, Teamwork"
                     value={skill}
                     onChange={(value) => updateSoftSkill(index, value)}
                     hasError={validationErrors.skills}
@@ -237,7 +237,7 @@ const SkillsAndLanguagesForm = ({ data, onChange, onValidationChange }) => {
                       type="text"
                       icon="globe"
                       width="w-full"
-                      placeholder="e.g., English, Spanish, French"
+                      placeholder="English, Spanish, French"
                       value={language.language || ""}
                       onChange={(value) => updateLanguage(index, "language", value)}
                     />

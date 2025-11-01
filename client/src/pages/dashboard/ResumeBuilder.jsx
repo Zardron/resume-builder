@@ -30,6 +30,8 @@ import MinimalTemplate from "../../components/templates/MinimalTemplate";
 import MinimalImageTemplate from "../../components/templates/MinimalImageTemplate";
 import ProfessionalSummary from "./forms/ProfessionalSummary";
 import ExperienceForm from "./forms/ExperienceForm";
+import EducationForm from "./forms/EducationForm";
+import ProjectsForm from "./forms/ProjectsForm";
 import SkillsAndLanguagesForm from "./forms/SkillsAndLanguagesForm";
 import AdditionalSectionsForm from "./forms/AdditionalSectionsForm";
 import ColorPicker from "../../util/ColorPicker";
@@ -477,6 +479,38 @@ const ResumeBuilder = () => {
                             }}
                             onValidationChange={(validationFn) =>
                               handleValidationChange("experience", validationFn)
+                            }
+                          />
+                        </div>
+                      )}
+                      {activeSection.id === "education" && (
+                        <div>
+                          <EducationForm
+                            data={resumeData.education}
+                            onChange={(data) => {
+                              setResumeData((prev) => ({
+                                ...prev,
+                                education: data,
+                              }));
+                            }}
+                            onValidationChange={(validationFn) =>
+                              handleValidationChange("education", validationFn)
+                            }
+                          />
+                        </div>
+                      )}
+                      {activeSection.id === "projects" && (
+                        <div>
+                          <ProjectsForm
+                            data={resumeData.projects}
+                            onChange={(data) => {
+                              setResumeData((prev) => ({
+                                ...prev,
+                                projects: data,
+                              }));
+                            }}
+                            onValidationChange={(validationFn) =>
+                              handleValidationChange("projects", validationFn)
                             }
                           />
                         </div>
