@@ -62,7 +62,7 @@ const MinimalImageTemplate = ({
     const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
 
     return (
-        <div className="max-w-6xl mx-auto bg-white text-gray-900 font-sans">
+        <div id="resume-print-content" className="max-w-6xl mx-auto bg-white text-gray-900 font-sans">
             <div className="grid grid-cols-12">
                 
                 {/* Left Sidebar */}

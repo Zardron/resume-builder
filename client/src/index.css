@@ -156,3 +156,99 @@ body.modal-open {
   background: #94a3b8;
 }
 
+/* PRINT STYLES - Only show resume template content when printing */
+@media print {
+  /* Hide everything */
+  body.printing-resume * {
+    display: none !important;
+  }
+  
+  /* Show the temp print container */
+  body.printing-resume #temp-print-container {
+    display: block !important;
+    visibility: visible !important;
+    position: relative !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Show all children with proper display types */
+  body.printing-resume #temp-print-container * {
+    visibility: visible !important;
+  }
+  
+  /* Restore specific Tailwind display utilities */
+  body.printing-resume #temp-print-container .flex {
+    display: flex !important;
+  }
+  
+  body.printing-resume #temp-print-container .grid {
+    display: grid !important;
+  }
+  
+  body.printing-resume #temp-print-container .block {
+    display: block !important;
+  }
+  
+  body.printing-resume #temp-print-container .inline-block {
+    display: inline-block !important;
+  }
+  
+  body.printing-resume #temp-print-container .inline {
+    display: inline !important;
+  }
+  
+  body.printing-resume #temp-print-container .inline-flex {
+    display: inline-flex !important;
+  }
+  
+  body.printing-resume #temp-print-container .table {
+    display: table !important;
+  }
+  
+  body.printing-resume #temp-print-container .hidden {
+    display: none !important;
+  }
+  
+  /* Default to block for elements without specific class */
+  body.printing-resume #temp-print-container *:not(.flex):not(.grid):not(.inline-block):not(.inline):not(.inline-flex):not(.table):not(.hidden) {
+    display: block !important;
+  }
+  
+  /* Style the resume content inside */
+  body.printing-resume #temp-print-container #resume-print-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 15mm !important;
+    background: white !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Force colors and backgrounds to print */
+  body.printing-resume #temp-print-container,
+  body.printing-resume #temp-print-container * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  /* Page settings */
+  @page {
+    margin: 0;
+    size: A4 portrait;
+  }
+  
+  /* Prevent awkward page breaks */
+  body.printing-resume #temp-print-container h1,
+  body.printing-resume #temp-print-container h2,
+  body.printing-resume #temp-print-container h3 {
+    page-break-after: avoid !important;
+  }
+  
+  body.printing-resume #temp-print-container section {
+    page-break-inside: avoid !important;
+  }
+}
+

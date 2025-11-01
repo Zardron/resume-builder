@@ -16,6 +16,10 @@ import {
   Plus,
   ChevronDown,
   Settings,
+  Eye,
+  EyeOff,
+  Download,
+  Share2,
 } from 'lucide-react';
 import InputField from '../../components/InputField';
 import { RandomIdGenerator } from '../../util/RandomIdGenerator';
@@ -90,6 +94,50 @@ const ResumeBuilder = () => {
   const [showFontSizeDropdown, setShowFontSizeDropdown] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const formSectionRef = useRef(null);
+  const resumePreviewRef = useRef(null);
+
+  const handleDownload = () => {
+    // Get the resume content element
+    const resumeContent = document.getElementById('resume-print-content');
+    if (!resumeContent) {
+      console.error('Resume content not found');
+      return;
+    }
+
+    // Clone the resume content
+    const clone = resumeContent.cloneNode(true);
+    
+    // Create a temporary container
+    const printContainer = document.createElement('div');
+    printContainer.id = 'temp-print-container';
+    printContainer.style.position = 'fixed';
+    printContainer.style.top = '0';
+    printContainer.style.left = '0';
+    printContainer.style.width = '100%';
+    printContainer.style.zIndex = '9999';
+    printContainer.appendChild(clone);
+    
+    // Hide the original content
+    document.body.style.visibility = 'hidden';
+    
+    // Add the print container
+    document.body.appendChild(printContainer);
+    
+    // Add print class
+    document.body.classList.add('printing-resume');
+    
+    // Trigger print
+    window.print();
+    
+    // Cleanup after print
+    setTimeout(() => {
+      document.body.classList.remove('printing-resume');
+      document.body.style.visibility = 'visible';
+      if (printContainer && printContainer.parentNode) {
+        printContainer.parentNode.removeChild(printContainer);
+      }
+    }, 100);
+  };
 
   const handleInputChange = (name, value) => {
     setResumeData(prev => ({ ...prev, [name]: value }));
@@ -232,7 +280,7 @@ const ResumeBuilder = () => {
           <InputField
             type="text"
             icon="title"
-            width="w-3/4"
+            width="w-1/4"
             placeholder="Enter your resume title"
             value={resumeData.title}
             onChange={(value) => handleInputChange("title", value)}
@@ -517,9 +565,66 @@ const ResumeBuilder = () => {
                 {/* Resume Preview Header */}
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                      Live Preview
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        Live Preview
+                      </h3>
+                      
+                      {/* Public/Private Toggle */}
+                      <button
+                        onClick={() => setResumeData(prev => ({ ...prev, public: !prev.public }))}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-80 cursor-pointer"
+                        style={resumeData.public ? {
+                          backgroundColor: 'rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)',
+                          color: 'var(--primary-color)',
+                          border: '1px solid rgba(var(--primary-color-rgb, 59, 130, 246), 0.2)'
+                        } : {
+                          backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                          color: '#6b7280',
+                          border: '1px solid rgba(156, 163, 175, 0.2)'
+                        }}
+                      >
+                        {resumeData.public ? (
+                          <>
+                            <Eye className="w-4 h-4" />
+                            Public
+                          </>
+                        ) : (
+                          <>
+                            <EyeOff className="w-4 h-4" />
+                            Private
+                          </>
+                        )}
+                      </button>
+
+                      {/* Download Button */}
+                      <button
+                        onClick={handleDownload}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80 cursor-pointer"
+                        style={{
+                          backgroundColor: 'rgba(var(--accent-color-rgb, 139, 92, 246), 0.1)',
+                          color: 'var(--accent-color)',
+                          border: '1px solid rgba(var(--accent-color-rgb, 139, 92, 246), 0.2)'
+                        }}
+                        title="Download Resume"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download
+                      </button>
+
+                      {/* Share Button */}
+                      <button
+                        className="flex items-center justify-center px-2 py-1.5 rounded-lg transition-colors hover:opacity-80 cursor-pointer"
+                        style={{
+                          backgroundColor: 'rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)',
+                          color: 'var(--primary-color)',
+                          border: '1px solid rgba(var(--primary-color-rgb, 59, 130, 246), 0.2)'
+                        }}
+                        title="Share Resume"
+                      >
+                        <Share2 className="w-4 h-4" />
+                      </button>
+                    </div>
                     <div className="flex items-center gap-3">
                       {/* Section Font Size Controls */}
                       <div className="relative font-size-dropdown">
@@ -868,7 +973,7 @@ const ResumeBuilder = () => {
                 <div className="p-4">
                   <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <div className="max-h-[600px] overflow-y-auto">
-                      <div className="scale-75 origin-top-left w-[133%] h-[133%] text-[1em]">
+                      <div ref={resumePreviewRef} className="scale-75 origin-top-left w-[133%] h-[133%] text-[1em] resume-preview-content">
                         {renderTemplate()}
                       </div>
                     </div>

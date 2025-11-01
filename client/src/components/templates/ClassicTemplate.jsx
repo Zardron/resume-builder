@@ -97,7 +97,7 @@ const ClassicTemplate = ({
     console.log(data);
 
     return (
-        <div className={`max-w-4xl mx-auto bg-white text-gray-900 font-sans ${fontSizes.padding}`}>
+        <div id="resume-print-content" className={`max-w-4xl mx-auto bg-white text-gray-900 font-sans ${fontSizes.padding}`}>
             {/* Header */}
             {showHeader && (
             <header className="mb-4">

@@ -96,7 +96,7 @@ const ModernTemplate = ({
 	const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
 
 	return (
-		<div className="max-w-4xl mx-auto bg-white text-gray-900 font-sans">
+		<div id="resume-print-content" className="max-w-4xl mx-auto bg-white text-gray-900 font-sans">
 			{/* Header */}
 			{showHeader && (
 			<header className={`${textColorClass} ${fontSizes.padding} mb-4`} style={{ backgroundColor: accentColor }}>
