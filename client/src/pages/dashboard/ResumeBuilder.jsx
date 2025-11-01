@@ -82,7 +82,6 @@ const ResumeBuilder = () => {
     public: false,
   });
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
-  const [completedSections, setCompletedSections] = useState(new Set());
   const [removeBackground, setRemoveBackground] = useState(false);
   const [validationFunctions, setValidationFunctions] = useState({});
   const [isTitleConfirmed, setIsTitleConfirmed] = useState(false);
@@ -94,48 +93,87 @@ const ResumeBuilder = () => {
   const [showFontSizeDropdown, setShowFontSizeDropdown] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const formSectionRef = useRef(null);
-  const resumePreviewRef = useRef(null);
 
   const handleDownload = () => {
-    // Get the resume content element
     const resumeContent = document.getElementById('resume-print-content');
     if (!resumeContent) {
       console.error('Resume content not found');
       return;
     }
 
-    // Clone the resume content
-    const clone = resumeContent.cloneNode(true);
+    // Store original styles and image sources using Maps for better performance
+    const originalElements = resumeContent.querySelectorAll('*');
+    const styleMap = new Map();
+    const imageMap = new Map();
     
-    // Create a temporary container
+    originalElements.forEach((el, index) => {
+      const computedStyle = window.getComputedStyle(el);
+      const bgColor = computedStyle.backgroundColor;
+      const bgImage = computedStyle.backgroundImage;
+      
+      // Only store non-default values
+      if (bgColor !== 'rgba(0, 0, 0, 0)' || bgImage !== 'none') {
+        styleMap.set(index, { bgColor, bgImage });
+      }
+      
+      // Store image sources
+      if (el.tagName === 'IMG') {
+        imageMap.set(index, { src: el.src, currentSrc: el.currentSrc });
+      }
+    });
+
+    // Clone and apply styles
+    const clone = resumeContent.cloneNode(true);
+    const clonedElements = clone.querySelectorAll('*');
+    
+    clonedElements.forEach((el, index) => {
+      // Apply background styles
+      const styles = styleMap.get(index);
+      if (styles) {
+        if (styles.bgColor !== 'rgba(0, 0, 0, 0)') {
+          el.style.setProperty('background-color', styles.bgColor, 'important');
+          el.style.setProperty('box-shadow', `inset 0 0 0 9999px ${styles.bgColor}`, 'important');
+        }
+        if (styles.bgImage !== 'none') {
+          el.style.setProperty('background-image', styles.bgImage, 'important');
+        }
+      }
+      
+      // Restore images
+      const imgData = imageMap.get(index);
+      if (el.tagName === 'IMG' && imgData) {
+        el.src = imgData.src;
+        el.style.setProperty('display', 'block', 'important');
+        el.style.setProperty('opacity', '1', 'important');
+        el.style.setProperty('visibility', 'visible', 'important');
+      }
+    });
+    
+    // Create print container with optimized style assignment
     const printContainer = document.createElement('div');
     printContainer.id = 'temp-print-container';
-    printContainer.style.position = 'fixed';
-    printContainer.style.top = '0';
-    printContainer.style.left = '0';
-    printContainer.style.width = '100%';
-    printContainer.style.zIndex = '9999';
+    Object.assign(printContainer.style, {
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      width: '100%',
+      zIndex: '9999'
+    });
     printContainer.appendChild(clone);
     
-    // Hide the original content
+    // Setup print environment
     document.body.style.visibility = 'hidden';
-    
-    // Add the print container
     document.body.appendChild(printContainer);
-    
-    // Add print class
     document.body.classList.add('printing-resume');
     
     // Trigger print
     window.print();
     
-    // Cleanup after print
+    // Cleanup
     setTimeout(() => {
       document.body.classList.remove('printing-resume');
       document.body.style.visibility = 'visible';
-      if (printContainer && printContainer.parentNode) {
-        printContainer.parentNode.removeChild(printContainer);
-      }
+      printContainer?.remove();
     }, 100);
   };
 
@@ -189,7 +227,6 @@ const ResumeBuilder = () => {
       if (!isValid) return;
     }
 
-    setCompletedSections(prev => new Set([...prev, currentSection.id]));
     setActiveSectionIndex(prevIndex => Math.min(prevIndex + 1, SECTIONS.length - 1));
   };
 
@@ -973,7 +1010,7 @@ const ResumeBuilder = () => {
                 <div className="p-4">
                   <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <div className="max-h-[600px] overflow-y-auto">
-                      <div ref={resumePreviewRef} className="scale-75 origin-top-left w-[133%] h-[133%] text-[1em] resume-preview-content">
+                      <div className="scale-75 origin-top-left w-[133%] h-[133%] text-[1em] resume-preview-content">
                         {renderTemplate()}
                       </div>
                     </div>
