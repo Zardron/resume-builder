@@ -1,243 +1,174 @@
-import React, { useState, useEffect, useRef } from "react";
-import LOGO from "../assets/logo.png"
-import { Link } from "react-router-dom";
-import ThemeSwitcher from "../util/ThemeSwitcher";
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import LOGO from '../assets/logo.png';
+import ThemeSwitcher from '../util/ThemeSwitcher';
+
+const NAV_LINKS = [
+  { label: 'Products', href: '#' },
+  { label: 'Customer Stories', href: '#' },
+  { label: 'Pricing', href: '#' },
+  { label: 'Docs', href: '#' },
+];
 
 const Navbar = () => {
-   const [isLoggedIn, setIsLoggedIn] = useState(true)
-   const [isMenuOpen, setIsMenuOpen] = useState(false);
-   const [isScrolled, setIsScrolled] = useState(false); 
-   const menuRef = useRef(null);
-   const openMenu = () => setIsMenuOpen(true);
-   const closeMenu = () => setIsMenuOpen(false);
+  const [isLoggedIn] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
-   useEffect(() => {
-      const handleScroll = () => {
-         setIsScrolled(window.scrollY > 50);
-      };
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-   }, []);
-
-   useEffect(() => {
-      const handleClickOutside = (event) => {
-         if (menuRef.current && !menuRef.current.contains(event.target)) {
-            closeMenu();
-         }
-      };
-
-      if (isMenuOpen) {
-         document.addEventListener("mousedown", handleClickOutside);
-         document.body.style.overflow = "hidden";
-      } else {
-         document.body.style.overflow = "unset";
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
       }
+    };
 
-      return () => {
-         document.removeEventListener("mousedown", handleClickOutside);
-         document.body.style.overflow = "unset";
-      };
-   }, [isMenuOpen]);
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
 
   return (
     <>
-      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div
           className="fixed inset-0 backdrop-blur-sm bg-white/10 dark:bg-black/10 z-40 md:hidden"
-          onClick={closeMenu}
+          onClick={() => setIsMenuOpen(false)}
         />
       )}
 
       <header
-        className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all duration-300 ease-in-out sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${isMenuOpen ? "hidden md:flex" : "flex"}`}
+        className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${
+          isMenuOpen ? 'hidden md:flex' : 'flex'
+        }`}
       >
-        <Link to={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-2">
+        <Link to={isLoggedIn ? '/dashboard' : '/'} className="flex items-center gap-2">
           <img
             src={LOGO}
-            alt="logo"
+            alt="Resume Builder"
             className="w-8 h-8 object-contain bg-white rounded-lg p-1 shadow-lg"
-          />{" "}
-          <span className="text-lg font-bold text-black dark:text-white">
-            Resume Builder
-          </span>
+          />
+          <span className="text-lg font-bold text-black dark:text-white">Resume Builder</span>
         </Link>
 
-        {/* Desktop Navigation */}
         {!isLoggedIn && (
-          <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm font-normal">
-            <a
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
-              href="#"
-            >
-              Products
-            </a>
-            <a
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
-              href="#"
-            >
-              Customer Stories
-            </a>
-            <a
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
-              href="#"
-            >
-              Pricing
-            </a>
-            <a
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
-              href="#"
-            >
-              Docs
-            </a>
+          <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="hover:text-blue-500 dark:hover:text-blue-400 transition"
+              >
+                {link.label}
+              </a>
+            ))}
           </nav>
         )}
 
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center gap-2">
           {isLoggedIn && (
-            <span className="text-sm font-normal text-gray-900 dark:text-gray-100">
-              Welcome,{" "}
-              <span className="font-bold text-gray-900 dark:text-gray-100">
-                Zardron
-              </span>
+            <span className="text-sm text-gray-900 dark:text-gray-100">
+              Welcome, <span className="font-bold">Zardron</span>
             </span>
           )}
           <ThemeSwitcher />
           {isLoggedIn ? (
             <Link
-              className="hidden md:flex bg-[var(--error-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-[var(--error-color)] hover:opacity-80 transition"
               to="/sign-in"
               state={{ fromHome: true }}
+              className="hidden md:flex bg-[var(--error-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium hover:opacity-80 transition"
             >
               Logout
             </Link>
           ) : (
             <Link
-              className="hidden md:flex bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-300"
               to="/sign-in"
               state={{ fromHome: true }}
+              className="hidden md:flex bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-300"
             >
               Sign in
             </Link>
           )}
           <button
-            onClick={openMenu}
+            onClick={() => setIsMenuOpen(true)}
             className="md:hidden text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
+            aria-label="Open menu"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M4 6h16M4 12h16M4 18h16" />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
       <nav
         ref={menuRef}
-        className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out z-[60] md:hidden ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 z-[60] md:hidden ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div
-          className={`flex flex-col h-full ${
-            isLoggedIn ? "justify-between" : "justify-end"
-          }`}
-        >
-          {/* Mobile Menu Header */}
+        <div className={`flex flex-col h-full ${isLoggedIn ? 'justify-between' : 'justify-end'}`}>
           <div>
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 mb-4">
               <div className="flex items-center gap-2">
-                <img src={LOGO} alt="logo" className="w-8 h-8" />
-                <span className="text-lg font-bold text-black dark:text-white">
-                  Resume Builder
-                </span>
+                <img src={LOGO} alt="Resume Builder" className="w-8 h-8" />
+                <span className="text-lg font-bold text-black dark:text-white">Resume Builder</span>
               </div>
               <button
-                onClick={closeMenu}
+                onClick={() => setIsMenuOpen(false)}
                 className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
+                aria-label="Close menu"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M6 18L18 6M6 6l12 12" />
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
             {isLoggedIn && (
-              <span className="text-sm px-4 font-normal text-gray-900 dark:text-gray-100">
-                Welcome,{" "}
-                <span className="font-bold text-gray-900 dark:text-gray-100">
-                  Zardron
-                </span>
+              <span className="text-sm px-4 text-gray-900 dark:text-gray-100">
+                Welcome, <span className="font-bold">Zardron</span>
               </span>
             )}
           </div>
 
-          {/* Mobile Menu Links */}
           {!isLoggedIn && (
             <div className="flex-1 flex flex-col p-4 space-y-4">
-              <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
-                href="#"
-                onClick={closeMenu}
-              >
-                Products
-              </a>
-              <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
-                href="#"
-                onClick={closeMenu}
-              >
-                Customer Stories
-              </a>
-              <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
-                href="#"
-                onClick={closeMenu}
-              >
-                Pricing
-              </a>
-              <a
-                className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
-                href="#"
-                onClick={closeMenu}
-              >
-                Docs
-              </a>
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
+                >
+                  {link.label}
+                </a>
+              ))}
             </div>
           )}
 
-          {/* Mobile Menu Footer */}
           <div className="p-4 border-t border-gray-200 dark:border-slate-700">
             {isLoggedIn ? (
               <Link
-                className="w-full bg-[var(--error-color)] text-white px-4 py-3 rounded-md text-sm font-medium hover:bg-[var(--error-color)] hover:opacity-80 transition text-center block"
                 to="/sign-in"
                 state={{ fromHome: true }}
-                onClick={closeMenu}
+                onClick={() => setIsMenuOpen(false)}
+                className="w-full bg-[var(--error-color)] text-white px-4 py-3 rounded-md text-sm font-medium hover:opacity-80 transition text-center block"
               >
                 Logout
               </Link>
             ) : (
               <Link
-                className="w-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] text-white px-4 py-3 rounded-md text-sm font-medium transition-all duration-300 text-center block"
                 to="/sign-in"
                 state={{ fromHome: true }}
-                onClick={closeMenu}
+                onClick={() => setIsMenuOpen(false)}
+                className="w-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] text-white px-4 py-3 rounded-md text-sm font-medium transition-all duration-300 text-center block"
               >
                 Sign in
               </Link>

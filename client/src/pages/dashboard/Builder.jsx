@@ -1,15 +1,12 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import ResumeBuilder from "./ResumeBuilder";
-import ExistingResumeBuilder from "./ExistingResumeBuilder";
+import { useLocation } from 'react-router-dom';
+import ResumeBuilder from './ResumeBuilder';
+import ExistingResumeBuilder from './ExistingResumeBuilder';
 
 const Builder = () => {
-  const { builder } = useLocation().state;
-  return (
-    <>
-    {builder === "new-resume" ? <ResumeBuilder /> : <ExistingResumeBuilder />}
-    </>
-  );
+  const { state } = useLocation();
+  const isNewResume = state?.builder === 'new-resume';
+  
+  return isNewResume ? <ResumeBuilder /> : <ExistingResumeBuilder />;
 };
 
 export default Builder;

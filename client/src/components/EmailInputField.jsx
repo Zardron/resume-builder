@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Mail } from "lucide-react";
-import referenceData from "../util/referenceData.json";
+import { useState, useRef, useEffect } from 'react';
+import { Mail } from 'lucide-react';
+import referenceData from '../util/referenceData.json';
 
 const EmailInputField = ({
   placeholder,
@@ -15,8 +15,6 @@ const EmailInputField = ({
   const [suggestions, setSuggestions] = useState([]);
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
-
-  // Common email domains from reference data - ordered by popularity (most popular first)
   const emailDomains = referenceData.emailDomains;
 
   useEffect(() => {
@@ -40,37 +38,35 @@ const EmailInputField = ({
   const handleInputChange = (inputValue) => {
     onChange(inputValue);
 
-    // Only show suggestions if there's text and no @ symbol yet, or incomplete domain
-    if (inputValue && inputValue.trim() !== '') {
-      const atIndex = inputValue.indexOf('@');
-      
-      if (atIndex === -1) {
-        // No @ yet, show all suggestions with the username
-        const username = inputValue.trim();
-        const newSuggestions = emailDomains.map(domain => username + domain);
-        setSuggestions(newSuggestions);
-        setShowSuggestions(true);
-      } else {
-        // Has @, filter domains based on what's typed after @
-        const username = inputValue.substring(0, atIndex);
-        const domainPart = inputValue.substring(atIndex).toLowerCase();
-        
-        if (username.length > 0) {
-          const filteredDomains = emailDomains.filter(domain => 
-            domain.toLowerCase().startsWith(domainPart)
-          );
-          
-          if (filteredDomains.length > 0) {
-            const newSuggestions = filteredDomains.map(domain => username + domain);
-            setSuggestions(newSuggestions);
-            setShowSuggestions(true);
-          } else {
-            setShowSuggestions(false);
-          }
-        }
-      }
-    } else {
+    if (!inputValue || !inputValue.trim()) {
       setShowSuggestions(false);
+      return;
+    }
+
+    const atIndex = inputValue.indexOf('@');
+    
+    if (atIndex === -1) {
+      const username = inputValue.trim();
+      setSuggestions(emailDomains.map(domain => username + domain));
+      setShowSuggestions(true);
+    } else {
+      const username = inputValue.substring(0, atIndex);
+      const domainPart = inputValue.substring(atIndex).toLowerCase();
+      
+      if (username.length > 0) {
+        const filteredDomains = emailDomains.filter(domain => 
+          domain.toLowerCase().startsWith(domainPart)
+        );
+        
+        if (filteredDomains.length > 0) {
+          setSuggestions(filteredDomains.map(domain => username + domain));
+          setShowSuggestions(true);
+        } else {
+          setShowSuggestions(false);
+        }
+      } else {
+        setShowSuggestions(false);
+      }
     }
   };
 
@@ -90,21 +86,15 @@ const EmailInputField = ({
     <div className="relative w-full">
       <div
         className={`group relative flex items-center h-12 ${
-          width ? width : "w-full"
-        } bg-white dark:bg-gray-800 border-2 rounded-xl overflow-hidden gap-0 transition-all duration-300 ${
+          width || 'w-full'
+        } bg-white dark:bg-gray-800 border-2 rounded-xl overflow-hidden transition-all duration-300 ${
           hasError
-            ? "border-red-500 focus-within:border-red-500"
-            : "border-gray-200 dark:border-gray-600 focus-within:border-[var(--primary-color)] dark:focus-within:border-[var(--primary-color)]"
+            ? 'border-red-500 focus-within:border-red-500'
+            : 'border-gray-200 dark:border-gray-600 focus-within:border-[var(--primary-color)] dark:focus-within:border-[var(--primary-color)]'
         }`}
       >
-        <div
-          className={`flex w-14 h-full items-center justify-center ${
-            hasError && "bg-transparent"
-          }`}
-        >
-          <div className="flex items-center justify-center w-full h-full">
-            <Mail className="w-4 h-4 text-gray-500/80 dark:text-gray-300" />
-          </div>
+        <div className="flex w-14 h-full items-center justify-center">
+          <Mail className="w-4 h-4 text-gray-500/80 dark:text-gray-300" />
         </div>
         <input
           ref={inputRef}
@@ -120,7 +110,6 @@ const EmailInputField = ({
         />
       </div>
 
-      {/* Suggestions Dropdown */}
       {showSuggestions && suggestions.length > 0 && (
         <div
           ref={dropdownRef}
@@ -132,7 +121,7 @@ const EmailInputField = ({
                 key={index}
                 type="button"
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-lg transition-colors duration-150 flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-lg transition-colors flex items-center gap-2"
               >
                 <Mail className="w-4 h-4 text-gray-400" />
                 <span>{suggestion}</span>

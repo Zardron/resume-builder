@@ -292,11 +292,6 @@ const PersonalInfoForm = ({
                   inputMode={item.inputMode}
                 />
               )}
-              {item.name === "phone" && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  📱 Philippine format: 0917 123 4567 or +63 917 123 4567
-                </p>
-              )}
             </div>
           );
         })}
