@@ -30,7 +30,7 @@ import TemplateSelector from '../../components/TemplateSelector';
 import ClassicTemplate from '../../components/templates/ClassicTemplate';
 import ModernTemplate from '../../components/templates/ModernTemplate';
 import MinimalTemplate from '../../components/templates/MinimalTemplate';
-import MinimalImageTemplate from '../../components/templates/MinimalImageTemplate';
+import SpotlightTemplate from '../../components/templates/SpotlightTemplate';
 import ProfessionalSummary from './forms/ProfessionalSummary';
 import ExperienceForm from './forms/ExperienceForm';
 import EducationForm from './forms/EducationForm';
@@ -38,6 +38,7 @@ import ProjectsForm from './forms/ProjectsForm';
 import SkillsAndLanguagesForm from './forms/SkillsAndLanguagesForm';
 import AdditionalSectionsForm from './forms/AdditionalSectionsForm';
 import ColorPicker from '../../util/ColorPicker';
+import { generateResumePdf } from '../../utils/pdfUtils';
 
 const SECTIONS = [
   { id: 'personal', name: 'Personal Info', icon: User },
@@ -48,6 +49,21 @@ const SECTIONS = [
   { id: 'skills', name: 'Skills & Languages', icon: Sparkles },
   { id: 'additional', name: 'Additional Sections', icon: Plus },
 ];
+
+const PAPER_SIZES = [
+  { id: 'short', label: 'Short', dimensions: '8.5" × 11"' },
+  { id: 'A4', label: 'A4', dimensions: '8.27" × 11.69"' },
+  { id: 'legal', label: 'Legal', dimensions: '8.5" × 14"' },
+];
+
+const PAPER_DIMENSIONS = {
+  short: { width: '680px', height: '880px' },
+  A4: { width: '660px', height: '935px' },
+  legal: { width: '680px', height: '1120px' },
+};
+
+const getPreviewDimensions = (size) =>
+  PAPER_DIMENSIONS[size] || PAPER_DIMENSIONS.A4;
 
 const TYPING_DELAY = 1000;
 const LOADING_DELAY = 1500;
@@ -67,6 +83,7 @@ const ExistingResumeBuilder = () => {
       linkedin: '',
       website: '',
       summary: '',
+      image: null,
     },
     professional_summary: '',
     experience: [],
@@ -83,6 +100,7 @@ const ExistingResumeBuilder = () => {
     font_size: 'medium',
     section_font_sizes: { ...DEFAULT_FONT_SIZES },
     public: false,
+    paper_size: 'A4',
   });
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [removeBackground, setRemoveBackground] = useState(false);
@@ -95,89 +113,30 @@ const ExistingResumeBuilder = () => {
   const [isTemplateSelected, setIsTemplateSelected] = useState(false);
   const [showFontSizeDropdown, setShowFontSizeDropdown] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const formSectionRef = useRef(null);
+  const previewRef = useRef(null);
 
-  const handleDownload = () => {
-    const resumeContent = document.getElementById('resume-print-content');
-    if (!resumeContent) {
-      console.error('Resume content not found');
-      return;
+  const handleDownload = async () => {
+    if (isDownloading || !previewRef.current) return;
+    
+    setIsDownloading(true);
+    
+    try {
+      const fileName = resumeData.title 
+        ? `${resumeData.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_resume.pdf`
+        : `resume_${new Date().getTime()}.pdf`;
+
+      await generateResumePdf({
+        node: previewRef.current,
+        fileName,
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsDownloading(false);
     }
-
-    // Store original styles and image sources using Maps for better performance
-    const originalElements = resumeContent.querySelectorAll('*');
-    const styleMap = new Map();
-    const imageMap = new Map();
-    
-    originalElements.forEach((el, index) => {
-      const computedStyle = window.getComputedStyle(el);
-      const bgColor = computedStyle.backgroundColor;
-      const bgImage = computedStyle.backgroundImage;
-      
-      // Only store non-default values
-      if (bgColor !== 'rgba(0, 0, 0, 0)' || bgImage !== 'none') {
-        styleMap.set(index, { bgColor, bgImage });
-      }
-      
-      // Store image sources
-      if (el.tagName === 'IMG') {
-        imageMap.set(index, { src: el.src, currentSrc: el.currentSrc });
-      }
-    });
-
-    // Clone and apply styles
-    const clone = resumeContent.cloneNode(true);
-    const clonedElements = clone.querySelectorAll('*');
-    
-    clonedElements.forEach((el, index) => {
-      // Apply background styles
-      const styles = styleMap.get(index);
-      if (styles) {
-        if (styles.bgColor !== 'rgba(0, 0, 0, 0)') {
-          el.style.setProperty('background-color', styles.bgColor, 'important');
-          el.style.setProperty('box-shadow', `inset 0 0 0 9999px ${styles.bgColor}`, 'important');
-        }
-        if (styles.bgImage !== 'none') {
-          el.style.setProperty('background-image', styles.bgImage, 'important');
-        }
-      }
-      
-      // Restore images
-      const imgData = imageMap.get(index);
-      if (el.tagName === 'IMG' && imgData) {
-        el.src = imgData.src;
-        el.style.setProperty('display', 'block', 'important');
-        el.style.setProperty('opacity', '1', 'important');
-        el.style.setProperty('visibility', 'visible', 'important');
-      }
-    });
-    
-    // Create print container with optimized style assignment
-    const printContainer = document.createElement('div');
-    printContainer.id = 'temp-print-container';
-    Object.assign(printContainer.style, {
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      width: '100%',
-      zIndex: '9999'
-    });
-    printContainer.appendChild(clone);
-    
-    // Setup print environment
-    document.body.style.visibility = 'hidden';
-    document.body.appendChild(printContainer);
-    document.body.classList.add('printing-resume');
-    
-    // Trigger print
-    window.print();
-    
-    // Cleanup
-    setTimeout(() => {
-      document.body.classList.remove('printing-resume');
-      document.body.style.visibility = 'visible';
-      printContainer?.remove();
-    }, 100);
   };
 
   const handleInputChange = (name, value) => {
@@ -210,6 +169,13 @@ const ExistingResumeBuilder = () => {
         setIsTitleConfirmed(false);
       }
     }
+  };
+
+  const handlePaperSizeChange = (size) => {
+    setResumeData((prev) => ({
+      ...prev,
+      paper_size: size,
+    }));
   };
 
   const handleFileChange = (file) => {
@@ -302,19 +268,23 @@ const ExistingResumeBuilder = () => {
     const templateProps = {
       data: resumeData,
       accentColor: resumeData.accent_color || '#3B82F6',
-      sectionFontSizes: resumeData.section_font_sizes || {}
+      sectionFontSizes: resumeData.section_font_sizes || {},
+      paperSize: resumeData.paper_size || 'A4',
     };
 
     const templates = {
       classic: ClassicTemplate,
       modern: ModernTemplate,
       minimal: MinimalTemplate,
-      'minimal-image': MinimalImageTemplate,
+      'minimal-image': SpotlightTemplate,
     };
 
     const Template = templates[resumeData.template] || ClassicTemplate;
     return <Template {...templateProps} />;
   };
+
+  const previewDimensions = getPreviewDimensions(resumeData.paper_size || 'A4');
+const isFullHeightTemplate = resumeData.template === 'minimal-image';
 
   return (
     <div className="mx-auto px-16 pt-4">
@@ -482,6 +452,8 @@ const ExistingResumeBuilder = () => {
                           accent_color: color,
                         }));
                       }}
+                      selectedPaperSize={resumeData.paper_size}
+                      onPaperSizeSelect={handlePaperSizeChange}
                     />
                   ) : (
                     <>
@@ -634,281 +606,470 @@ const ExistingResumeBuilder = () => {
           <div className="w-full">
             <div className="w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4 sticky top-18">
               <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300">
-                {/* Resume Preview Header */}
-                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                 {/* Resume Preview Header */}
+                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mr-2">
+                    <div className="w-full flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                         Live Preview
                       </h3>
-                      
-                      {/* Public/Private Toggle */}
-                      <button
-                        onClick={() => setResumeData(prev => ({ ...prev, public: !prev.public }))}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-80 cursor-pointer"
-                        style={resumeData.public ? {
-                          backgroundColor: 'rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)',
-                          color: 'var(--primary-color)',
-                          border: '1px solid rgba(var(--primary-color-rgb, 59, 130, 246), 0.2)'
-                        } : {
-                          backgroundColor: 'rgba(156, 163, 175, 0.1)',
-                          color: '#6b7280',
-                          border: '1px solid rgba(156, 163, 175, 0.2)'
-                        }}
-                      >
-                        {resumeData.public ? (
-                          <>
-                            <Eye className="w-4 h-4" />
-                            Public
-                          </>
-                        ) : (
-                          <>
-                            <EyeOff className="w-4 h-4" />
-                            Private
-                          </>
-                        )}
-                      </button>
-
-                      {/* Download Button */}
-                      <button
-                        onClick={handleDownload}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80 cursor-pointer"
-                        style={{
-                          backgroundColor: 'rgba(var(--accent-color-rgb, 139, 92, 246), 0.1)',
-                          color: 'var(--accent-color)',
-                          border: '1px solid rgba(var(--accent-color-rgb, 139, 92, 246), 0.2)'
-                        }}
-                        title="Download Resume"
-                      >
-                        <Download className="w-4 h-4" />
-                        Download
-                      </button>
-
-                      {/* Share Button */}
-                      <button
-                        className="flex items-center justify-center px-2 py-1.5 rounded-lg transition-colors hover:opacity-80 cursor-pointer"
-                        style={{
-                          backgroundColor: 'rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)',
-                          color: 'var(--primary-color)',
-                          border: '1px solid rgba(var(--primary-color-rgb, 59, 130, 246), 0.2)'
-                        }}
-                        title="Share Resume"
-                      >
-                        <Share2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {/* Section Font Size Controls */}
-                      <div className="relative font-size-dropdown">
-                        <button
-                          onClick={() => setShowFontSizeDropdown(!showFontSizeDropdown)}
-                          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                        >
-                          <Settings className="w-4 h-4" />
-                          Font Sizes
-                          <ChevronDown className={`w-3 h-3 transition-transform ${showFontSizeDropdown ? 'rotate-180' : ''}`} />
-                        </button>
-                        
-                        {showFontSizeDropdown && (
-                          <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-4 max-h-96 overflow-y-auto">
-                            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Section Font Sizes</h4>
-                            <div className="space-y-4">
-                              {/* Personal Information Category */}
-                              <div>
-                                <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Personal Information</h5>
-                                <div className="space-y-2 pl-3">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-sm text-gray-700 dark:text-gray-300">Name</span>
-                                    <select
-                                      value={resumeData.section_font_sizes.name}
-                                      onChange={(e) => updateSectionFontSize('name', e.target.value)}
-                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                    >
-                                      <option value="small">Small</option>
-                                      <option value="medium">Medium</option>
-                                      <option value="large">Large</option>
-                                    </select>
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-sm text-gray-700 dark:text-gray-300">Job Title</span>
-                                    <select
-                                      value={resumeData.section_font_sizes.title}
-                                      onChange={(e) => updateSectionFontSize('title', e.target.value)}
-                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                    >
-                                      <option value="small">Small</option>
-                                      <option value="medium">Medium</option>
-                                      <option value="large">Large</option>
-                                    </select>
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-sm text-gray-700 dark:text-gray-300">Contact Details</span>
-                                    <select
-                                      value={resumeData.section_font_sizes.contact_details}
-                                      onChange={(e) => updateSectionFontSize('contact_details', e.target.value)}
-                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                    >
-                                      <option value="small">Small</option>
-                                      <option value="medium">Medium</option>
-                                      <option value="large">Large</option>
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Professional Summary Category */}
-                              {(activeSection.id === 'summary' || activeSection.id === 'experience' || activeSection.id === 'education' || activeSection.id === 'projects' || activeSection.id === 'skills') && (
-                                <div>
-                                  <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Professional Summary</h5>
-                                  <div className="space-y-2 pl-3">
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Summary Text</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.summary}
-                                        onChange={(e) => updateSectionFontSize('summary', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Experience Category */}
-                              {(activeSection.id === 'experience' || activeSection.id === 'education' || activeSection.id === 'projects' || activeSection.id === 'skills') && (
-                                <div>
-                                  <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Experience</h5>
-                                  <div className="space-y-2 pl-3">
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Job Position</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.experience}
-                                        onChange={(e) => updateSectionFontSize('experience', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Company Names</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.company_names}
-                                        onChange={(e) => updateSectionFontSize('company_names', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Job Descriptions</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.job_descriptions}
-                                        onChange={(e) => updateSectionFontSize('job_descriptions', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Location</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.location}
-                                        onChange={(e) => updateSectionFontSize('location', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Other Sections Category */}
-                              {(activeSection.id === 'education' || activeSection.id === 'projects' || activeSection.id === 'skills') && (
-                                <div>
-                                  <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Other Sections</h5>
-                                  <div className="space-y-2 pl-3">
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Section Headers</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.section_headers}
-                                        onChange={(e) => updateSectionFontSize('section_headers', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Education</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.education}
-                                        onChange={(e) => updateSectionFontSize('education', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Projects</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.projects}
-                                        onChange={(e) => updateSectionFontSize('projects', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-700 dark:text-gray-300">Skills</span>
-                                      <select
-                                        value={resumeData.section_font_sizes.skills}
-                                        onChange={(e) => updateSectionFontSize('skills', e.target.value)}
-                                        className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                      >
-                                        <option value="small">Small</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="large">Large</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                          <label htmlFor="existing-paper-size-selector-header" className="font-medium">
+                            Paper
+                          </label>
+                          <select
+                            id="existing-paper-size-selector-header"
+                            value={resumeData.paper_size}
+                            onChange={(e) => handlePaperSizeChange(e.target.value)}
+                            className="px-2 py-1.5 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            {PAPER_SIZES.map((size) => (
+                              <option key={size.id} value={size.id}>
+                                {size.label} ({size.dimensions})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {resumeData.template.charAt(0).toUpperCase() +
+                            resumeData.template.slice(1).replace("-", " ")}{" "}
+                          Template
+                        </span>
                       </div>
-                      
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {resumeData.template.charAt(0).toUpperCase() +
-                          resumeData.template.slice(1).replace('-', ' ')}{' '}
-                        Template
-                      </span>
                     </div>
                   </div>
                 </div>
 
+                <div className="w-full p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {/* Public/Private Toggle */}
+                    <button
+                      onClick={() =>
+                        setResumeData((prev) => ({
+                          ...prev,
+                          public: !prev.public,
+                        }))
+                      }
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-80 cursor-pointer"
+                      style={
+                        resumeData.public
+                          ? {
+                              backgroundColor:
+                                "rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)",
+                              color: "var(--primary-color)",
+                              border:
+                                "1px solid rgba(var(--primary-color-rgb, 59, 130, 246), 0.2)",
+                            }
+                          : {
+                              backgroundColor: "rgba(156, 163, 175, 0.1)",
+                              color: "#6b7280",
+                              border: "1px solid rgba(156, 163, 175, 0.2)",
+                            }
+                      }
+                    >
+                      {resumeData.public ? (
+                        <>
+                          <Eye className="w-4 h-4" />
+                          Public
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff className="w-4 h-4" />
+                          Private
+                        </>
+                      )}
+                    </button>
+
+                    {/* Download Button */}
+                    <button
+                      onClick={handleDownload}
+                      disabled={isDownloading || !isTitleConfirmed}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{
+                        backgroundColor:
+                          "rgba(var(--accent-color-rgb, 139, 92, 246), 0.1)",
+                        color: "var(--accent-color)",
+                        border:
+                          "1px solid rgba(var(--accent-color-rgb, 139, 92, 246), 0.2)",
+                      }}
+                      title={
+                        isDownloading
+                          ? "Generating PDF..."
+                          : isTitleConfirmed
+                          ? "Download Resume"
+                          : "Enter a resume title to download"
+                      }
+                    >
+                      {isDownloading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Download className="w-4 h-4" />
+                      )}
+                      {isDownloading ? "Generating..." : "Download"}
+                    </button>
+
+                    {/* Share Button */}
+                    <button
+                      className="flex items-center justify-center px-2 py-1.5 rounded-lg transition-colors hover:opacity-80 cursor-pointer"
+                      style={{
+                        backgroundColor:
+                          "rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)",
+                        color: "var(--primary-color)",
+                        border:
+                          "1px solid rgba(var(--primary-color-rgb, 59, 130, 246), 0.2)",
+                      }}
+                      title="Share Resume"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {/* Section Font Size Controls */}
+                  <div className="relative font-size-dropdown">
+                    <button
+                      onClick={() =>
+                        setShowFontSizeDropdown(!showFontSizeDropdown)
+                      }
+                      className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                    >
+                      <Settings className="w-4 h-4" />
+                      Font Sizes
+                      <ChevronDown
+                        className={`w-3 h-3 transition-transform ${
+                          showFontSizeDropdown ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {showFontSizeDropdown && (
+                      <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-4 max-h-96 overflow-y-auto">
+                        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                          Section Font Sizes
+                        </h4>
+                        <div className="space-y-4">
+                          {/* Personal Information Category - Always show */}
+                          <div>
+                            <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                              Personal Information
+                            </h5>
+                            <div className="space-y-2 pl-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  Name
+                                </span>
+                                <select
+                                  value={resumeData.section_font_sizes.name}
+                                  onChange={(e) =>
+                                    updateSectionFontSize(
+                                      "name",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                >
+                                  <option value="small">Small</option>
+                                  <option value="medium">Medium</option>
+                                  <option value="large">Large</option>
+                                </select>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  Job Title
+                                </span>
+                                <select
+                                  value={resumeData.section_font_sizes.title}
+                                  onChange={(e) =>
+                                    updateSectionFontSize(
+                                      "title",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                >
+                                  <option value="small">Small</option>
+                                  <option value="medium">Medium</option>
+                                  <option value="large">Large</option>
+                                </select>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  Contact Details
+                                </span>
+                                <select
+                                  value={
+                                    resumeData.section_font_sizes
+                                      .contact_details
+                                  }
+                                  onChange={(e) =>
+                                    updateSectionFontSize(
+                                      "contact_details",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                >
+                                  <option value="small">Small</option>
+                                  <option value="medium">Medium</option>
+                                  <option value="large">Large</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Professional Summary Category - Show when on summary or later sections */}
+                          {(activeSection.id === "summary" ||
+                            activeSection.id === "experience" ||
+                            activeSection.id === "education" ||
+                            activeSection.id === "projects" ||
+                            activeSection.id === "skills") && (
+                            <div>
+                              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                Professional Summary
+                              </h5>
+                              <div className="space-y-2 pl-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Summary Text
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes.summary
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "summary",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Experience Category - Show when on experience or later sections */}
+                          {(activeSection.id === "experience" ||
+                            activeSection.id === "education" ||
+                            activeSection.id === "projects" ||
+                            activeSection.id === "skills") && (
+                            <div>
+                              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                Experience
+                              </h5>
+                              <div className="space-y-2 pl-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Job Position
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes.experience
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "experience",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Company Names
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes
+                                        .company_names
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "company_names",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Job Descriptions
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes
+                                        .job_descriptions
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "job_descriptions",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Location
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes.location
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "location",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Other Sections Category - Show when on education, projects, or skills */}
+                          {(activeSection.id === "education" ||
+                            activeSection.id === "projects" ||
+                            activeSection.id === "skills") && (
+                            <div>
+                              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                Other Sections
+                              </h5>
+                              <div className="space-y-2 pl-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Section Headers
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes
+                                        .section_headers
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "section_headers",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Education
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes.education
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "education",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Projects
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes.projects
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "projects",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Skills
+                                  </span>
+                                  <select
+                                    value={resumeData.section_font_sizes.skills}
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "skills",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <hr className="border-gray-200 dark:border-gray-700 mx-4" />
+
                 {/* Resume Preview Content */}
                 <div className="p-4">
                   <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <div className="max-h-[600px] overflow-y-auto">
-                      <div className="scale-75 origin-top-left w-[133%] h-[133%] text-[1em] resume-preview-content">
+                    <div className="max-h-[600px] overflow-y-auto overflow-x-hidden">
+                      <div
+                        ref={previewRef}
+                        className="origin-top-left text-[1em] resume-preview-content"
+                        style={{
+                          width: `min(${previewDimensions.width}, 100%)`,
+                          maxWidth: "100%",
+                          height: isFullHeightTemplate
+                            ? previewDimensions.height
+                            : "auto",
+                          margin: "0 auto",
+                        }}
+                      >
                         {renderTemplate()}
                       </div>
                     </div>

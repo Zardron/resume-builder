@@ -9,7 +9,7 @@ import {
     getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
 
-const MinimalImageTemplate = ({ 
+const SpotlightTemplate = ({ 
     data, 
     accentColor, 
     sectionFontSizes = {},
@@ -84,8 +84,8 @@ const MinimalImageTemplate = ({
     const getPaperHeight = () => {
         const heights = {
             short: '880px',
-            A4: '1123px',
-            legal: '1344px'
+            A4: '935px',
+            legal: '1120px'
         };
         return heights[paperSize] || heights.A4;
     };
@@ -102,9 +102,9 @@ const MinimalImageTemplate = ({
         <div
             id="resume-print-content"
             className="max-w-6xl mx-auto bg-white text-gray-900 font-sans"
-            style={{ minHeight: getPaperHeight() }}
+            style={{ height: getPaperHeight() }}
         >
-            <div className="grid grid-cols-12 h-full">
+            <div className="grid grid-cols-12 h-full" style={{ minHeight: '100%' }}>
                 
                 {/* Left Sidebar */}
                 <aside className="col-span-4 bg-gray-100 border-r border-gray-300 h-full flex flex-col">
@@ -484,4 +484,4 @@ const MinimalImageTemplate = ({
     );
 };
 
-export default MinimalImageTemplate;
+export default SpotlightTemplate;

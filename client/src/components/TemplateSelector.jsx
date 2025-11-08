@@ -3,11 +3,18 @@ import { Check, Eye } from "lucide-react";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
-import MinimalImageTemplate from "./templates/MinimalImageTemplate";
+import SpotlightTemplate from "./templates/SpotlightTemplate";
 import TemplatePreviewModal from "./TemplatePreviewModal";
 import ColorPicker from "../util/ColorPicker";
 
-const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, onColorSelect }) => {
+const TemplateSelector = ({ 
+  selectedTemplate, 
+  onTemplateSelect, 
+  selectedColor, 
+  onColorSelect,
+  selectedPaperSize = "A4",
+  onPaperSizeSelect
+}) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTemplateForPreview, setSelectedTemplateForPreview] = useState(null);
 
@@ -87,9 +94,9 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
     },
     {
       id: "minimal-image",
-      name: "Minimal with Image",
+      name: "Spotlight",
       description: "Minimalist design with professional photo space",
-      component: MinimalImageTemplate
+      component: SpotlightTemplate
     }
   ];
 
@@ -180,6 +187,8 @@ const TemplateSelector = ({ selectedTemplate, onTemplateSelect, selectedColor, o
         accentColor={selectedColor || "#3B82F6"}
         sampleData={sampleData}
         onTemplateSelect={onTemplateSelect}
+        initialPaperSize={selectedPaperSize}
+        onPaperSizeChange={onPaperSizeSelect}
       />
     </div>
   );

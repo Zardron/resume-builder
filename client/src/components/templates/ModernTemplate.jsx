@@ -30,6 +30,14 @@ const ModernTemplate = ({
 		});
 	};
 
+	const getProfileImageSrc = (image) => {
+		if (!image) return null;
+		if (typeof image === 'string') return image;
+		if (image?.dataUrl) return image.dataUrl;
+		if (image instanceof File) return URL.createObjectURL(image);
+		return null;
+	};
+
 	// Function to get the appropriate icon for social platforms
 	const getSocialIcon = (platform) => {
 		const iconMap = {
@@ -46,6 +54,25 @@ const ModernTemplate = ({
 	};
 
 	// Function to get social links from personal_info
+	const formatSocialValue = (value) => {
+		if (!value) return '';
+		const trimmed = value.trim();
+
+		try {
+			const prefixed = trimmed.match(/^https?:\/\//i) ? trimmed : `https://${trimmed}`;
+			const url = new URL(prefixed);
+			const host = url.hostname.replace(/^www\./i, '');
+			const pathname = url.pathname.replace(/^\/+/, '');
+			const search = url.search.replace(/^\?/, '');
+			const hash = url.hash.replace(/^#/, '');
+			const path = [pathname, search].filter(Boolean).join(search ? '?' : '');
+			const fullPath = [path, hash].filter(Boolean).join('#');
+			return [host, fullPath].filter(Boolean).join('/');
+		} catch {
+			return trimmed.replace(/^https?:\/\//i, '').replace(/^www\./i, '');
+		}
+	};
+
 	const getSocialLinks = () => {
 		const socialPlatforms = ['linkedin', 'website', 'github', 'twitter', 'instagram', 'youtube', 'facebook', 'telegram'];
 		return socialPlatforms
@@ -53,6 +80,7 @@ const ModernTemplate = ({
 			.map(platform => ({
 				platform,
 				value: data.personal_info[platform],
+				displayValue: formatSocialValue(data.personal_info[platform]),
 				icon: getSocialIcon(platform)
 			}));
 	};
@@ -136,25 +164,25 @@ const ModernTemplate = ({
 								return (
 									<div key={index} className="flex items-center gap-2">
 										<IconComponent className={`${fontSizes.icon} ${textColorClass}`} />
-										<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'} break-all>{socialLink.value}</span>
+										<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'} break-all>{socialLink.displayValue}</span>
 									</div>
 								);
 							})}
 						</div>
 					</div>
-                    <div className="ml-6">
-                        {data.personal_info?.image ? (
-                            <img 
-                                src={typeof data.personal_info.image === 'string' ? data.personal_info.image : URL.createObjectURL(data.personal_info.image)} 
-                                alt="Profile" 
-                                className="w-24 h-24 rounded-full object-cover border-2 border-white"
-                            />
-                        ) : (
-                                                         <div className="w-24 h-24 rounded-full border-2 border-white bg-white/20 flex items-center justify-center">
-                                 <User className={`size-12 ${textColor === 'black' ? 'text-gray-400' : 'text-white/60'}`} />
-                             </div>
-                        )}
-                    </div>
+					<div className="ml-6">
+						{getProfileImageSrc(data.personal_info?.image) ? (
+							<img 
+								src={getProfileImageSrc(data.personal_info?.image)} 
+								alt="Profile" 
+								className="w-24 h-24 rounded-full object-cover border-2 border-white"
+							/>
+						) : (
+							<div className="w-24 h-24 rounded-full border-2 border-white bg-white/20 flex items-center justify-center">
+								<User className={`size-12 ${textColor === 'black' ? 'text-gray-400' : 'text-white/60'}`} />
+							</div>
+						)}
+					</div>
 				</div>
 			</header>
 			)}

@@ -219,16 +219,51 @@ const PersonalInfoForm = ({
     return limited;
   };
 
+  const resolveImageSource = (image) => {
+    if (!image) return null;
+    if (typeof image === 'string') return image;
+    if (image?.dataUrl) return image.dataUrl;
+    if (image instanceof File) return URL.createObjectURL(image);
+    return null;
+  };
+
   const onImageChange = (field, value) => {
     console.log("onImageChange called:", { field, value, data });
-    if (field === "image" && value) {
+    if (field === "image") {
+      if (!value) {
+        onChange({ ...data, image: null });
+        return;
+      }
+
+      if (!(value instanceof File)) {
+        onChange({ ...data, image: value });
+        return;
+      }
+
       setIsLoading(true);
-      setTimeout(() => {
-        const newData = { ...data, [field]: value };
-        console.log("Calling onChange with:", newData);
-        onChange(newData);
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        const imagePayload = {
+          dataUrl: reader.result,
+          name: value.name,
+          size: value.size,
+          type: value.type,
+          lastModified: value.lastModified,
+        };
+
+        onChange({ ...data, image: imagePayload });
         setIsLoading(false);
-      }, 500);
+      };
+
+      reader.onerror = (error) => {
+        console.error("Failed to read image file:", error);
+        setIsLoading(false);
+        onChange({ ...data, image: null });
+      };
+
+      reader.readAsDataURL(value);
+      return;
     } else if (field === "phone") {
       // Format phone number for Philippines
       const formattedPhone = formatPhilippinePhone(value);
@@ -337,11 +372,7 @@ const PersonalInfoForm = ({
                 <div className="relative group">
                   <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-500 bg-gray-50 dark:bg-gray-700">
                     <img
-                      src={
-                        typeof data.image === "string"
-                          ? data.image
-                          : URL.createObjectURL(data.image)
-                      }
+                      src={resolveImageSource(data.image)}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />

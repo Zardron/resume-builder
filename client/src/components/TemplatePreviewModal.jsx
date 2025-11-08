@@ -4,7 +4,7 @@ import { X, FileText, Maximize2, Minimize2 } from "lucide-react";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
-import MinimalImageTemplate from "./templates/MinimalImageTemplate";
+import SpotlightTemplate from "./templates/SpotlightTemplate";
 
 const TemplatePreviewModal = ({ 
   isOpen, 
@@ -14,9 +14,11 @@ const TemplatePreviewModal = ({
   templateDescription, 
   accentColor, 
   sampleData,
-  onTemplateSelect 
+  onTemplateSelect,
+  initialPaperSize = "A4",
+  onPaperSizeChange
 }) => {
-  const [paperSize, setPaperSize] = useState("A4");
+  const [paperSize, setPaperSize] = useState(initialPaperSize);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -28,6 +30,12 @@ const TemplatePreviewModal = ({
     setMounted(true);
     return () => setMounted(false);
   }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setPaperSize(initialPaperSize);
+    }
+  }, [isOpen, initialPaperSize]);
 
   useEffect(() => {
     if (isOpen) {
@@ -67,8 +75,8 @@ const TemplatePreviewModal = ({
       description: "Clean, minimalist design focusing on content and readability"
     },
     "minimal-image": {
-      component: MinimalImageTemplate,
-      name: "Minimal with Image",
+      component: SpotlightTemplate,
+      name: "Spotlight",
       description: "Minimalist design with space for a professional photo"
     }
   };
@@ -260,7 +268,11 @@ const TemplatePreviewModal = ({
                   </label>
                   <select
                     value={paperSize}
-                    onChange={(e) => setPaperSize(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setPaperSize(value);
+                      onPaperSizeChange?.(value);
+                    }}
                     className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                   >
                     {paperSizes.map((size) => (
