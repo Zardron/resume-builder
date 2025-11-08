@@ -7,6 +7,8 @@ import Features from '../components/home/Features';
 import About from '../components/home/About';
 import Testimonials from '../components/home/Testimonials';
 import Footer from '../components/Footer';
+import TemplateShowcase from '../components/home/TemplateShowcase';
+import Pricing from '../components/home/Pricing';
 
 const SCROLL_THRESHOLD = 250;
 
@@ -35,14 +37,16 @@ const Home = () => {
       <Navbar />
       <HeroSection />
       <Features />
+      <TemplateShowcase />
       <About />
+      <Pricing />
       <Testimonials />
       <Footer />
 
       {hasScrolled && (
         <button
           onClick={scrollToTop}
-          className={`fixed bottom-8 right-6 p-2 border border-[var(--primary-color)] bg-white/90 hover:bg-white text-gray-900 rounded-md shadow-md transition-all duration-300 ${
+          className={`fixed bottom-8 right-6 p-2 border border-[var(--primary-color)] bg-white/90 hover:bg-white text-gray-900 rounded-md shadow-md transition-all duration-300 cursor-pointer ${
             isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
           aria-label="Scroll to top"

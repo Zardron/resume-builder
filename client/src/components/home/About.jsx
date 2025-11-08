@@ -1,4 +1,6 @@
 import React from "react";
+import { Workflow } from "lucide-react";
+import SectionBadge from "./SectionBadge";
 
 const features = [
   {
@@ -42,7 +44,7 @@ const features = [
   {
     title: "Seamless Export & Sharing",
     description:
-      "Easily download or share your resume in multiple formats — PDF, DOCX, and more.",
+      "Easily download or share your resume as a polished PDF or via a secure link.",
     svg: (
       <svg
         width="24"
@@ -59,10 +61,15 @@ const features = [
 
 const About = () => {
   return (
-    <>
-      <div className="mt-20">
-        <h1 className="text-3xl font-semibold text-center mx-auto mt-10 text-gray-900 dark:text-gray-100">
-          About our Resume Builder
+    <section
+      id="how-it-works"
+      className="mt-24 px-4 md:px-16 lg:px-24 xl:px-32"
+      aria-labelledby="about-heading"
+    >
+      <div className="mt-10 text-center">
+        <SectionBadge icon={Workflow} label="How it works" className="mx-auto" />
+        <h1 id="about-heading" className="text-3xl font-semibold text-center mx-auto text-gray-900 dark:text-gray-100">
+          How the builder works
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
           Unlock your career potential with AI-powered tools that build resumes
@@ -89,7 +96,7 @@ const About = () => {
                   <div className="size-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex-shrink-0 flex items-center justify-center">
                     {feature.svg}
                   </div>
-                  <div>
+                  <div className="text-left">
                     <h3 className="text-base font-medium text-slate-600 dark:text-slate-300">
                       {feature.title}
                     </h3>
@@ -103,7 +110,7 @@ const About = () => {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

@@ -5,7 +5,7 @@ const CreditsIndicator = ({ availableCredits = 0 }) => {
   const creditsLabel = `${availableCredits} credit${availableCredits === 1 ? "" : "s"}`;
 
   return (
-    <div className="flex flex-col items-start gap-1 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-100 md:items-end">
+    <div className="flex flex-col items-start gap-1 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 px-4 py-3 text-gray-900 dark:border-gray-700 dark:text-gray-100 md:items-end">
       <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
         Credits
       </span>

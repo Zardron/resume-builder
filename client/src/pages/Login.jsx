@@ -12,6 +12,10 @@ const Login = () => {
   const { state } = useLocation();
   const fromHome = state?.fromHome || false;
   
+  const handleBack = () => {
+      navigate('/');
+  };
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: false, password: false });
   const [rememberMe, setRememberMe] = useState(false);
@@ -40,15 +44,16 @@ const Login = () => {
 
   return (
     <div className="relative flex items-center justify-center w-full h-screen p-24">
-      <Link
-        to="/dashboard"
-        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-gray-900 dark:text-gray-100 dark:bg-slate-800/90 dark:hover:bg-slate-800 rounded-md shadow-md transition-all duration-200 font-medium"
+      <button
+        type="button"
+        onClick={handleBack}
+        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-gray-900 dark:text-gray-100 dark:bg-slate-800/90 dark:hover:bg-slate-800 rounded-md shadow-md transition-all duration-200 font-medium hover:text-[var(--primary-color)] cursor-pointer"
       >
         <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
         <span className="text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent">
-          Back to dashboard
+          Go back
         </span>
-      </Link>
+      </button>
 
       <div className="absolute top-8 right-6">
         <ThemeSwitcher />

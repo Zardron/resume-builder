@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowLeftIcon,
   Briefcase,
@@ -65,7 +65,7 @@ const TEMPLATE_DISPLAY_NAMES = {
 };
 
 const PAPER_SIZES = [
-  { id: "short", label: 'Short', dimensions: '8.5" × 11"' },
+  { id: "short", label: "Short", dimensions: '8.5" × 11"' },
   { id: "A4", label: "A4", dimensions: '8.27" × 11.69"' },
   { id: "legal", label: "Legal", dimensions: '8.5" × 14"' },
 ];
@@ -90,6 +90,16 @@ const TYPING_DELAY = 1000;
 const LOADING_DELAY = 1500;
 
 const ResumeBuilder = () => {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    if (window.history.state?.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
   const [resumeData, setResumeData] = useState({
     _id: RandomIdGenerator(),
     title: "",
@@ -208,7 +218,10 @@ const ResumeBuilder = () => {
     setResumeData((prev) => {
       const prevDefaults = getDefaultMarginsForPaper(prev.paper_size);
       const nextDefaults = getDefaultMarginsForPaper(size);
-      const currentMargins = resolvePageMargins(prev.page_margins, prevDefaults);
+      const currentMargins = resolvePageMargins(
+        prev.page_margins,
+        prevDefaults
+      );
       const isUsingDefaults = ["top", "right", "bottom", "left"].every(
         (side) => currentMargins[side] === prevDefaults[side]
       );
@@ -267,7 +280,10 @@ const ResumeBuilder = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showFontSizeDropdown && !event.target.closest(".font-size-dropdown")) {
+      if (
+        showFontSizeDropdown &&
+        !event.target.closest(".font-size-dropdown")
+      ) {
         setShowFontSizeDropdown(false);
       }
       if (showMarginDropdown && !event.target.closest(".margin-dropdown")) {
@@ -307,7 +323,9 @@ const ResumeBuilder = () => {
 
   const getMarginPresetId = (margins) => {
     const preset = MARGIN_PRESETS.find(({ value }) =>
-      ["top", "right", "bottom", "left"].every((side) => margins[side] === value)
+      ["top", "right", "bottom", "left"].every(
+        (side) => margins[side] === value
+      )
     );
     return preset?.id || "custom";
   };
@@ -345,7 +363,7 @@ const ResumeBuilder = () => {
       classic: ClassicTemplate,
       modern: ModernTemplate,
       minimal: MinimalTemplate,
-      "spotlight": SpotlightTemplate,
+      spotlight: SpotlightTemplate,
     };
 
     const Template = templates[resumeData.template] || ClassicTemplate;
@@ -356,17 +374,18 @@ const ResumeBuilder = () => {
   const isFullHeightTemplate = resumeData.template === "spotlight";
 
   return (
-    <div className="mx-auto px-16 pt-4">
-      <Link
-        to="/dashboard"
-        className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300"
-      >
-        <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
-        Back to dashboard
-      </Link>
-
+    <div className="mx-auto px-16 pt-8">
       <header className="w-full mt-2">
         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300"
+            >
+            <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
+              Go back
+            </button>
           <div>
             <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
               Create Resume
@@ -375,6 +394,8 @@ const ResumeBuilder = () => {
               Craft a professional, standout resume in minutes — powered by AI
             </p>
           </div>
+        </div>
+          
           <CreditsIndicator availableCredits={availableCredits} />
         </div>
         <div className="mt-2 space-y-2 mb-4">
@@ -703,7 +724,9 @@ const ResumeBuilder = () => {
                       <div className="flex items-center gap-2">
                         <div className="relative paper-dropdown">
                           <button
-                            onClick={() => setShowPaperDropdown((prev) => !prev)}
+                            onClick={() =>
+                              setShowPaperDropdown((prev) => !prev)
+                            }
                             className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                           >
                             <LayoutTemplateIcon className="w-4 h-4" />
@@ -730,7 +753,9 @@ const ResumeBuilder = () => {
                                       : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                                   }`}
                                 >
-                                  <div className="font-semibold">{size.label}</div>
+                                  <div className="font-semibold">
+                                    {size.label}
+                                  </div>
                                   <div className="text-[10px] text-gray-500 dark:text-gray-400">
                                     {size.dimensions}
                                   </div>
@@ -832,391 +857,415 @@ const ResumeBuilder = () => {
                       <Share2 className="w-4 h-4" />
                     </button>
                   </div>
-            
-            <div className="flex items-center gap-2">
-              {/* Margin Preset Dropdown */}
-              <div className="relative margin-dropdown">
-                <button
-                  onClick={() =>
-                    setShowMarginDropdown((prev) => !prev)
-                  }
-                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                  Margins
-                  <ChevronDown
-                    className={`w-3 h-3 transition-transform ${
-                      showMarginDropdown ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
 
-                {showMarginDropdown && (
-                  <div className="absolute right-0 top-full mt-2 w-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 space-y-2">
-                    {currentMarginPresetId === "custom" && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Custom margins applied
-                      </p>
-                    )}
-                    {MARGIN_PRESETS.map((preset) => (
+                  <div className="flex items-center gap-2">
+                    {/* Margin Preset Dropdown */}
+                    <div className="relative margin-dropdown">
                       <button
-                        key={preset.id}
-                        onClick={() => {
-                          handleMarginPresetChange(preset.id);
-                          setShowMarginDropdown(false);
-                        }}
-                        className={`w-full text-left px-2 py-1 text-xs rounded-md transition-colors ${
-                          currentMarginPresetId === preset.id
-                            ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium"
-                            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        }`}
+                        onClick={() => setShowMarginDropdown((prev) => !prev)}
+                        className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                       >
-                        {preset.label}
+                        <Maximize2 className="w-4 h-4" />
+                        Margins
+                        <ChevronDown
+                          className={`w-3 h-3 transition-transform ${
+                            showMarginDropdown ? "rotate-180" : ""
+                          }`}
+                        />
                       </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {/* Section Font Size Controls */}
-              <div className="relative font-size-dropdown">
-                    <button
-                      onClick={() =>
-                        setShowFontSizeDropdown(!showFontSizeDropdown)
-                      }
-                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                    >
-                  <Type className="w-4 h-4" />
-                      Font Sizes
-                      <ChevronDown
-                        className={`w-3 h-3 transition-transform ${
-                          showFontSizeDropdown ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
 
-                    {showFontSizeDropdown && (
-                      <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-4 max-h-96 overflow-y-auto">
-                        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                          Section Font Sizes
-                        </h4>
-                        <div className="space-y-4">
-                          {/* Personal Information Category - Always show */}
-                          <div>
-                            <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
-                              Personal Information
-                            </h5>
-                            <div className="space-y-2 pl-3">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-700 dark:text-gray-300">
-                                  Name
-                                </span>
-                                <select
-                                  value={resumeData.section_font_sizes.name}
-                                  onChange={(e) =>
-                                    updateSectionFontSize(
-                                      "name",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                >
-                                  <option value="extra_small">Extra Small</option>
-                                  <option value="small">Small</option>
-                                  <option value="medium">Medium</option>
-                                  <option value="large">Large</option>
-                                </select>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-700 dark:text-gray-300">
-                                  Job Title
-                                </span>
-                                <select
-                                  value={resumeData.section_font_sizes.title}
-                                  onChange={(e) =>
-                                    updateSectionFontSize(
-                                      "title",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                >
-                                  <option value="extra_small">Extra Small</option>
-                                  <option value="small">Small</option>
-                                  <option value="medium">Medium</option>
-                                  <option value="large">Large</option>
-                                </select>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-700 dark:text-gray-300">
-                                  Contact Details
-                                </span>
-                                <select
-                                  value={
-                                    resumeData.section_font_sizes
-                                      .contact_details
-                                  }
-                                  onChange={(e) =>
-                                    updateSectionFontSize(
-                                      "contact_details",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                >
-                                  <option value="extra_small">Extra Small</option>
-                                  <option value="small">Small</option>
-                                  <option value="medium">Medium</option>
-                                  <option value="large">Large</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Professional Summary Category - Show when on summary or later sections */}
-                          {(activeSection.id === "summary" ||
-                            activeSection.id === "experience" ||
-                            activeSection.id === "education" ||
-                            activeSection.id === "projects" ||
-                            activeSection.id === "skills") && (
-                            <div>
-                              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
-                                Professional Summary
-                              </h5>
-                              <div className="space-y-2 pl-3">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Summary Text
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes.summary
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "summary",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
+                      {showMarginDropdown && (
+                        <div className="absolute right-0 top-full mt-2 w-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 space-y-2">
+                          {currentMarginPresetId === "custom" && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              Custom margins applied
+                            </p>
                           )}
-
-                          {/* Experience Category - Show when on experience or later sections */}
-                          {(activeSection.id === "experience" ||
-                            activeSection.id === "education" ||
-                            activeSection.id === "projects" ||
-                            activeSection.id === "skills") && (
-                            <div>
-                              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
-                                Experience
-                              </h5>
-                              <div className="space-y-2 pl-3">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Job Position
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes.experience
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "experience",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Company Names
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes
-                                        .company_names
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "company_names",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Job Descriptions
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes
-                                        .job_descriptions
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "job_descriptions",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Location
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes.location
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "location",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Other Sections Category - Show when on education, projects, or skills */}
-                          {(activeSection.id === "education" ||
-                            activeSection.id === "projects" ||
-                            activeSection.id === "skills") && (
-                            <div>
-                              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
-                                Other Sections
-                              </h5>
-                              <div className="space-y-2 pl-3">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Section Headers
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes
-                                        .section_headers
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "section_headers",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Education
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes.education
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "education",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Projects
-                                  </span>
-                                  <select
-                                    value={
-                                      resumeData.section_font_sizes.projects
-                                    }
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "projects",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    Skills
-                                  </span>
-                                  <select
-                                    value={resumeData.section_font_sizes.skills}
-                                    onChange={(e) =>
-                                      updateSectionFontSize(
-                                        "skills",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  >
-                                    <option value="extra_small">Extra Small</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                          {MARGIN_PRESETS.map((preset) => (
+                            <button
+                              key={preset.id}
+                              onClick={() => {
+                                handleMarginPresetChange(preset.id);
+                                setShowMarginDropdown(false);
+                              }}
+                              className={`w-full text-left px-2 py-1 text-xs rounded-md transition-colors ${
+                                currentMarginPresetId === preset.id
+                                  ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium"
+                                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                              }`}
+                            >
+                              {preset.label}
+                            </button>
+                          ))}
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
+                    {/* Section Font Size Controls */}
+                    <div className="relative font-size-dropdown">
+                      <button
+                        onClick={() =>
+                          setShowFontSizeDropdown(!showFontSizeDropdown)
+                        }
+                        className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      >
+                        <Type className="w-4 h-4" />
+                        Font Sizes
+                        <ChevronDown
+                          className={`w-3 h-3 transition-transform ${
+                            showFontSizeDropdown ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {showFontSizeDropdown && (
+                        <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-4 max-h-96 overflow-y-auto">
+                          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                            Section Font Sizes
+                          </h4>
+                          <div className="space-y-4">
+                            {/* Personal Information Category - Always show */}
+                            <div>
+                              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                Personal Information
+                              </h5>
+                              <div className="space-y-2 pl-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Name
+                                  </span>
+                                  <select
+                                    value={resumeData.section_font_sizes.name}
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "name",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="extra_small">
+                                      Extra Small
+                                    </option>
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Job Title
+                                  </span>
+                                  <select
+                                    value={resumeData.section_font_sizes.title}
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "title",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="extra_small">
+                                      Extra Small
+                                    </option>
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                                    Contact Details
+                                  </span>
+                                  <select
+                                    value={
+                                      resumeData.section_font_sizes
+                                        .contact_details
+                                    }
+                                    onChange={(e) =>
+                                      updateSectionFontSize(
+                                        "contact_details",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  >
+                                    <option value="extra_small">
+                                      Extra Small
+                                    </option>
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Professional Summary Category - Show when on summary or later sections */}
+                            {(activeSection.id === "summary" ||
+                              activeSection.id === "experience" ||
+                              activeSection.id === "education" ||
+                              activeSection.id === "projects" ||
+                              activeSection.id === "skills") && (
+                              <div>
+                                <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                  Professional Summary
+                                </h5>
+                                <div className="space-y-2 pl-3">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Summary Text
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes.summary
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "summary",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Experience Category - Show when on experience or later sections */}
+                            {(activeSection.id === "experience" ||
+                              activeSection.id === "education" ||
+                              activeSection.id === "projects" ||
+                              activeSection.id === "skills") && (
+                              <div>
+                                <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                  Experience
+                                </h5>
+                                <div className="space-y-2 pl-3">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Job Position
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes.experience
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "experience",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Company Names
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes
+                                          .company_names
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "company_names",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Job Descriptions
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes
+                                          .job_descriptions
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "job_descriptions",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Location
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes.location
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "location",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Other Sections Category - Show when on education, projects, or skills */}
+                            {(activeSection.id === "education" ||
+                              activeSection.id === "projects" ||
+                              activeSection.id === "skills") && (
+                              <div>
+                                <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                  Other Sections
+                                </h5>
+                                <div className="space-y-2 pl-3">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Section Headers
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes
+                                          .section_headers
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "section_headers",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Education
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes.education
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "education",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Projects
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes.projects
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "projects",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                      Skills
+                                    </span>
+                                    <select
+                                      value={
+                                        resumeData.section_font_sizes.skills
+                                      }
+                                      onChange={(e) =>
+                                        updateSectionFontSize(
+                                          "skills",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    >
+                                      <option value="extra_small">
+                                        Extra Small
+                                      </option>
+                                      <option value="small">Small</option>
+                                      <option value="medium">Medium</option>
+                                      <option value="large">Large</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-            </div>
                 </div>
                 <hr className="border-gray-200 dark:border-gray-700 mx-4" />
 

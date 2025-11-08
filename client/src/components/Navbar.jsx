@@ -1,19 +1,68 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LOGO from '../assets/logo.png';
 import ThemeSwitcher from '../util/ThemeSwitcher';
 
 const NAV_LINKS = [
-  { label: 'Products', href: '#' },
-  { label: 'Customer Stories', href: '#' },
-  { label: 'Pricing', href: '#' },
-  { label: 'Docs', href: '#' },
+  { label: 'Features', href: '/#features' },
+  { label: 'Templates', href: '/#templates' },
+  { label: 'How it works', href: '/#how-it-works' },
+  { label: 'Pricing', href: '/#pricing' },
+  { label: 'Success stories', href: '/#testimonials' },
 ];
 
 const Navbar = () => {
-  const [isLoggedIn] = useState(true);
+  const [isLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const headerRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const scrollToSection = useCallback(
+    (sectionId) => {
+      const target = document.getElementById(sectionId);
+
+      if (!target) {
+        return;
+      }
+
+      const headerHeight = headerRef.current?.offsetHeight ?? 80;
+      const additionalOffset = 16;
+      const elementPosition = target.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - headerHeight - additionalOffset;
+
+      window.scrollTo({ top: Math.max(offsetPosition, 0), behavior: 'smooth' });
+    },
+    [headerRef]
+  );
+
+  useEffect(() => {
+    if (location.pathname === '/' && location.state?.scrollTo) {
+      scrollToSection(location.state.scrollTo);
+
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location, navigate, scrollToSection]);
+
+  const handleNavClick = (event, href) => {
+    if (!href.startsWith('/#')) {
+      setIsMenuOpen(false);
+      return;
+    }
+
+    event.preventDefault();
+
+    const sectionId = href.split('#')[1];
+
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: sectionId } });
+    } else {
+      scrollToSection(sectionId);
+    }
+
+    setIsMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -45,6 +94,7 @@ const Navbar = () => {
       )}
 
       <header
+        ref={headerRef}
         className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${
           isMenuOpen ? 'hidden md:flex' : 'flex'
         }`}
@@ -61,13 +111,14 @@ const Navbar = () => {
         {!isLoggedIn && (
           <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm">
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.label}
-                href={link.href}
+                to={link.href}
+                onClick={(event) => handleNavClick(event, link.href)}
                 className="hover:text-blue-500 dark:hover:text-blue-400 transition"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
         )}
@@ -141,14 +192,14 @@ const Navbar = () => {
           {!isLoggedIn && (
             <div className="flex-1 flex flex-col p-4 space-y-4">
               {NAV_LINKS.map((link) => (
-                <a
+                <Link
                   key={link.label}
-                  href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
+                  to={link.href}
+                  onClick={(event) => handleNavClick(event, link.href)}
                   className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
           )}

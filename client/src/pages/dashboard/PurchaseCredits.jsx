@@ -60,6 +60,14 @@ const PurchaseCredits = () => {
     [selectedPackageId],
   );
 
+  const handleBack = () => {
+    if (window.history.state?.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/dashboard');
+    }
+  };
+
   const handlePurchase = () => {
     if (!selectedPackage) return;
 
@@ -78,26 +86,33 @@ const PurchaseCredits = () => {
 
   return (
     <div className="mx-auto px-16 py-8">
-      <div className="mb-6 flex items-start justify-between">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-sm font-medium text-gray-600 transition hover:text-gray-900 cursor-pointer"
-        >
-          <ArrowLeftIcon className="size-4" />
-          Back
-        </button>
-        <CreditsIndicator availableCredits={availableCredits} />
-      </div>
+    <header className="w-full mt-2">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div className="w-2/5 flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300"
+            >
+              <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
+              Go back
+            </button>
 
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          Purchase Credits
-        </h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-          Each credit costs {formatCurrency(BASE_CREDIT_PRICE)}. Bundles unlock automatic savings —
-          10% off for 5 credits, 15% off for 10 credits, and 25% off for the 20-credit pro bundle.
-        </p>
+            
+
+            <div>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                Purchase Credits
+              </h1>
+              <p className="text-sm font-light text-gray-900 dark:text-gray-100 mt-2">
+                Each credit costs {formatCurrency(BASE_CREDIT_PRICE)}. Bundle savings: 5 credits (10% off),
+                10 credits (15% off), 20 credits (25% off).
+              </p>
+            </div>
+          </div>
+          <CreditsIndicator availableCredits={availableCredits} />
+        </div>
+        <hr className="border-gray-200 dark:border-gray-700 my-4" />
       </header>
 
       {successMessage && (
@@ -120,7 +135,7 @@ const PurchaseCredits = () => {
               key={pack.id}
               type="button"
               onClick={() => setSelectedPackageId(pack.id)}
-              className={`relative flex h-full flex-col gap-4 rounded-xl border p-6 text-left transition cursor-pointer ${
+              className={`relative flex h-full flex-col bg-white dark:bg-gray-800 gap-4 rounded-xl border p-6 text-left transition cursor-pointer ${
                 isSelected
                   ? 'border-blue-600 shadow-lg shadow-blue-100 dark:border-blue-400 dark:shadow-blue-900/40'
                   : 'border-gray-200 hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-400'

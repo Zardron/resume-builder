@@ -6,7 +6,7 @@ const GlobalBackground = () => {
   
   return (
     <svg
-      className="size-full fixed top-0 left-0 -z-10 opacity-10 pointer-events-none"
+      className="size-full fixed top-0 left-0 -z-10 opacity-[0.08] pointer-events-none"
       width="1440"
       height="720"
       viewBox="0 0 1440 720"

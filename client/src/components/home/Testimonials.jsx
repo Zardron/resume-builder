@@ -1,4 +1,6 @@
 import React from 'react'
+import { MessageCircle } from 'lucide-react'
+import SectionBadge from './SectionBadge'
 
 const Testimonials = () => {
   const cardsData = [
@@ -98,9 +100,14 @@ const Testimonials = () => {
   );
 
   return (
-    <>
-      <div className="mt-20">
-        <h1 className="text-3xl font-semibold text-center mx-auto mt-10 text-gray-900 dark:text-gray-100">
+    <section
+      id="testimonials"
+      className="mt-24 px-4 md:px-16 lg:px-24 xl:px-32"
+      aria-labelledby="testimonials-heading"
+    >
+      <div className="text-center">
+        <SectionBadge icon={MessageCircle} label="Testimonials" className="mx-auto" />
+        <h1 id="testimonials-heading" className="text-3xl font-semibold text-center mx-auto text-gray-900 dark:text-gray-100">
           What Our Users Say
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
@@ -116,7 +123,7 @@ const Testimonials = () => {
         </div>
         <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white dark:from-slate-900 to-transparent"></div>
       </div>
-    </>
+    </section>
   );
 }
 
