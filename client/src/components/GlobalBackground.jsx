@@ -1,6 +1,6 @@
 import { useTheme } from '../ThemeContext';
 
-const AuthBackground = () => {
+const GlobalBackground = () => {
   const { isDark } = useTheme();
   const stroke = isDark ? '#FFFFFF' : '#2563eb';
   
@@ -22,5 +22,5 @@ const AuthBackground = () => {
   );
 };
 
-export default AuthBackground;
+export default GlobalBackground;
 

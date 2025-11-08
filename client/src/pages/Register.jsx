@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftIcon } from 'lucide-react';
 import InputField from '../components/InputField';
-import AuthBackground from '../components/AuthBackground';
 import AuthSidebar from '../components/AuthSidebar';
 import ThemeSwitcher from '../util/ThemeSwitcher';
 import TermsModal from '../components/TermsModal';
@@ -72,8 +71,6 @@ const Register = () => {
 
   return (
     <div className="relative flex items-center justify-center w-full h-screen p-24">
-      <AuthBackground />
-      
       <Link
         to="/dashboard"
         className="absolute top-6 left-6 z-10 flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-gray-900 dark:text-gray-100 dark:bg-slate-800/90 dark:hover:bg-slate-800 rounded-md shadow-md transition-all duration-200 font-medium"

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Video } from 'lucide-react';
 import HERO_IMAGE from '../../assets/hero-img.png';
-import AuthBackground from '../AuthBackground';
 
 const USER_AVATARS = [
   'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=50',
@@ -11,7 +10,6 @@ const USER_AVATARS = [
 
 const HeroSection = () => (
   <div className="relative">
-    <AuthBackground />
     <section className="flex flex-col max-md:gap-20 md:flex-row pb-20 items-center justify-between mt-20 px-4 md:px-16 lg:px-24 xl:px-32">
       <div className="flex flex-col items-center md:items-start">
         <div className="flex flex-wrap items-center justify-center p-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-gray-700 dark:text-gray-400 text-xs">
