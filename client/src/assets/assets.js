@@ -65,7 +65,7 @@ export const dummyResumeData = [
                 _id: "68d2a31a1c4dd38875bb0382"
             }
         ],
-        template: "minimal-image",
+        template: "spotlight",
         accent_color: "#14B8A6",
         project: [
             {
@@ -140,7 +140,7 @@ export const dummyResumeData = [
                 _id: "78e3b42c2d5ff49286cc1493"
             }
         ],
-        template: "minimal-image",
+        template: "spotlight",
         accent_color: "#6366F1",
         project: [
             {
@@ -215,7 +215,7 @@ export const dummyResumeData = [
                 _id: "89f4c53d3e6gg59397dd259k"
             }
         ],
-        template: "minimal-image",
+        template: "spotlight",
         accent_color: "#F59E0B",
         project: [
             {

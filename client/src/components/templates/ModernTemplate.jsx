@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin, Linkedin, Globe, Code, Briefcase, GraduationCap, Star, Sparkles, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle, Languages, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 import { 
     getSectionFontSize, 
     getNameFontSize, 
@@ -8,10 +9,15 @@ import {
     getLocationFontSize,
     getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
+import {
+    getDefaultMarginsForPaper,
+    getPagePaddingStyle
+} from "../../utils/marginUtils";
 
 const ModernTemplate = ({ 
 	data, 
 	accentColor, 
+	availableCredits = 0,
 	sectionFontSizes = {},
 	showHeader = true,
 	showProfessionalSummary = true,
@@ -19,7 +25,8 @@ const ModernTemplate = ({
 	showProjects = true,
 	showEducation = true,
 	showSkills = true,
-	paperSize = "A4"
+	paperSize = "A4",
+	pageMargins
 }) => {
 	const formatDate = (dateStr) => {
 		if (!dateStr) return "";
@@ -118,13 +125,32 @@ const ModernTemplate = ({
 	};
 
 	const fontSizes = getFontSizes();
+	const paddingStyle = getPagePaddingStyle(
+		pageMargins,
+		getDefaultMarginsForPaper(paperSize)
+	);
 	
 	// Determine text color based on background
 	const textColor = getTextColorForBackground(accentColor);
 	const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
+	const showWatermark = availableCredits <= 0;
+	const watermarkText = (
+		<>
+			This resume was generated with Resume Builder by Zardron Angelo Pesquera.{" "}
+			<Link to="/dashboard/purchase" className="underline underline-offset-2 cursor-pointer">
+				Buy more credits
+			</Link>
+			.
+		</>
+	);
+	const watermarkClassName = `text-xs font-semibold ${textColor === 'black' ? 'text-red-600' : 'text-red-200'}`;
 
 	return (
-		<div id="resume-print-content" className="max-w-4xl mx-auto bg-white text-gray-900 font-sans">
+		<div
+			id="resume-print-content"
+			className="max-w-4xl mx-auto bg-white text-gray-900 font-sans"
+			style={paddingStyle}
+		>
 			{/* Header */}
 			{showHeader && (
 			<header className={`${textColorClass} ${fontSizes.padding} mb-4`} style={{ backgroundColor: accentColor }}>
@@ -503,6 +529,11 @@ const ModernTemplate = ({
 					)}
 				</div>
 			</div>
+			{showWatermark && (
+				<footer className="mt-6 text-center text-[10px] text-gray-500 italic">
+					{watermarkText}
+				</footer>
+			)}
 		</div>
 	);
 };

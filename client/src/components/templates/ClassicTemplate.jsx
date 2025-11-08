@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin, Linkedin, Globe, Award, Briefcase, GraduationCap, Code2, Star, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle, Languages, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 import { 
     getSectionFontSize, 
     getNameFontSize, 
@@ -8,10 +9,15 @@ import {
     getLocationFontSize,
     getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
+import {
+    getDefaultMarginsForPaper,
+    getPagePaddingStyle
+} from "../../utils/marginUtils";
 
 const ClassicTemplate = ({ 
     data, 
     accentColor, 
+    availableCredits = 0,
     sectionFontSizes = {},
     showHeader = true,
     showProfessionalSummary = true,
@@ -19,7 +25,8 @@ const ClassicTemplate = ({
     showProjects = true,
     showEducation = true,
     showSkills = true,
-    paperSize = "A4"
+    paperSize = "A4",
+    pageMargins
 }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
@@ -117,15 +124,32 @@ const ClassicTemplate = ({
     };
 
     const fontSizes = getFontSizes();
+    const paddingStyle = getPagePaddingStyle(
+        pageMargins,
+        getDefaultMarginsForPaper(paperSize)
+    );
     
     // Determine text color based on background
     const textColor = getTextColorForBackground(accentColor);
     const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
 
-    console.log(data);
+    const showWatermark = availableCredits <= 0;
+    const watermarkText = (
+        <>
+            This resume was generated with Resume Builder by Zardron Angelo Pesquera.{" "}
+            <Link to="/dashboard/purchase" className="underline underline-offset-2 cursor-pointer">
+                Buy more credits
+            </Link>
+            .
+        </>
+    );
 
     return (
-        <div id="resume-print-content" className={`max-w-4xl mx-auto bg-white text-gray-900 font-sans ${fontSizes.padding}`}>
+        <div
+            id="resume-print-content"
+            className="max-w-4xl mx-auto bg-white text-gray-900 font-sans"
+            style={paddingStyle}
+        >
             {/* Header */}
             {showHeader && (
             <header className="mb-4">
@@ -509,6 +533,11 @@ const ClassicTemplate = ({
                     </section>
                 )}
             </div>
+            {showWatermark && (
+                <footer className="mt-6 text-center text-[10px] text-gray-400 italic">
+                    {watermarkText}
+                </footer>
+            )}
         </div>
     );
 };

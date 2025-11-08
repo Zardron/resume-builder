@@ -15,7 +15,8 @@ import {
   LayoutTemplateIcon,
   Plus,
   ChevronDown,
-  Settings,
+  Maximize2,
+  Type,
   Eye,
   EyeOff,
   Download,
@@ -38,6 +39,13 @@ import SkillsAndLanguagesForm from "./forms/SkillsAndLanguagesForm";
 import AdditionalSectionsForm from "./forms/AdditionalSectionsForm";
 import ColorPicker from "../../util/ColorPicker";
 import { generateResumePdf } from "../../utils/pdfUtils";
+import CreditsIndicator from "../../components/CreditsIndicator";
+import {
+  DEFAULT_PAGE_MARGINS,
+  getDefaultMarginsForPaper,
+  resolvePageMargins,
+} from "../../utils/marginUtils";
+import { getStoredCredits } from "../../utils/creditUtils";
 
 const SECTIONS = [
   { id: "personal", name: "Personal Info", icon: User },
@@ -48,6 +56,13 @@ const SECTIONS = [
   { id: "skills", name: "Skills & Languages", icon: Sparkles },
   { id: "additional", name: "Additional Sections", icon: Plus },
 ];
+
+const TEMPLATE_DISPLAY_NAMES = {
+  classic: "Classic",
+  modern: "Modern",
+  minimal: "Minimal",
+  spotlight: "Spotlight",
+};
 
 const PAPER_SIZES = [
   { id: "short", label: 'Short', dimensions: '8.5" × 11"' },
@@ -60,6 +75,13 @@ const PAPER_DIMENSIONS = {
   A4: { width: "660px", height: "935px" },
   legal: { width: "680px", height: "1120px" },
 };
+
+const MARGIN_PRESETS = [
+  { id: "0.25", label: "0.25 in", value: 24 },
+  { id: "0.5", label: "0.5 in", value: 48 },
+  { id: "0.75", label: "0.75 in", value: 72 },
+  { id: "1", label: "1 in", value: 96 },
+];
 
 const getPreviewDimensions = (size) =>
   PAPER_DIMENSIONS[size] || PAPER_DIMENSIONS.A4;
@@ -98,6 +120,7 @@ const ResumeBuilder = () => {
     section_font_sizes: { ...DEFAULT_FONT_SIZES },
     public: false,
     paper_size: "A4",
+    page_margins: { ...DEFAULT_PAGE_MARGINS.A4 },
   });
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [removeBackground, setRemoveBackground] = useState(false);
@@ -109,10 +132,21 @@ const ResumeBuilder = () => {
   const typingTimeoutRef = useRef(null);
   const [isTemplateSelected, setIsTemplateSelected] = useState(false);
   const [showFontSizeDropdown, setShowFontSizeDropdown] = useState(false);
+  const [showMarginDropdown, setShowMarginDropdown] = useState(false);
+  const [showPaperDropdown, setShowPaperDropdown] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const formSectionRef = useRef(null);
   const previewRef = useRef(null);
+  const [availableCredits, setAvailableCredits] = useState(getStoredCredits);
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setAvailableCredits(getStoredCredits());
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const handleDownload = async () => {
     if (isDownloading || !previewRef.current) return;
@@ -171,10 +205,22 @@ const ResumeBuilder = () => {
   };
 
   const handlePaperSizeChange = (size) => {
-    setResumeData((prev) => ({
-      ...prev,
-      paper_size: size,
-    }));
+    setResumeData((prev) => {
+      const prevDefaults = getDefaultMarginsForPaper(prev.paper_size);
+      const nextDefaults = getDefaultMarginsForPaper(size);
+      const currentMargins = resolvePageMargins(prev.page_margins, prevDefaults);
+      const isUsingDefaults = ["top", "right", "bottom", "left"].every(
+        (side) => currentMargins[side] === prevDefaults[side]
+      );
+
+      return {
+        ...prev,
+        paper_size: size,
+        page_margins: isUsingDefaults
+          ? { ...nextDefaults }
+          : { ...currentMargins },
+      };
+    });
   };
 
   const updateSectionFontSize = (section, fontSize) => {
@@ -221,17 +267,20 @@ const ResumeBuilder = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        showFontSizeDropdown &&
-        !event.target.closest(".font-size-dropdown")
-      ) {
+      if (showFontSizeDropdown && !event.target.closest(".font-size-dropdown")) {
         setShowFontSizeDropdown(false);
+      }
+      if (showMarginDropdown && !event.target.closest(".margin-dropdown")) {
+        setShowMarginDropdown(false);
+      }
+      if (showPaperDropdown && !event.target.closest(".paper-dropdown")) {
+        setShowPaperDropdown(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showFontSizeDropdown]);
+  }, [showFontSizeDropdown, showMarginDropdown, showPaperDropdown]);
 
   useEffect(() => {
     if (isTypingComplete && formSectionRef.current) {
@@ -249,27 +298,62 @@ const ResumeBuilder = () => {
   const calculateProgressPercentage = () =>
     Math.round((activeSectionIndex * 100) / (SECTIONS.length - 1));
 
+  const paperSize = resumeData.paper_size || "A4";
+  const defaultPageMargins = getDefaultMarginsForPaper(paperSize);
+  const currentPageMargins = resolvePageMargins(
+    resumeData.page_margins,
+    defaultPageMargins
+  );
+
+  const getMarginPresetId = (margins) => {
+    const preset = MARGIN_PRESETS.find(({ value }) =>
+      ["top", "right", "bottom", "left"].every((side) => margins[side] === value)
+    );
+    return preset?.id || "custom";
+  };
+
+  const currentMarginPresetId = getMarginPresetId(currentPageMargins);
+
+  const handleMarginPresetChange = (presetId) => {
+    const preset = MARGIN_PRESETS.find((option) => option.id === presetId);
+    if (!preset) {
+      return;
+    }
+
+    setResumeData((prev) => ({
+      ...prev,
+      page_margins: {
+        top: preset.value,
+        right: preset.value,
+        bottom: preset.value,
+        left: preset.value,
+      },
+    }));
+  };
+
   const renderTemplate = () => {
     const templateProps = {
       data: resumeData,
       accentColor: resumeData.accent_color || "#3B82F6",
       sectionFontSizes: resumeData.section_font_sizes || {},
-      paperSize: resumeData.paper_size || "A4",
+      paperSize,
+      pageMargins: currentPageMargins,
+      availableCredits,
     };
 
     const templates = {
       classic: ClassicTemplate,
       modern: ModernTemplate,
       minimal: MinimalTemplate,
-      "minimal-image": SpotlightTemplate,
+      "spotlight": SpotlightTemplate,
     };
 
     const Template = templates[resumeData.template] || ClassicTemplate;
     return <Template {...templateProps} />;
   };
 
-  const previewDimensions = getPreviewDimensions(resumeData.paper_size || "A4");
-  const isFullHeightTemplate = resumeData.template === "minimal-image";
+  const previewDimensions = getPreviewDimensions(paperSize);
+  const isFullHeightTemplate = resumeData.template === "spotlight";
 
   return (
     <div className="mx-auto px-16 pt-4">
@@ -282,12 +366,17 @@ const ResumeBuilder = () => {
       </Link>
 
       <header className="w-full mt-2">
-        <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-          Create Resume
-        </h1>
-        <p className="text-sm font-light text-gray-900 dark:text-gray-100">
-          Craft a professional, standout resume in minutes — powered by AI
-        </p>
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+              Create Resume
+            </h1>
+            <p className="text-sm font-light text-gray-900 dark:text-gray-100">
+              Craft a professional, standout resume in minutes — powered by AI
+            </p>
+          </div>
+          <CreditsIndicator availableCredits={availableCredits} />
+        </div>
         <div className="mt-2 space-y-2 mb-4">
           <label className="block text-sm font-medium text-gray-800 dark:text-gray-200">
             Resume Title
@@ -336,10 +425,10 @@ const ResumeBuilder = () => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 overflow-x-auto">
                     <button
                       onClick={() => setIsTemplateSelected(!isTemplateSelected)}
-                      className="flex items-center gap-1 p-2 rounded-md text-sm font-medium text-white transition-all bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] cursor-pointer hover:opacity-80"
+                      className="flex items-center gap-1 p-2 rounded-md text-sm font-medium text-white transition-all bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] cursor-pointer hover:opacity-80 flex-shrink-0"
                     >
                       {isTemplateSelected ? (
                         <>
@@ -354,7 +443,7 @@ const ResumeBuilder = () => {
                     {!isTemplateSelected && (
                       <button
                         onClick={() => setShowColorPicker(!showColorPicker)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
+                        className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors border flex-shrink-0 ${
                           showColorPicker
                             ? "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 border-blue-300 dark:border-blue-600"
                             : "text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-600"
@@ -385,7 +474,7 @@ const ResumeBuilder = () => {
                       {activeSectionIndex !== SECTIONS.length - 1 && (
                         <button
                           onClick={handleNextClick}
-                          className="flex items-center gap-1 p-3 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all"
+                          className="flex items-center gap-1 p-3 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all cursor-pointer"
                         >
                           Next <ChevronRightIcon className="size-4" />
                         </button>
@@ -549,6 +638,31 @@ const ResumeBuilder = () => {
                     </>
                   )}
                 </div>
+                {!isTemplateSelected && (
+                  <div className="mt-8 flex flex-col gap-4 border-t border-gray-200 dark:border-gray-700 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      Step {activeSectionIndex + 1} of {SECTIONS.length}
+                    </span>
+                    <div className="flex items-center justify-end gap-2">
+                      {activeSectionIndex !== 0 && (
+                        <button
+                          onClick={handlePreviousClick}
+                          className="flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                        >
+                          <ChevronLeftIcon className="size-4" /> Previous
+                        </button>
+                      )}
+                      {activeSectionIndex !== SECTIONS.length - 1 && (
+                        <button
+                          onClick={handleNextClick}
+                          className="flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:opacity-90 transition-all cursor-pointer"
+                        >
+                          Next <ChevronRightIcon className="size-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Overlay for entire section when title is empty or loading */}
@@ -586,28 +700,49 @@ const ResumeBuilder = () => {
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                         Live Preview
                       </h3>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
-                          <label htmlFor="paper-size-selector-header" className="font-medium">
-                            Paper
-                          </label>
-                          <select
-                            id="paper-size-selector-header"
-                            value={resumeData.paper_size}
-                            onChange={(e) => handlePaperSizeChange(e.target.value)}
-                            className="px-2 py-1.5 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      <div className="flex items-center gap-2">
+                        <div className="relative paper-dropdown">
+                          <button
+                            onClick={() => setShowPaperDropdown((prev) => !prev)}
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                           >
-                            {PAPER_SIZES.map((size) => (
-                              <option key={size.id} value={size.id}>
-                                {size.label} ({size.dimensions})
-                              </option>
-                            ))}
-                          </select>
+                            <LayoutTemplateIcon className="w-4 h-4" />
+                            Paper Sizes
+                            <ChevronDown
+                              className={`w-3 h-3 transition-transform ${
+                                showPaperDropdown ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+
+                          {showPaperDropdown && (
+                            <div className="absolute right-0 top-full mt-2 w-34 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 space-y-1">
+                              {PAPER_SIZES.map((size) => (
+                                <button
+                                  key={size.id}
+                                  onClick={() => {
+                                    handlePaperSizeChange(size.id);
+                                    setShowPaperDropdown(false);
+                                  }}
+                                  className={`w-full text-left px-3 py-1.5 text-xs rounded-md transition-colors ${
+                                    resumeData.paper_size === size.id
+                                      ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium"
+                                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                  }`}
+                                >
+                                  <div className="font-semibold">{size.label}</div>
+                                  <div className="text-[10px] text-gray-500 dark:text-gray-400">
+                                    {size.dimensions}
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {resumeData.template.charAt(0).toUpperCase() +
-                            resumeData.template.slice(1).replace("-", " ")}{" "}
-                          Template
+                        <span className="px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg">
+                          {TEMPLATE_DISPLAY_NAMES[resumeData.template] ||
+                            resumeData.template}
+                          {" Template"}
                         </span>
                       </div>
                     </div>
@@ -697,15 +832,60 @@ const ResumeBuilder = () => {
                       <Share2 className="w-4 h-4" />
                     </button>
                   </div>
-                  {/* Section Font Size Controls */}
-                  <div className="relative font-size-dropdown">
+            
+            <div className="flex items-center gap-2">
+              {/* Margin Preset Dropdown */}
+              <div className="relative margin-dropdown">
+                <button
+                  onClick={() =>
+                    setShowMarginDropdown((prev) => !prev)
+                  }
+                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                  Margins
+                  <ChevronDown
+                    className={`w-3 h-3 transition-transform ${
+                      showMarginDropdown ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {showMarginDropdown && (
+                  <div className="absolute right-0 top-full mt-2 w-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 space-y-2">
+                    {currentMarginPresetId === "custom" && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Custom margins applied
+                      </p>
+                    )}
+                    {MARGIN_PRESETS.map((preset) => (
+                      <button
+                        key={preset.id}
+                        onClick={() => {
+                          handleMarginPresetChange(preset.id);
+                          setShowMarginDropdown(false);
+                        }}
+                        className={`w-full text-left px-2 py-1 text-xs rounded-md transition-colors ${
+                          currentMarginPresetId === preset.id
+                            ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium"
+                            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {/* Section Font Size Controls */}
+              <div className="relative font-size-dropdown">
                     <button
                       onClick={() =>
                         setShowFontSizeDropdown(!showFontSizeDropdown)
                       }
-                      className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                     >
-                      <Settings className="w-4 h-4" />
+                  <Type className="w-4 h-4" />
                       Font Sizes
                       <ChevronDown
                         className={`w-3 h-3 transition-transform ${
@@ -740,6 +920,7 @@ const ResumeBuilder = () => {
                                   }
                                   className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                 >
+                                  <option value="extra_small">Extra Small</option>
                                   <option value="small">Small</option>
                                   <option value="medium">Medium</option>
                                   <option value="large">Large</option>
@@ -759,6 +940,7 @@ const ResumeBuilder = () => {
                                   }
                                   className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                 >
+                                  <option value="extra_small">Extra Small</option>
                                   <option value="small">Small</option>
                                   <option value="medium">Medium</option>
                                   <option value="large">Large</option>
@@ -781,6 +963,7 @@ const ResumeBuilder = () => {
                                   }
                                   className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                 >
+                                  <option value="extra_small">Extra Small</option>
                                   <option value="small">Small</option>
                                   <option value="medium">Medium</option>
                                   <option value="large">Large</option>
@@ -816,6 +999,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -851,6 +1035,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -873,6 +1058,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -895,6 +1081,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -916,6 +1103,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -951,6 +1139,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -972,6 +1161,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -993,6 +1183,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -1012,6 +1203,7 @@ const ResumeBuilder = () => {
                                     }
                                     className="text-xs px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   >
+                                    <option value="extra_small">Extra Small</option>
                                     <option value="small">Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
@@ -1024,6 +1216,7 @@ const ResumeBuilder = () => {
                       </div>
                     )}
                   </div>
+            </div>
                 </div>
                 <hr className="border-gray-200 dark:border-gray-700 mx-4" />
 

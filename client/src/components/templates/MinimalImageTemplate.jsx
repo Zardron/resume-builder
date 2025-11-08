@@ -8,6 +8,10 @@ import {
     getLocationFontSize,
     getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
+import {
+    getDefaultMarginsForPaper,
+    getPagePaddingStyle
+} from "../../utils/marginUtils";
 
 const MinimalImageTemplate = ({ 
     data, 
@@ -19,7 +23,8 @@ const MinimalImageTemplate = ({
     showProjects = true,
     showEducation = true,
     showSkills = true,
-    paperSize = "A4"
+    paperSize = "A4",
+    pageMargins
 }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
@@ -98,11 +103,16 @@ const MinimalImageTemplate = ({
         return null;
     };
 
+    const paddingStyle = getPagePaddingStyle(
+        pageMargins,
+        getDefaultMarginsForPaper(paperSize)
+    );
+
     return (
         <div
             id="resume-print-content"
             className="max-w-6xl mx-auto bg-white text-gray-900 font-sans"
-            style={{ minHeight: getPaperHeight() }}
+            style={{ ...paddingStyle, minHeight: getPaperHeight() }}
         >
             <div className="grid grid-cols-12 h-full">
                 

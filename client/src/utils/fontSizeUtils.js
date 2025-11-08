@@ -13,6 +13,7 @@
 export const getSectionFontSize = (sectionFontSizes, section, defaultSize = 'medium') => {
     const size = sectionFontSizes[section] || defaultSize;
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm', 
         large: 'text-base'
@@ -28,6 +29,7 @@ export const getSectionFontSize = (sectionFontSizes, section, defaultSize = 'med
 export const getNameFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.name || 'large';
     const sizeMap = {
+        extra_small: 'text-base',
         small: 'text-lg',
         medium: 'text-xl',
         large: 'text-2xl'
@@ -43,6 +45,7 @@ export const getNameFontSize = (sectionFontSizes) => {
 export const getSectionHeaderFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.section_headers || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -58,6 +61,7 @@ export const getSectionHeaderFontSize = (sectionFontSizes) => {
 export const getDateFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.dates || 'small';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -73,6 +77,7 @@ export const getDateFontSize = (sectionFontSizes) => {
 export const getCompanyFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.company_names || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -88,6 +93,7 @@ export const getCompanyFontSize = (sectionFontSizes) => {
 export const getLocationFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.location || 'small';
     const sizeMap = {
+        extra_small: 'text-[9px]',
         small: 'text-[10px]',
         medium: 'text-xs',
         large: 'text-sm'
@@ -103,6 +109,7 @@ export const getLocationFontSize = (sectionFontSizes) => {
 export const getJobTitleFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.title || 'medium';
     const sizeMap = {
+        extra_small: 'text-xs',
         small: 'text-sm',
         medium: 'text-base',
         large: 'text-lg'
@@ -118,6 +125,7 @@ export const getJobTitleFontSize = (sectionFontSizes) => {
 export const getContactDetailsFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.contact_details || 'small';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -133,6 +141,7 @@ export const getContactDetailsFontSize = (sectionFontSizes) => {
 export const getSummaryFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.summary || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -148,6 +157,7 @@ export const getSummaryFontSize = (sectionFontSizes) => {
 export const getExperienceFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.experience || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -163,6 +173,7 @@ export const getExperienceFontSize = (sectionFontSizes) => {
 export const getJobDescriptionsFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.job_descriptions || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -178,6 +189,7 @@ export const getJobDescriptionsFontSize = (sectionFontSizes) => {
 export const getEducationFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.education || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -193,6 +205,7 @@ export const getEducationFontSize = (sectionFontSizes) => {
 export const getProjectsFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.projects || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'
@@ -208,6 +221,7 @@ export const getProjectsFontSize = (sectionFontSizes) => {
 export const getSkillsFontSize = (sectionFontSizes) => {
     const size = sectionFontSizes.skills || 'medium';
     const sizeMap = {
+        extra_small: 'text-[10px]',
         small: 'text-xs',
         medium: 'text-sm',
         large: 'text-base'

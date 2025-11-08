@@ -74,7 +74,7 @@ const TemplatePreviewModal = ({
       name: "Minimal",
       description: "Clean, minimalist design focusing on content and readability"
     },
-    "minimal-image": {
+    "spotlight": {
       component: SpotlightTemplate,
       name: "Spotlight",
       description: "Minimalist design with space for a professional photo"

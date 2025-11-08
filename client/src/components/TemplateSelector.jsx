@@ -93,7 +93,7 @@ const TemplateSelector = ({
       component: MinimalTemplate
     },
     {
-      id: "minimal-image",
+      id: "spotlight",
       name: "Spotlight",
       description: "Minimalist design with professional photo space",
       component: SpotlightTemplate

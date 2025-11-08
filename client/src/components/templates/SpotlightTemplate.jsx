@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin, Linkedin, Globe, Circle, Award, Briefcase, GraduationCap, User, Github, Twitter, Instagram, Youtube, Facebook, MessageCircle, Languages, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 import { 
     getSectionFontSize, 
     getNameFontSize, 
@@ -8,10 +9,15 @@ import {
     getLocationFontSize,
     getTextColorForBackground 
 } from "../../utils/fontSizeUtils";
+import {
+    getDefaultMarginsForPaper,
+    getPagePaddingStyle
+} from "../../utils/marginUtils";
 
 const SpotlightTemplate = ({ 
     data, 
     accentColor, 
+    availableCredits = 0,
     sectionFontSizes = {},
     showHeader = true,
     showProfessionalSummary = true,
@@ -19,7 +25,8 @@ const SpotlightTemplate = ({
     showProjects = true,
     showEducation = true,
     showSkills = true,
-    paperSize = "A4"
+    paperSize = "A4",
+    pageMargins
 }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
@@ -80,6 +87,16 @@ const SpotlightTemplate = ({
     // Determine text color based on background
     const textColor = getTextColorForBackground(accentColor);
     const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
+    const showWatermark = availableCredits <= 0;
+    const watermarkText = (
+        <>
+            This resume was generated with Resume Builder by Zardron Angelo Pesquera.{" "}
+            <Link to="/dashboard/purchase" className="underline underline-offset-2 cursor-pointer">
+                Buy more credits
+            </Link>
+            .
+        </>
+    );
 
     const getPaperHeight = () => {
         const heights = {
@@ -98,11 +115,16 @@ const SpotlightTemplate = ({
         return null;
     };
 
+    const paddingStyle = getPagePaddingStyle(
+        pageMargins,
+        getDefaultMarginsForPaper(paperSize)
+    );
+
     return (
         <div
             id="resume-print-content"
             className="max-w-6xl mx-auto bg-white text-gray-900 font-sans"
-            style={{ height: getPaperHeight() }}
+            style={{ ...paddingStyle, height: getPaperHeight() }}
         >
             <div className="grid grid-cols-12 h-full" style={{ minHeight: '100%' }}>
                 
@@ -227,7 +249,7 @@ const SpotlightTemplate = ({
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
-                                        <Star className={`size-3 ${textColorClass}`} />
+                                        <Heart className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
                                         Soft Skills
@@ -311,6 +333,11 @@ const SpotlightTemplate = ({
                         <h1 className={`${getNameFontSize(sectionFontSizes)} font-bold text-gray-900 mb-1 capitalize`}>
                             {data.personal_info?.name || "Your Name"}
                         </h1>
+                        {showWatermark && (
+                            <p className="text-xs font-semibold text-red-600">
+                                {watermarkText}
+                            </p>
+                        )}
                         {data.personal_info?.profession && (
                             <p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-600 font-medium mb-3`}>
                                 {data.personal_info.profession}
@@ -480,6 +507,11 @@ const SpotlightTemplate = ({
                     )}
                 </main>
             </div>
+            {showWatermark && (
+                <footer className="mt-6 text-center text-[10px] text-gray-400 italic">
+                    {watermarkText}
+                </footer>
+            )}
         </div>
     );
 };
