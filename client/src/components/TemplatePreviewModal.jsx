@@ -90,25 +90,25 @@ const TemplatePreviewModal = ({
   const getPaperSizeStyles = (size) => {
     const styles = {
       short: {
-        width: "680px",        // Realistic screen width for 8.5" paper
-        height: "880px",       // Realistic screen height for 11" paper
+        width: "816px",        // 8.5" × 11" at 96 DPI
+        height: "1056px",
         aspectRatio: "8.5/11",
-        maxWidth: "680px",
-        maxHeight: "880px"
+        maxWidth: "816px",
+        maxHeight: "1056px"
       },
       A4: {
-        width: "660px",        // Realistic screen width for A4 paper
-        height: "935px",       // Realistic screen height for A4 paper
+        width: "794px",        // 210mm × 297mm at 96 DPI
+        height: "1123px",
         aspectRatio: "8.27/11.69",
-        maxWidth: "660px",
-        maxHeight: "935px"
+        maxWidth: "794px",
+        maxHeight: "1123px"
       },
       legal: {
-        width: "680px",        // Realistic screen width for legal paper
-        height: "1120px",      // Realistic screen height for 14" paper
+        width: "816px",        // 8.5" × 14" at 96 DPI
+        height: "1344px",
         aspectRatio: "8.5/14",
-        maxWidth: "680px",
-        maxHeight: "1120px"
+        maxWidth: "816px",
+        maxHeight: "1344px"
       }
     };
     return styles[size] || styles.A4;

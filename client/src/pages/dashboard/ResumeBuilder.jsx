@@ -71,9 +71,9 @@ const PAPER_SIZES = [
 ];
 
 const PAPER_DIMENSIONS = {
-  short: { width: "680px", height: "880px" },
-  A4: { width: "660px", height: "935px" },
-  legal: { width: "680px", height: "1120px" },
+  short: { width: "816px", height: "1056px" }, // 8.5" × 11" at 96 DPI
+  A4: { width: "794px", height: "1123px" }, // 210mm × 297mm at 96 DPI
+  legal: { width: "816px", height: "1344px" }, // 8.5" × 14" at 96 DPI
 };
 
 const MARGIN_PRESETS = [
@@ -146,9 +146,9 @@ const ResumeBuilder = () => {
   const [showPaperDropdown, setShowPaperDropdown] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [isExportMode, setIsExportMode] = useState(false);
   const formSectionRef = useRef(null);
   const previewRef = useRef(null);
+  const exportRef = useRef(null);
   const [availableCredits, setAvailableCredits] = useState(getStoredCredits);
   useEffect(() => {
     const handleStorageChange = () => {
@@ -160,10 +160,10 @@ const ResumeBuilder = () => {
   }, []);
 
   const handleDownload = async () => {
-    if (isDownloading || !previewRef.current) return;
+    const targetNode = exportRef.current || previewRef.current;
+    if (isDownloading || !targetNode) return;
 
     setIsDownloading(true);
-    setIsExportMode(true);
 
     await new Promise((resolve) => requestAnimationFrame(() => resolve()));
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -176,14 +176,13 @@ const ResumeBuilder = () => {
         : `resume_${new Date().getTime()}.pdf`;
 
       await generateResumePdf({
-        node: previewRef.current,
+        node: targetNode,
         fileName,
       });
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert("Failed to generate PDF. Please try again.");
     } finally {
-      setIsExportMode(false);
       setIsDownloading(false);
     }
   };
@@ -355,7 +354,7 @@ const ResumeBuilder = () => {
     }));
   };
 
-  const renderTemplate = () => {
+  const renderTemplate = (isDownloadMode = false) => {
     const templateProps = {
       data: resumeData,
       accentColor: resumeData.accent_color || "#3B82F6",
@@ -363,7 +362,7 @@ const ResumeBuilder = () => {
       paperSize,
       pageMargins: currentPageMargins,
       availableCredits,
-      isDownloadMode: isExportMode,
+      isDownloadMode,
     };
 
     const templates = {
@@ -851,7 +850,7 @@ const ResumeBuilder = () => {
 
                     {/* Share Button */}
                     <button
-                      className="flex items-center justify-center px-2 py-1.5 rounded-lg transition-colors hover:opacity-80 cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor:
                           "rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)",
@@ -859,9 +858,10 @@ const ResumeBuilder = () => {
                         border:
                           "1px solid rgba(var(--primary-color-rgb, 59, 130, 246), 0.2)",
                       }}
-                      title="Share Resume"
                     >
-                      <Share2 className="w-4 h-4" />
+                     
+                        <Share2 className="w-4 h-4" />
+                      Share
                     </button>
                   </div>
 
@@ -1282,6 +1282,7 @@ const ResumeBuilder = () => {
                     <div className="max-h-[600px] overflow-y-auto overflow-x-hidden">
                       <div
                         ref={previewRef}
+                        data-preview-environment="true"
                         className="origin-top-left text-[1em] resume-preview-content"
                         style={{
                           width: `min(${previewDimensions.width}, 100%)`,
@@ -1292,7 +1293,7 @@ const ResumeBuilder = () => {
                           margin: "0 auto",
                         }}
                       >
-                        {renderTemplate()}
+                        {renderTemplate(false)}
                       </div>
                     </div>
                   </div>
@@ -1306,6 +1307,34 @@ const ResumeBuilder = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            visibility: "hidden",
+            zIndex: -1,
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            padding: "32px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            ref={exportRef}
+            className="origin-top-left text-[1em] resume-preview-export-content"
+            style={{
+              width: previewDimensions.width,
+              height: isFullHeightTemplate ? previewDimensions.height : "auto",
+              margin: "0 auto",
+            }}
+          >
+            {renderTemplate(true)}
           </div>
         </div>
       </div>

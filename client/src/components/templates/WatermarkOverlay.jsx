@@ -17,7 +17,7 @@ const WatermarkOverlay = ({
   return (
     <>
     <div
-      className={`pointer-events-none absolute inset-0 grid place-items-center select-none ${className}`}
+      className={`watermark-overlay pointer-events-none absolute inset-0 grid place-items-center select-none ${className}`}
       aria-hidden="true"
     >
       <img
@@ -27,7 +27,7 @@ const WatermarkOverlay = ({
       />
        
     </div>
-    <p className="absolute bottom-4 left-0 right-0 text-center text-[10px] text-gray-400 italic">{watermarkText}  </p>
+    <p className="watermark-overlay-text absolute bottom-4 left-0 right-0 text-center text-[10px] text-gray-400 italic">{watermarkText}  </p>
   </>
   );
 };

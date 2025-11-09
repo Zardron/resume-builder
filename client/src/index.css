@@ -386,6 +386,12 @@ body.modal-open {
   background: #94a3b8;
 }
 
+[data-preview-environment="true"] .watermark-overlay,
+[data-preview-environment="true"] .watermark-overlay-text {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
 /* PRINT STYLES - Only show resume template content when printing */
 @media print {
   /* Hide everything */

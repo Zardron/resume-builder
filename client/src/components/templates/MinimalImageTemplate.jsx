@@ -125,7 +125,7 @@ const MinimalImageTemplate = ({
 
   const getPaperHeight = () => {
     const heights = {
-      short: "880px",
+      short: "1056px",
       A4: "1123px",
       legal: "1344px",
     };

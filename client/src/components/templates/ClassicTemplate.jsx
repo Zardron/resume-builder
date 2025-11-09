@@ -168,13 +168,13 @@ const ClassicTemplate = ({
 
   const printHeightClass =
     {
-      short: "print:min-h-[880px]",
+      short: "print:min-h-[1056px]",
       A4: "print:min-h-[1123px]",
       legal: "print:min-h-[1344px]",
     }[paperSize] || "print:min-h-[1123px]";
 
   const heightMap = {
-    short: "880px",
+    short: "1056px",
     A4: "1123px",
     legal: "1344px",
   };

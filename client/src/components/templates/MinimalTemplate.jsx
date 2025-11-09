@@ -130,9 +130,9 @@ const MinimalTemplate = ({
   // Calculate height based on paper size
   const getPaperHeight = () => {
     const heights = {
-      short: "880px", // Matches modal preview height
-      A4: "935px", // Matches modal preview height
-      legal: "1120px", // Matches modal preview height
+      short: "1056px",
+      A4: "1123px",
+      legal: "1344px",
     };
     return heights[paperSize] || heights.A4;
   };
@@ -144,13 +144,13 @@ const MinimalTemplate = ({
 
   const printHeightClass =
     {
-      short: "print:min-h-[880px]",
+      short: "print:min-h-[1056px]",
       A4: "print:min-h-[1123px]",
       legal: "print:min-h-[1344px]",
     }[paperSize] || "print:min-h-[1123px]";
 
   const heightMap = {
-    short: "880px",
+    short: "1056px",
     A4: "1123px",
     legal: "1344px",
   };

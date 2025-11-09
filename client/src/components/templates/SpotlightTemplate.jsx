@@ -97,13 +97,13 @@ const SpotlightTemplate = ({
     );
 
     const heightMap = {
-        short: '880px',
+        short: '1056px',
         A4: '1123px',
         legal: '1344px'
     };
 
     const printHeightClass = {
-        short: "print:max-h-[880px]",
+        short: "print:max-h-[1056px]",
         A4: "print:max-h-[1123px]",
         legal: "print:max-h-[1344px]"
     }[paperSize] || "print:max-h-[1123px]";
