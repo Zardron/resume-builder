@@ -206,7 +206,49 @@ export const generateResumePdf = async ({ node, fileName }) => {
     return originalInsertRule.call(this, rule, index);
   };
 
+  const waitForImageLoad = async (img) => {
+    if (!img) return;
+
+    if (img.complete && img.naturalWidth > 0) {
+      if (typeof img.decode === 'function') {
+        try {
+          await img.decode();
+        } catch {
+          // Ignore decode errors and resolve immediately
+        }
+      }
+      return;
+    }
+
+    await new Promise((resolve) => {
+      const cleanUp = () => {
+        img.removeEventListener('load', onLoad);
+        img.removeEventListener('error', onError);
+      };
+
+      const onLoad = () => {
+        cleanUp();
+        resolve();
+      };
+
+      const onError = () => {
+        cleanUp();
+        resolve();
+      };
+
+      img.addEventListener('load', onLoad, { once: true });
+      img.addEventListener('error', onError, { once: true });
+    });
+  };
+
+  const waitForImages = async (element) => {
+    if (!element) return;
+    const images = Array.from(element.querySelectorAll('img'));
+    await Promise.all(images.map(waitForImageLoad));
+  };
+
   try {
+    await waitForImages(clone);
     dataUrl = await toPng(clone, baseOptions);
   } catch (error) {
     console.warn('Primary capture failed, retrying without embedded fonts.', error);
@@ -236,13 +278,16 @@ export const generateResumePdf = async ({ node, fileName }) => {
 
   const widthScale = maxPdfWidth / pdfWidth;
   const heightScale = maxPdfHeight / pdfHeight;
-  const scale = Math.min(1, widthScale, heightScale);
+  const scale = Math.min(widthScale, heightScale);
+  const normalizedScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
 
-  pdfWidth *= scale;
-  pdfHeight *= scale;
+  pdfWidth *= normalizedScale;
+  pdfHeight *= normalizedScale;
 
   const pdf = new jsPDF('p', 'mm', 'a4');
-  pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
+  const xOffset = pdfWidth < maxPdfWidth ? (maxPdfWidth - pdfWidth) / 2 : 0;
+  const yOffset = pdfHeight < maxPdfHeight ? (maxPdfHeight - pdfHeight) / 2 : 0;
+  pdf.addImage(dataUrl, 'PNG', xOffset, yOffset, pdfWidth, pdfHeight);
   pdf.save(fileName);
 };
 
