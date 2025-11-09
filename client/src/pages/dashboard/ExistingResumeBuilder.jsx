@@ -139,6 +139,7 @@ const ExistingResumeBuilder = () => {
   const [showPaperDropdown, setShowPaperDropdown] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isExportMode, setIsExportMode] = useState(false);
   const [availableCredits, setAvailableCredits] = useState(getStoredCredits);
   const formSectionRef = useRef(null);
   const previewRef = useRef(null);
@@ -155,6 +156,10 @@ const ExistingResumeBuilder = () => {
     if (isDownloading || !previewRef.current) return;
 
     setIsDownloading(true);
+    setIsExportMode(true);
+
+    await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     try {
       const fileName = resumeData.title
@@ -171,6 +176,7 @@ const ExistingResumeBuilder = () => {
       console.error("Error generating PDF:", error);
       alert("Failed to generate PDF. Please try again.");
     } finally {
+      setIsExportMode(false);
       setIsDownloading(false);
     }
   };
@@ -366,6 +372,7 @@ const ExistingResumeBuilder = () => {
       paperSize,
       pageMargins: currentPageMargins,
       availableCredits,
+      isDownloadMode: isExportMode,
     };
 
     const templates = {
