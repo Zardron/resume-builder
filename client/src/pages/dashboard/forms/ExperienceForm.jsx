@@ -35,10 +35,17 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
     }
   }, []);
 
+  // Keep the latest onChange handler without retriggering downstream effects
+  const latestOnChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    latestOnChangeRef.current = onChange;
+  }, [onChange]);
+
   // Update parent component when experiences change
   useEffect(() => {
-    onChange(experiences);
-  }, [experiences, onChange]);
+    latestOnChangeRef.current?.(experiences);
+  }, [experiences]);
 
   // Add new experience
   const addExperience = () => {

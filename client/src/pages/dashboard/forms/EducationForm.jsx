@@ -27,6 +27,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
   const validationRef = useRef();
   const dropdownRef = useRef({});
   const institutionDropdownRef = useRef({});
+  const latestOnChangeRef = useRef(onChange);
 
   // Initialize with one empty education if none exist
   useEffect(() => {
@@ -46,10 +47,14 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
     }
   }, []);
 
+  useEffect(() => {
+    latestOnChangeRef.current = onChange;
+  }, [onChange]);
+
   // Update parent component when education list changes
   useEffect(() => {
-    onChange(educationList);
-  }, [educationList, onChange]);
+    latestOnChangeRef.current?.(educationList);
+  }, [educationList]);
 
   // Add new education
   const addEducation = () => {

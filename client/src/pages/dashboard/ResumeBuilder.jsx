@@ -194,6 +194,7 @@ const ResumeBuilder = () => {
         node: targetNode,
         fileName,
         paperSize,
+        pageMargins: currentPageMargins,
       });
     } catch (error) {
       console.error("Error generating PDF:", error);

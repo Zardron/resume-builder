@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import { toPng } from 'html-to-image';
 import { converter, formatRgb } from 'culori';
+import { resolvePageMargins, getDefaultMarginsForPaper } from './marginUtils';
 
 const toRgb = converter('rgb');
 
@@ -144,7 +145,12 @@ const PAPER_SIZE_CONFIG = {
 
 const getPaperConfig = (paperSize) => PAPER_SIZE_CONFIG[paperSize] || PAPER_SIZE_CONFIG.A4;
 
-export const generateResumePdf = async ({ node, fileName, paperSize = 'A4' }) => {
+export const generateResumePdf = async ({
+  node,
+  fileName,
+  paperSize = 'A4',
+  pageMargins,
+}) => {
   if (!node) {
     throw new Error('Preview node is not available.');
   }
@@ -187,9 +193,56 @@ export const generateResumePdf = async ({ node, fileName, paperSize = 'A4' }) =>
   clone.style.maxWidth = 'unset';
   clone.style.maxHeight = 'unset';
 
+  const cloneRect = clone.getBoundingClientRect();
+  const cssWidthPx =
+    (cloneRect?.width && Number.isFinite(cloneRect.width) && cloneRect.width > 0
+      ? cloneRect.width
+      : 0) ||
+    (contentWidth && Number.isFinite(contentWidth) && contentWidth > 0 ? contentWidth : 0) ||
+    (clone.offsetWidth && clone.offsetWidth > 0 ? clone.offsetWidth : 0);
+
   tempContainer.appendChild(clone);
 
   document.body.appendChild(tempContainer);
+
+  const parsePaddingValue = (value) => {
+    const numeric = Number.parseFloat(value);
+    if (!Number.isFinite(numeric) || numeric < 0) {
+      return 0;
+    }
+    return numeric;
+  };
+
+  const resolveContentPadding = () => {
+    const possibleContentRoot =
+      clone.querySelector('[data-resume-content]') || clone.firstElementChild || clone;
+
+    if (!possibleContentRoot) {
+      return { top: 0, right: 0, bottom: 0, left: 0 };
+    }
+
+    const style = getComputedStyle(possibleContentRoot);
+    return {
+      top: parsePaddingValue(style.paddingTop),
+      right: parsePaddingValue(style.paddingRight),
+      bottom: parsePaddingValue(style.paddingBottom),
+      left: parsePaddingValue(style.paddingLeft),
+    };
+  };
+
+  const contentPaddingSource = (() => {
+    if (pageMargins) {
+      try {
+        const defaultMargins = getDefaultMarginsForPaper(paperSize);
+        return resolvePageMargins(pageMargins, defaultMargins);
+      } catch (error) {
+        console.warn('Failed to resolve provided page margins; falling back to computed padding.', error);
+      }
+    }
+    return resolveContentPadding();
+  })();
+
+  const contentPadding = contentPaddingSource || resolveContentPadding();
 
   // Normalize global custom properties that may use OKLCH
   normalizeCustomProperties(document.documentElement, tempContainer);
@@ -278,27 +331,125 @@ export const generateResumePdf = async ({ node, fileName, paperSize = 'A4' }) =>
   });
 
   const PX_TO_MM = 25.4 / 96; // 96 DPI
+  const captureScaleX =
+    cssWidthPx > 0 && Number.isFinite(image.width) && image.width > 0
+      ? image.width / cssWidthPx
+      : 1;
+  const captureScale =
+    Number.isFinite(captureScaleX) && captureScaleX > 0 ? captureScaleX : 1;
+  const cssBaseWidthPx =
+    cssWidthPx > 0
+      ? cssWidthPx
+      : Number.isFinite(image.width) && image.width > 0
+        ? image.width / captureScale
+        : 0;
   const { width: maxPdfWidth, height: maxPdfHeight, format } = getPaperConfig(paperSize);
 
-  let pdfWidth = image.width * PX_TO_MM;
-  let pdfHeight = image.height * PX_TO_MM;
+  const contentPaddingTopPx = contentPadding.top;
+  const contentPaddingBottomPx = contentPadding.bottom;
+  const paddingTopImagePx = contentPaddingTopPx * captureScale;
+  const paddingBottomImagePx = contentPaddingBottomPx * captureScale;
 
-  const widthScale = maxPdfWidth / pdfWidth;
-  const heightScale = maxPdfHeight / pdfHeight;
-  const scale = Math.min(widthScale, heightScale);
-  const normalizedScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
+  const basePdfWidth =
+    cssBaseWidthPx > 0 ? cssBaseWidthPx * PX_TO_MM : image.width * PX_TO_MM;
+  const widthScale = maxPdfWidth / basePdfWidth;
+  const normalizedScale = Number.isFinite(widthScale) && widthScale > 0 ? Math.min(widthScale, 1) : 1;
+  const scaledPdfWidth = basePdfWidth * normalizedScale;
 
-  pdfWidth *= normalizedScale;
-  pdfHeight *= normalizedScale;
+  const rawContentHeightPx = image.height - paddingTopImagePx - paddingBottomImagePx;
+  const hasValidPadding = rawContentHeightPx > 0;
+
+  const effectiveContentHeightPx = hasValidPadding ? rawContentHeightPx : image.height;
+  const startOffsetPx = hasValidPadding ? paddingTopImagePx : 0;
+
+  let paddingTopMm = hasValidPadding ? contentPaddingTopPx * PX_TO_MM * normalizedScale : 0;
+  let paddingBottomMm = hasValidPadding ? contentPaddingBottomPx * PX_TO_MM * normalizedScale : 0;
+
+  let innerPageHeightMm = maxPdfHeight - paddingTopMm - paddingBottomMm;
+  if (!hasValidPadding || innerPageHeightMm <= 0) {
+    innerPageHeightMm = maxPdfHeight;
+    paddingTopMm = 0;
+    paddingBottomMm = 0;
+  }
+
+  const innerPageHeightPxExact =
+    innerPageHeightMm * captureScale / (PX_TO_MM * normalizedScale);
+  const innerPageHeightPx =
+    Number.isFinite(innerPageHeightPxExact) && innerPageHeightPxExact > 0
+      ? innerPageHeightPxExact
+      : image.height;
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(effectiveContentHeightPx / innerPageHeightPx),
+  );
 
   const pdf = new jsPDF({
     orientation: 'p',
     unit: 'mm',
     format,
   });
-  const xOffset = pdfWidth < maxPdfWidth ? (maxPdfWidth - pdfWidth) / 2 : 0;
-  const yOffset = pdfHeight < maxPdfHeight ? (maxPdfHeight - pdfHeight) / 2 : 0;
-  pdf.addImage(dataUrl, 'PNG', xOffset, yOffset, pdfWidth, pdfHeight);
+  const xOffset = scaledPdfWidth < maxPdfWidth ? (maxPdfWidth - scaledPdfWidth) / 2 : 0;
+
+  const paddingTopPx = hasValidPadding ? paddingTopImagePx : 0;
+  const paddingBottomPx = hasValidPadding ? paddingBottomImagePx : 0;
+
+  for (let pageIndex = 0; pageIndex < totalPages; pageIndex += 1) {
+    const contentOffsetPx = startOffsetPx + pageIndex * innerPageHeightPx;
+    const remainingContentPx =
+      effectiveContentHeightPx - pageIndex * innerPageHeightPx;
+    const contentSliceHeightPx = Math.max(
+      Math.min(innerPageHeightPx, remainingContentPx),
+      0,
+    );
+
+    if (contentSliceHeightPx <= 0) {
+      continue;
+    }
+
+    const sliceCanvas = document.createElement('canvas');
+    sliceCanvas.width = image.width;
+    const canvasHeightPx = Math.max(
+      Math.ceil(contentSliceHeightPx + paddingTopPx + paddingBottomPx),
+      1,
+    );
+    sliceCanvas.height = canvasHeightPx;
+
+    const context = sliceCanvas.getContext('2d');
+    context.fillStyle = '#FFFFFF';
+    context.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
+    context.drawImage(
+      image,
+      0,
+      contentOffsetPx,
+      image.width,
+      contentSliceHeightPx,
+      0,
+      paddingTopPx,
+      image.width,
+      contentSliceHeightPx,
+    );
+
+    const sliceDataUrl = sliceCanvas.toDataURL('image/png');
+    const sliceHeightMm = Math.min(
+      maxPdfHeight,
+      canvasHeightPx * PX_TO_MM * normalizedScale,
+    );
+
+    if (pageIndex > 0) {
+      pdf.addPage(format, 'p');
+    }
+
+    pdf.addImage(
+      sliceDataUrl,
+      'PNG',
+      xOffset,
+      0,
+      scaledPdfWidth,
+      sliceHeightMm,
+    );
+  }
+
   pdf.save(fileName);
 };
 

@@ -152,6 +152,8 @@ const MinimalImageTemplate = ({
   );
 
   const showWatermark = availableCredits <= 0;
+  const containerOverflowClass =
+    isDownloadMode && showWatermark ? "overflow-visible" : "";
   const projectsToRender = filterPopulatedProjects(data.projects);
 
   const watermarkText = (
@@ -164,10 +166,12 @@ const MinimalImageTemplate = ({
     <div
       id={isDownloadMode ? "resume-print-content" : undefined}
       data-paper-size={paperSize}
-      className="relative max-w-6xl mx-auto bg-white text-gray-900 font-sans"
+      className={`relative max-w-6xl mx-auto bg-white text-gray-900 font-sans ${containerOverflowClass}`}
       style={{ ...paddingStyle, minHeight: getPaperHeight() }}
     >
-      {isDownloadMode && showWatermark && <WatermarkOverlay className="z-20" />}
+      {isDownloadMode && showWatermark && (
+        <WatermarkOverlay className="z-20" paperSize={paperSize} />
+      )}
       <div className="flex flex-col" style={{ minHeight: "100%" }}>
         <div className="grid grid-cols-12 flex-1">
           {/* Left Sidebar */}

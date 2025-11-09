@@ -145,15 +145,19 @@ const SpotlightTemplate = ({
     });
 
     const projectsToRender = filterPopulatedProjects(data.projects);
+    const containerOverflowClass =
+      isDownloadMode && showWatermark ? "overflow-visible" : "overflow-hidden";
 
     return (
         <div
             id={isDownloadMode ? "resume-print-content" : undefined}
             data-paper-size={paperSize}
-            className={`relative max-w-6xl mx-auto bg-white text-gray-900 font-sans overflow-hidden ${printHeightClass}`}
+            className={`relative max-w-6xl mx-auto bg-white text-gray-900 font-sans ${containerOverflowClass} ${printHeightClass}`}
             style={pageStyle}
         >
-            {isDownloadMode && showWatermark && <WatermarkOverlay />}
+            {isDownloadMode && showWatermark && (
+              <WatermarkOverlay paperSize={paperSize} />
+            )}
             <div
                 className="relative z-10 flex flex-col"
                 style={{ minHeight: '100%', ...contentPaddingStyle }}

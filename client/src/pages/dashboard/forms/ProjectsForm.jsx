@@ -14,6 +14,7 @@ const ProjectsForm = ({ data, onChange, onValidationChange }) => {
   const [validationErrors, setValidationErrors] = useState({});
   const [expandedProjects, setExpandedProjects] = useState(new Set());
   const validationRef = useRef();
+  const latestOnChangeRef = useRef(onChange);
 
   // Initialize with one empty project if none exist
   useEffect(() => {
@@ -33,10 +34,14 @@ const ProjectsForm = ({ data, onChange, onValidationChange }) => {
     }
   }, []);
 
+  useEffect(() => {
+    latestOnChangeRef.current = onChange;
+  }, [onChange]);
+
   // Update parent component when projects change
   useEffect(() => {
-    onChange(projects);
-  }, [projects, onChange]);
+    latestOnChangeRef.current?.(projects);
+  }, [projects]);
 
   // Add new project
   const addProject = () => {
