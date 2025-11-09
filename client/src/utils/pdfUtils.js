@@ -190,6 +190,23 @@ export const generateResumePdf = async ({
     clone.style.height = `${contentHeight}px`;
   }
 
+  const ensureMinimumCloneHeight = () => {
+    const { height: paperHeightMm } = getPaperConfig(paperSize);
+    const MM_TO_PX = 96 / 25.4;
+    const minHeightPx = paperHeightMm * MM_TO_PX;
+
+    if (!Number.isFinite(minHeightPx) || minHeightPx <= 0) {
+      return;
+    }
+
+    const currentHeight = clone.getBoundingClientRect().height || contentHeight;
+    if (!currentHeight || currentHeight < minHeightPx) {
+      clone.style.minHeight = `${minHeightPx}px`;
+    }
+  };
+
+  ensureMinimumCloneHeight();
+
   clone.style.maxWidth = 'unset';
   clone.style.maxHeight = 'unset';
 
@@ -431,9 +448,11 @@ export const generateResumePdf = async ({
     );
 
     const sliceDataUrl = sliceCanvas.toDataURL('image/png');
+    const canvasHeightCssPx =
+      captureScale > 0 ? canvasHeightPx / captureScale : canvasHeightPx;
     const sliceHeightMm = Math.min(
       maxPdfHeight,
-      canvasHeightPx * PX_TO_MM * normalizedScale,
+      canvasHeightCssPx * PX_TO_MM * normalizedScale,
     );
 
     if (pageIndex > 0) {

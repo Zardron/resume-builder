@@ -169,7 +169,7 @@ const MinimalTemplate = ({
     ...paddingStyle,
   };
 
-  if (isDownloadMode) {
+  if (isDownloadMode && showWatermark) {
     containerStyle.minHeight = heightMap[paperSize] || heightMap.A4;
   }
 
