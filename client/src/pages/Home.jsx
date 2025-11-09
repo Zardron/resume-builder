@@ -9,6 +9,8 @@ import Testimonials from '../components/home/Testimonials';
 import Footer from '../components/Footer';
 import TemplateShowcase from '../components/home/TemplateShowcase';
 import Pricing from '../components/home/Pricing';
+import TestimonialForm from '../components/home/TestimonialForm';
+import { TestimonialsProvider } from '../components/home/testimonials/TestimonialsContext';
 
 const SCROLL_THRESHOLD = 250;
 
@@ -40,7 +42,10 @@ const Home = () => {
       <TemplateShowcase />
       <About />
       <Pricing />
-      <Testimonials />
+      <TestimonialsProvider>
+        <Testimonials />
+        <TestimonialForm />
+      </TestimonialsProvider>
       <Footer />
 
       {hasScrolled && (

@@ -8,7 +8,7 @@ const NAV_LINKS = [
   { label: 'Templates', href: '/#templates' },
   { label: 'How it works', href: '/#how-it-works' },
   { label: 'Pricing', href: '/#pricing' },
-  { label: 'Success stories', href: '/#testimonials' },
+  { label: 'Testimonials', href: '/#testimonials' },
 ];
 
 const Navbar = () => {

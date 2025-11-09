@@ -27,6 +27,7 @@ const ICON_MAP = {
 const iconClassName = 'w-4 h-4 text-gray-500/80 dark:text-gray-300';
 
 const InputField = ({
+  id,
   type,
   placeholder,
   value,
@@ -51,7 +52,7 @@ const InputField = ({
     <div
       className={`group relative flex items-center h-12 ${
         width || 'w-full'
-      } bg-white dark:bg-gray-800 border-2 rounded-xl overflow-hidden transition-all duration-300 ${
+      } bg-white dark:bg-gray-800 border-2 rounded-md overflow-hidden transition-all duration-300 ${
         hasError
           ? 'border-red-500 focus-within:border-red-500'
           : 'border-gray-200 dark:border-gray-600 focus-within:border-[var(--primary-color)] dark:focus-within:border-[var(--primary-color)]'
@@ -65,6 +66,7 @@ const InputField = ({
       
       <input
         readOnly={readOnly}
+        id={id || name}
         type={type}
         placeholder={placeholder}
         className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs outline-none text-sm w-full h-full px-4 py-3"
