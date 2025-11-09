@@ -13,6 +13,7 @@ import {
     getDefaultMarginsForPaper,
     getPagePaddingStyle
 } from "../../utils/marginUtils";
+import WatermarkOverlay from "./WatermarkOverlay";
 
 const SpotlightTemplate = ({ 
     data, 
@@ -26,7 +27,8 @@ const SpotlightTemplate = ({
     showEducation = true,
     showSkills = true,
     paperSize = "A4",
-    pageMargins
+    pageMargins,
+    isDownloadMode = false
 }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
@@ -94,14 +96,17 @@ const SpotlightTemplate = ({
         </>
     );
 
-    const getPaperHeight = () => {
-        const heights = {
-            short: '880px',
-            A4: '935px',
-            legal: '1120px'
-        };
-        return heights[paperSize] || heights.A4;
+    const heightMap = {
+        short: '880px',
+        A4: '1123px',
+        legal: '1344px'
     };
+
+    const printHeightClass = {
+        short: "print:max-h-[880px]",
+        A4: "print:max-h-[1123px]",
+        legal: "print:max-h-[1344px]"
+    }[paperSize] || "print:max-h-[1123px]";
 
     const getProfileImageSrc = (image) => {
         if (!image) return null;
@@ -116,16 +121,39 @@ const SpotlightTemplate = ({
         getDefaultMarginsForPaper(paperSize)
     );
 
+    const containerStyle = {
+        ...paddingStyle
+    };
+
+    if (isDownloadMode) {
+        containerStyle.minHeight = heightMap[paperSize] || heightMap.A4;
+    }
+
+    const pageStyle = { ...containerStyle };
+    const contentPaddingStyle = {};
+    ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"].forEach((key) => {
+        if (pageStyle[key] !== undefined) {
+            contentPaddingStyle[key] = pageStyle[key];
+            delete pageStyle[key];
+        }
+    });
+
     return (
         <div
             id="resume-print-content"
-            className="max-w-6xl mx-auto bg-white text-gray-900 font-sans"
-            style={{ ...paddingStyle, height: getPaperHeight() }}
+            data-paper-size={paperSize}
+            className={`relative max-w-6xl mx-auto bg-white text-gray-900 font-sans overflow-hidden ${printHeightClass}`}
+            style={pageStyle}
         >
-            <div className="grid grid-cols-12 h-full" style={{ minHeight: '100%' }}>
-                
-                {/* Left Sidebar */}
-                <aside className="col-span-4 bg-gray-100 border-r border-gray-300 h-full flex flex-col">
+            {isDownloadMode && showWatermark && <WatermarkOverlay />}
+            <div
+                className="relative z-10 flex flex-col"
+                style={{ minHeight: '100%', ...contentPaddingStyle }}
+            >
+                <div className="grid grid-cols-12 flex-1">
+                    
+                    {/* Left Sidebar */}
+                    <aside className="col-span-4 bg-gray-100 border-r border-gray-300 h-full flex flex-col">
                     <div className="p-4 flex-1">
                         {/* Profile Image */}
                         <div className="text-center mb-4">
@@ -496,13 +524,9 @@ const SpotlightTemplate = ({
                             </div>
                         </section>
                     )}
-                </main>
+                    </main>
+                </div>
             </div>
-            {showWatermark && (
-                <footer className="mt-6 text-center text-[10px] text-gray-400 italic">
-                    {watermarkText}
-                </footer>
-            )}
         </div>
     );
 };

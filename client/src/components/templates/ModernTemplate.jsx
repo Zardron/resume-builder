@@ -13,6 +13,7 @@ import {
     getDefaultMarginsForPaper,
     getPagePaddingStyle
 } from "../../utils/marginUtils";
+import WatermarkOverlay from "./WatermarkOverlay";
 
 const ModernTemplate = ({ 
 	data, 
@@ -26,7 +27,8 @@ const ModernTemplate = ({
 	showEducation = true,
 	showSkills = true,
 	paperSize = "A4",
-	pageMargins
+	pageMargins,
+	isDownloadMode = false
 }) => {
 	const formatDate = (dateStr) => {
 		if (!dateStr) return "";
@@ -125,28 +127,58 @@ const ModernTemplate = ({
 	};
 
 	const fontSizes = getFontSizes();
+	const showWatermark = availableCredits <= 0;
 	const paddingStyle = getPagePaddingStyle(
 		pageMargins,
 		getDefaultMarginsForPaper(paperSize)
 	);
+
+	const printHeightClass = {
+		short: "print:min-h-[880px]",
+		A4: "print:min-h-[1123px]",
+		legal: "print:min-h-[1344px]"
+	}[paperSize] || "print:min-h-[1123px]";
+
+	const heightMap = {
+		short: "880px",
+		A4: "1123px",
+		legal: "1344px"
+	};
+
+	const containerStyle = {
+		...paddingStyle
+	};
+
+	if (isDownloadMode) {
+		containerStyle.minHeight = heightMap[paperSize] || heightMap.A4;
+	}
 	
 	// Determine text color based on background
 	const textColor = getTextColorForBackground(accentColor);
 	const textColorClass = textColor === 'black' ? 'text-gray-900' : 'text-white';
-	const showWatermark = availableCredits <= 0;
-	const watermarkText = (
-		<>
-			This resume was generated with Resume Builder by Zardron Angelo Pesquera
-		</>
-	);
-	const watermarkClassName = `text-xs font-semibold ${textColor === 'black' ? 'text-red-600' : 'text-red-200'}`;
+
+	const pageStyle = { ...containerStyle };
+	const contentPaddingStyle = {};
+	["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"].forEach((key) => {
+		if (pageStyle[key] !== undefined) {
+			contentPaddingStyle[key] = pageStyle[key];
+			delete pageStyle[key];
+		}
+	});
 
 	return (
 		<div
 			id="resume-print-content"
-			className="max-w-4xl mx-auto bg-white text-gray-900 font-sans"
-			style={paddingStyle}
+			data-paper-size={paperSize}
+			className={`relative max-w-4xl mx-auto bg-white text-gray-900 font-sans overflow-hidden ${printHeightClass}`}
+			style={pageStyle}
 		>
+			{isDownloadMode && showWatermark && <WatermarkOverlay />}
+			<div
+				className="relative z-10 flex flex-col"
+				style={{ minHeight: "100%", ...contentPaddingStyle }}
+			>
+			<div className="flex-1">
 			{/* Header */}
 			{showHeader && (
 			<header className={`${textColorClass} ${fontSizes.padding} mb-4`} style={{ backgroundColor: accentColor }}>
@@ -525,12 +557,10 @@ const ModernTemplate = ({
 					)}
 				</div>
 			</div>
-			{showWatermark && (
-				<footer className="mt-6 text-center text-[10px] text-gray-500 italic">
-					{watermarkText}
-				</footer>
-			)}
+			
+			</div>
 		</div>
+    </div>
 	);
 };
 
