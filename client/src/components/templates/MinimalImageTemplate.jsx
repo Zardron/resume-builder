@@ -31,6 +31,7 @@ import {
   getDefaultMarginsForPaper,
   getPagePaddingStyle,
 } from "../../utils/marginUtils";
+import { filterPopulatedProjects, formatUrlForDisplay } from "../../utils/sectionUtils";
 import WatermarkOverlay from "./WatermarkOverlay";
 
 const MinimalImageTemplate = ({
@@ -136,7 +137,12 @@ const MinimalImageTemplate = ({
     if (!image) return null;
     if (typeof image === "string") return image;
     if (image?.dataUrl) return image.dataUrl;
-    if (image instanceof File) return URL.createObjectURL(image);
+    if (image instanceof File) {
+      if (!image.previewUrl) {
+        image.previewUrl = URL.createObjectURL(image);
+      }
+      return image.previewUrl;
+    }
     return null;
   };
 
@@ -146,6 +152,7 @@ const MinimalImageTemplate = ({
   );
 
   const showWatermark = availableCredits <= 0;
+  const projectsToRender = filterPopulatedProjects(data.projects);
 
   const watermarkText = (
     <>
@@ -155,7 +162,7 @@ const MinimalImageTemplate = ({
 
   return (
     <div
-      id="resume-print-content"
+      id={isDownloadMode ? "resume-print-content" : undefined}
       data-paper-size={paperSize}
       className="relative max-w-6xl mx-auto bg-white text-gray-900 font-sans"
       style={{ ...paddingStyle, minHeight: getPaperHeight() }}
@@ -599,7 +606,7 @@ const MinimalImageTemplate = ({
               )}
 
             {/* Projects */}
-            {showProjects && data.projects && data.projects.length > 0 && (
+            {showProjects && projectsToRender.length > 0 && (
               <section className="mb-4">
                 <div className="flex items-center gap-2 mb-2">
                   <div
@@ -613,7 +620,7 @@ const MinimalImageTemplate = ({
                   </h2>
                 </div>
                 <div className="pl-6 grid gap-2 md:grid-cols-2">
-                  {data.projects.map((project, index) => (
+                  {projectsToRender.map((project, index) => (
                     <div
                       key={index}
                       className="border border-gray-200 rounded p-2"
@@ -635,15 +642,12 @@ const MinimalImageTemplate = ({
                         </div>
                       )}
                       {project.link && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs hover:underline"
+                        <p
+                          className="text-xs break-all"
                           style={{ color: accentColor }}
                         >
-                          View Project
-                        </a>
+                          {formatUrlForDisplay(project.link)}
+                        </p>
                       )}
                     </div>
                   ))}

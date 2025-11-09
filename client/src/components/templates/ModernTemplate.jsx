@@ -13,6 +13,7 @@ import {
     getDefaultMarginsForPaper,
     getPagePaddingStyle
 } from "../../utils/marginUtils";
+import { filterPopulatedProjects, formatUrlForDisplay } from "../../utils/sectionUtils";
 import WatermarkOverlay from "./WatermarkOverlay";
 
 const ModernTemplate = ({ 
@@ -43,7 +44,12 @@ const ModernTemplate = ({
 		if (!image) return null;
 		if (typeof image === 'string') return image;
 		if (image?.dataUrl) return image.dataUrl;
-		if (image instanceof File) return URL.createObjectURL(image);
+		if (image instanceof File) {
+			if (!image.previewUrl) {
+				image.previewUrl = URL.createObjectURL(image);
+			}
+			return image.previewUrl;
+		}
 		return null;
 	};
 
@@ -166,9 +172,11 @@ const ModernTemplate = ({
 		}
 	});
 
+	const projectsToRender = filterPopulatedProjects(data.projects);
+
 	return (
 		<div
-			id="resume-print-content"
+			id={isDownloadMode ? "resume-print-content" : undefined}
 			data-paper-size={paperSize}
 			className={`relative max-w-4xl mx-auto bg-white text-gray-900 font-sans overflow-hidden ${printHeightClass}`}
 			style={pageStyle}
@@ -300,7 +308,7 @@ const ModernTemplate = ({
 				)}
 
 			{/* Projects */}
-			{showProjects && data.projects && data.projects.length > 0 && (
+			{showProjects && projectsToRender.length > 0 && (
 				<section className="mb-3">
 					<div className="flex items-center gap-2 mb-2">
 						<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
@@ -310,9 +318,8 @@ const ModernTemplate = ({
 							Key Projects
 						</h2>
 					</div>
-
 					<div className="pl-6 grid gap-2 md:grid-cols-2">
-						{data.projects.map((p, index) => (
+						{projectsToRender.map((p, index) => (
 							<div key={index} className="border border-gray-200 rounded p-2">
 								<h3 className="text-xs font-bold text-gray-900 mb-1">{p.title}</h3>
 								{p.technologies && (
@@ -326,9 +333,9 @@ const ModernTemplate = ({
 									</div>
 								)}
 								{p.link && (
-									<a href={p.link} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline mt-1 block" style={{ color: accentColor }}>
-										View Project
-									</a>
+									<p className="text-xs break-all mt-1" style={{ color: accentColor }}>
+										{formatUrlForDisplay(p.link)}
+									</p>
 								)}
 							</div>
 						))}

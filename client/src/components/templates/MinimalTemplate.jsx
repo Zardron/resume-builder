@@ -29,6 +29,7 @@ import {
   getDefaultMarginsForPaper,
   getPagePaddingStyle,
 } from "../../utils/marginUtils";
+import { filterPopulatedProjects, formatUrlForDisplay } from "../../utils/sectionUtils";
 import WatermarkOverlay from "./WatermarkOverlay";
 
 const MinimalTemplate = ({
@@ -59,7 +60,12 @@ const MinimalTemplate = ({
     if (!image) return null;
     if (typeof image === "string") return image;
     if (image?.dataUrl) return image.dataUrl;
-    if (image instanceof File) return URL.createObjectURL(image);
+    if (image instanceof File) {
+      if (!image.previewUrl) {
+        image.previewUrl = URL.createObjectURL(image);
+      }
+      return image.previewUrl;
+    }
     return null;
   };
 
@@ -174,10 +180,12 @@ const MinimalTemplate = ({
     }
   });
 
+  const projectsToRender = filterPopulatedProjects(data.projects);
+
 
   return (
     <div
-      id="resume-print-content"
+      id={isDownloadMode ? "resume-print-content" : undefined}
       data-paper-size={paperSize}
       className={`relative max-w-4xl mx-auto bg-white text-gray-900 font-sans overflow-hidden ${printHeightClass}`}
       style={pageStyle}
@@ -373,7 +381,7 @@ const MinimalTemplate = ({
           )}
 
           {/* Projects */}
-          {showProjects && data.projects && data.projects.length > 0 && (
+          {showProjects && projectsToRender.length > 0 && (
             <section className="mb-3">
               <div className="flex items-center gap-2 mb-2">
                 <div
@@ -386,7 +394,7 @@ const MinimalTemplate = ({
               </div>
 
               <div className="pl-3 space-y-2">
-                {data.projects.map((proj, index) => (
+                {projectsToRender.map((proj, index) => (
                   <div key={index} className="relative">
                     <h3 className="text-xs font-medium text-gray-900 mb-1">
                       {proj.title}
@@ -405,15 +413,12 @@ const MinimalTemplate = ({
                       </p>
                     )}
                     {proj.link && (
-                      <a
-                        href={proj.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs hover:underline mt-1 inline-block"
+                      <p
+                        className="text-xs text-gray-600 break-all"
                         style={{ color: accentColor }}
                       >
-                        View Project
-                      </a>
+                        {formatUrlForDisplay(proj.link)}
+                      </p>
                     )}
                   </div>
                 ))}

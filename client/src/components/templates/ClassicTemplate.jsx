@@ -33,6 +33,7 @@ import {
   getDefaultMarginsForPaper,
   getPagePaddingStyle,
 } from "../../utils/marginUtils";
+import { filterPopulatedProjects, formatUrlForDisplay } from "../../utils/sectionUtils";
 import WatermarkOverlay from "./WatermarkOverlay";
 
 const ClassicTemplate = ({
@@ -63,7 +64,12 @@ const ClassicTemplate = ({
     if (!image) return null;
     if (typeof image === "string") return image;
     if (image?.dataUrl) return image.dataUrl;
-    if (image instanceof File) return URL.createObjectURL(image);
+    if (image instanceof File) {
+      if (!image.previewUrl) {
+        image.previewUrl = URL.createObjectURL(image);
+      }
+      return image.previewUrl;
+    }
     return null;
   };
 
@@ -184,6 +190,7 @@ const ClassicTemplate = ({
   };
 
   const showWatermark = availableCredits <= 0;
+  const projectsToRender = filterPopulatedProjects(data.projects);
 
   if (isDownloadMode) {
     containerStyle.minHeight = heightMap[paperSize] || heightMap.A4;
@@ -204,7 +211,7 @@ const ClassicTemplate = ({
 
   return (
     <div
-      id="resume-print-content"
+      id={isDownloadMode ? "resume-print-content" : undefined}
       data-paper-size={paperSize}
       className={`relative max-w-4xl mx-auto bg-white text-gray-900 font-sans overflow-hidden ${printHeightClass}`}
       style={pageStyle}
@@ -447,7 +454,7 @@ const ClassicTemplate = ({
           )}
 
           {/* Projects */}
-          {showProjects && data.projects && data.projects.length > 0 && (
+          {showProjects && projectsToRender.length > 0 && (
             <section className="mb-3">
               <div className="flex items-center gap-2 mb-2">
                 <div
@@ -462,7 +469,7 @@ const ClassicTemplate = ({
               </div>
 
               <div className="pl-6 grid gap-2 md:grid-cols-2">
-                {data.projects.map((proj, index) => (
+                {projectsToRender.map((proj, index) => (
                   <div
                     key={index}
                     className="border border-gray-200 rounded p-2"
@@ -484,15 +491,12 @@ const ClassicTemplate = ({
                       </p>
                     )}
                     {proj.link && (
-                      <a
-                        href={proj.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs hover:underline"
+                      <p
+                        className="text-xs break-all"
                         style={{ color: accentColor }}
                       >
-                        View Project
-                      </a>
+                        {formatUrlForDisplay(proj.link)}
+                      </p>
                     )}
                   </div>
                 ))}
