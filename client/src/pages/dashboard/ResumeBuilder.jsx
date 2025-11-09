@@ -1,4 +1,10 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeftIcon,
@@ -148,7 +154,10 @@ const ResumeBuilder = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const formSectionRef = useRef(null);
   const previewRef = useRef(null);
+  const previewContainerRef = useRef(null);
   const exportRef = useRef(null);
+  const [previewScale, setPreviewScale] = useState(1);
+  const [previewContentHeight, setPreviewContentHeight] = useState(0);
   const [availableCredits, setAvailableCredits] = useState(getStoredCredits);
   useEffect(() => {
     const handleStorageChange = () => {
@@ -376,8 +385,99 @@ const ResumeBuilder = () => {
     return <Template {...templateProps} />;
   };
 
+  const parsePxValue = (value) => {
+    if (typeof value === "number") return value;
+    if (typeof value === "string") {
+      const parsed = parseFloat(value.replace("px", "").trim());
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+    return 0;
+  };
+
   const previewDimensions = getPreviewDimensions(paperSize);
   const isFullHeightTemplate = resumeData.template === "spotlight";
+  const basePreviewWidth = parsePxValue(previewDimensions.width);
+
+  useEffect(() => {
+    const container = previewContainerRef.current;
+    const previewWidth = basePreviewWidth;
+
+    if (!container || !previewWidth) {
+      setPreviewScale(1);
+      return;
+    }
+
+    const updateScale = () => {
+      const availableWidth = container.clientWidth;
+      if (!availableWidth) return;
+      const calculatedScale = Math.min(availableWidth / previewWidth, 1);
+      setPreviewScale(calculatedScale > 0 ? calculatedScale : 1);
+    };
+
+    updateScale();
+
+    if (typeof ResizeObserver !== "undefined") {
+      const resizeObserver = new ResizeObserver(updateScale);
+      resizeObserver.observe(container);
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+
+    window.addEventListener("resize", updateScale);
+    return () => {
+      window.removeEventListener("resize", updateScale);
+    };
+  }, [basePreviewWidth, isTemplateSelected]);
+
+  useLayoutEffect(() => {
+    const previewNode = previewRef.current;
+    if (!previewNode) {
+      return;
+    }
+
+    const updateHeight = () => {
+      const height = previewNode.offsetHeight;
+      if (height !== previewContentHeight) {
+        setPreviewContentHeight(height);
+      }
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver !== "undefined") {
+      const resizeObserver = new ResizeObserver(updateHeight);
+      resizeObserver.observe(previewNode);
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+
+    window.addEventListener("resize", updateHeight);
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, [
+    basePreviewWidth,
+    isFullHeightTemplate,
+    previewContentHeight,
+    resumeData,
+    paperSize,
+  ]);
+
+  const scaledWrapperWidth =
+    basePreviewWidth && previewScale
+      ? `${basePreviewWidth * previewScale}px`
+      : previewDimensions.width;
+
+  const scaledWrapperHeight =
+    previewContentHeight && previewScale
+      ? `${previewContentHeight * previewScale}px`
+      : isFullHeightTemplate
+      ? previewDimensions.height
+      : "auto";
 
   return (
     <div className="mx-auto px-16 pt-8">
@@ -1279,21 +1379,34 @@ const ResumeBuilder = () => {
                 {/* Resume Preview Content */}
                 <div className="p-4">
                   <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <div className="max-h-[600px] overflow-y-auto overflow-x-hidden">
-                      <div
-                        ref={previewRef}
-                        data-preview-environment="true"
-                        className="origin-top-left text-[1em] resume-preview-content"
-                        style={{
-                          width: `min(${previewDimensions.width}, 100%)`,
-                          maxWidth: "100%",
-                          height: isFullHeightTemplate
-                            ? previewDimensions.height
-                            : "auto",
-                          margin: "0 auto",
-                        }}
-                      >
-                        {renderTemplate(false)}
+                    <div
+                      ref={previewContainerRef}
+                      className="max-h-[600px] overflow-y-auto overflow-x-hidden"
+                    >
+                      <div className="flex justify-center">
+                        <div
+                          className="resume-preview-scale-wrapper"
+                          style={{
+                            width: scaledWrapperWidth,
+                            height: scaledWrapperHeight,
+                          }}
+                        >
+                          <div
+                            ref={previewRef}
+                            data-preview-environment="true"
+                            className="text-[1em] resume-preview-content"
+                            style={{
+                              width: previewDimensions.width,
+                              height: isFullHeightTemplate
+                                ? previewDimensions.height
+                                : "auto",
+                              transform: `scale(${previewScale})`,
+                              transformOrigin: "top left",
+                            }}
+                          >
+                            {renderTemplate(false)}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
