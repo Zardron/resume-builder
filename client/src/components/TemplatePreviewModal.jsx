@@ -247,7 +247,7 @@ const TemplatePreviewModal = ({
           <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
             <div className="flex items-center justify-between p-8">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: accentColor }}>
+                <div className="w-12 h-12 rounded-md flex items-center justify-center shadow-lg" style={{ backgroundColor: accentColor }}>
                   <FileText className="size-6 text-white" />
                 </div>
                 <div>

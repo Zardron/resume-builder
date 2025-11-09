@@ -87,11 +87,11 @@ export const dummyResumeData = [
     {
         // ----------------------------------------------------- Resume 2 ------------------------------------------------------
         personal_info: {
-            full_name: "Jordan Lee",
-            email: "jordan.lee@example.com",
+            full_name: "John Doe",
+            email: "john.doe@example.com",
             phone: "0 987654321",
             location: "San Francisco, CA, USA",
-            linkedin: "https://www.linkedin.com/in/jordanlee",
+            linkedin: "https://www.linkedin.com/in/johndoe",
             website: "https://www.jordanlee.dev",
             profession: "Frontend Engineer",
             image: dummy_profile

@@ -68,7 +68,7 @@ const About = () => {
     >
       <div className="mt-10 text-center">
         <SectionBadge icon={Workflow} label="How it works" className="mx-auto" />
-        <h1 id="about-heading" className="text-3xl font-semibold text-center mx-auto text-gray-900 dark:text-gray-100">
+        <h1 id="about-heading" className="text-3xl font-semibold text-center mx-auto text-gray-900 dark:text-gray-100 mt-4">
           How the builder works
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
@@ -78,7 +78,7 @@ const About = () => {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-12 px-4 md:px-0 py-10">
           <div className="w-full md:w-1/2">
             <img
-              className="w-full rounded-xl h-auto shadow-lg"
+              className="w-full rounded-md h-auto shadow-lg"
               src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80"
               alt="Resume Builder AI Features"
             />

@@ -76,10 +76,10 @@ const Pricing = () => (
         return (
           <article
             key={plan.id}
-            className={`relative flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/50`}
+            className={`relative flex h-full flex-col rounded-md border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:shadow-xl dark:border-slate-800 dark:bg-slate-900`}
           >
             {plan.badge && (
-              <span className="absolute right-4 top-4 rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1 text-xs font-semibold text-white shadow-sm">
+              <span className="absolute right-4 top-4 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1 text-xs font-semibold text-white shadow-sm">
                 {plan.badge}
               </span>
             )}
@@ -126,7 +126,7 @@ const Pricing = () => (
       })}
     </div>
 
-    <div className="mt-8 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-4 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-300 md:flex-row md:items-center md:justify-between">
+    <div className="mt-8 flex flex-col gap-3 rounded-md border border-slate-200 bg-slate-50 px-6 py-4 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 md:flex-row md:items-center md:justify-between">
       <div className="flex items-center gap-3">
         <Shield className="size-5 text-[var(--accent-color)]" />
         <p className="font-medium text-slate-700 dark:text-slate-200">Secure payments through Credit/Debit Card, GCash, GrabPay, and Maya.</p>

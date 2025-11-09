@@ -364,13 +364,13 @@ const PersonalInfoForm = ({
           <span className="text-xs text-gray-500 dark:text-gray-400">Optional</span>
         </div>
         
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
           {data?.image ? (
             <div className="space-y-4">
               {/* Image Preview */}
               <div className="flex items-start gap-4">
                 <div className="relative group">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-500 bg-gray-50 dark:bg-gray-700">
+                  <div className="w-20 h-20 rounded-md overflow-hidden border-2 border-gray-200 dark:border-gray-500 bg-gray-50 dark:bg-gray-700">
                     <img
                       src={resolveImageSource(data.image)}
                       alt="Profile"
@@ -428,7 +428,7 @@ const PersonalInfoForm = ({
             </div>
           ) : (
             <div className="text-center">
-              <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-500 flex items-center justify-center mb-4">
+              <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-md border-2 border-dashed border-gray-300 dark:border-gray-500 flex items-center justify-center mb-4">
                 {isLoading ? (
                   <Loader2 className="w-8 h-8 text-[var(--primary-color)] animate-spin" />
                 ) : (
@@ -466,7 +466,7 @@ const PersonalInfoForm = ({
       </div>
 
       {/* Personal Information Fields */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
         <div className="mb-6">
           <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Contact Information
@@ -482,7 +482,7 @@ const PersonalInfoForm = ({
           <button
             type="button"
             onClick={() => setShowSocialLinks(!showSocialLinks)}
-            className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             {showSocialLinks ? 'Hide Social Links' : 'Add Social Links'}

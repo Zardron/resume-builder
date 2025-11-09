@@ -136,11 +136,7 @@ const ModernTemplate = ({
 	const showWatermark = availableCredits <= 0;
 	const watermarkText = (
 		<>
-			This resume was generated with Resume Builder by Zardron Angelo Pesquera.{" "}
-			<Link to="/dashboard/purchase" className="underline underline-offset-2 cursor-pointer">
-				Buy more credits
-			</Link>
-			.
+			This resume was generated with Resume Builder by Zardron Angelo Pesquera
 		</>
 	);
 	const watermarkClassName = `text-xs font-semibold ${textColor === 'black' ? 'text-red-600' : 'text-red-200'}`;

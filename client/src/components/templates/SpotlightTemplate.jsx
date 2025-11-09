@@ -90,11 +90,7 @@ const SpotlightTemplate = ({
     const showWatermark = availableCredits <= 0;
     const watermarkText = (
         <>
-            This resume was generated with Resume Builder by Zardron Angelo Pesquera.{" "}
-            <Link to="/dashboard/purchase" className="underline underline-offset-2 cursor-pointer">
-                Buy more credits
-            </Link>
-            .
+            This resume was generated with Resume Builder by Zardron Angelo Pesquera.
         </>
     );
 
@@ -333,11 +329,6 @@ const SpotlightTemplate = ({
                         <h1 className={`${getNameFontSize(sectionFontSizes)} font-bold text-gray-900 mb-1 capitalize`}>
                             {data.personal_info?.name || "Your Name"}
                         </h1>
-                        {showWatermark && (
-                            <p className="text-xs font-semibold text-red-600">
-                                {watermarkText}
-                            </p>
-                        )}
                         {data.personal_info?.profession && (
                             <p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-600 font-medium mb-3`}>
                                 {data.personal_info.profession}

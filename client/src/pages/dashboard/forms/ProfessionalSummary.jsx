@@ -134,7 +134,7 @@ const ProfessionalSummary = ({
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -152,7 +152,7 @@ const ProfessionalSummary = ({
         <div className="space-y-4">
           {/* Textarea Field */}
           <div className="relative">
-            <div className={`group relative bg-white dark:bg-gray-800 border-2 rounded-xl overflow-hidden transition-all duration-300 ${
+            <div className={`group relative bg-white dark:bg-gray-800 border-2 rounded-md overflow-hidden transition-all duration-300 ${
               validationErrors.professionalSummary
                 ? "border-red-500 focus-within:border-red-500"
                 : "border-gray-200 dark:border-gray-600 focus-within:border-[var(--primary-color)] dark:focus-within:border-[var(--primary-color)]"

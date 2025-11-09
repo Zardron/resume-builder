@@ -23,7 +23,7 @@ const ConfirmationModal = ({
       <div
         className={`animate__animated ${
           isClosing ? 'animate__zoomOut' : 'animate__zoomIn'
-        } animate__faster flex flex-col items-center bg-white dark:bg-gray-800 shadow-md rounded-xl py-6 px-5 md:w-[460px] w-[370px] border border-gray-200 dark:border-gray-700`}
+        } animate__faster flex flex-col items-center bg-white dark:bg-gray-800 shadow-md rounded-md py-6 px-5 md:w-[460px] w-[370px] border border-gray-200 dark:border-gray-700`}
       >
         <div className="flex items-center justify-center p-4 bg-red-100 dark:bg-red-900/20 rounded-full">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

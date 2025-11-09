@@ -135,7 +135,7 @@ const PurchaseCredits = () => {
               key={pack.id}
               type="button"
               onClick={() => setSelectedPackageId(pack.id)}
-              className={`relative flex h-full flex-col bg-white dark:bg-gray-800 gap-4 rounded-xl border p-6 text-left transition cursor-pointer ${
+              className={`relative flex h-full flex-col bg-white dark:bg-gray-800 gap-4 rounded-md border p-6 text-left transition cursor-pointer ${
                 isSelected
                   ? 'border-blue-600 shadow-lg shadow-blue-100 dark:border-blue-400 dark:shadow-blue-900/40'
                   : 'border-gray-200 hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-400'
@@ -179,7 +179,7 @@ const PurchaseCredits = () => {
       </div>
 
       <div className="mt-8 grid gap-6 xl:grid-cols-2">
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div className="rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <h2 className="mb-4 text-sm font-semibold text-gray-900 dark:text-gray-100">
             Payment Method
           </h2>
@@ -217,7 +217,7 @@ const PurchaseCredits = () => {
           </div>
         </div>
 
-        <div className="grid gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div className="grid gap-4 rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
             <ShieldCheck className="size-5 text-blue-500" />
             Secure payments handled via your preferred method. We’ll instantly add credits to your

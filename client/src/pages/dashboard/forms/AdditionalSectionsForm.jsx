@@ -108,7 +108,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
 
       <div className="space-y-8">
         {/* Certifications Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
             <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
               <Award className="w-4 h-4 text-white" />
@@ -188,7 +188,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
             <button
               type="button"
               onClick={addCertification}
-              className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Certification
@@ -197,7 +197,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
         </div>
 
         {/* Achievements Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
             <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
               <Star className="w-4 h-4 text-white" />
@@ -263,7 +263,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
             <button
               type="button"
               onClick={addAchievement}
-              className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Achievement
@@ -272,7 +272,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
         </div>
 
         {/* Volunteer Work Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
             <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
               <Heart className="w-4 h-4 text-white" />
@@ -376,7 +376,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
             <button
               type="button"
               onClick={addVolunteerWork}
-              className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Volunteer Work

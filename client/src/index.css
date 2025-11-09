@@ -310,9 +310,8 @@ html.dark {
   }
 }
 
-.marquee-inner {
-  animation: marqueeScroll 25s linear infinite;
-}
+
+
 
 /* Modal Animation Styles */
 .modal-backdrop {

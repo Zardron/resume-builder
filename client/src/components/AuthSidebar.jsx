@@ -18,7 +18,7 @@ const AuthSidebar = ({ title, description }) => (
         <img
           src={logo}
           alt="Resume Builder Logo"
-          className="w-10 h-10 object-contain bg-white rounded-xl p-1 shadow-lg"
+          className="w-10 h-10 object-contain bg-white rounded-md p-1 shadow-lg"
         />
         <h1 className="text-3xl font-bold">{title}</h1>
       </div>

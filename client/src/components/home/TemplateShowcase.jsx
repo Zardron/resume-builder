@@ -46,14 +46,14 @@ const TemplateShowcase = () => (
       {TEMPLATE_GROUPS.map((template) => (
         <article
           key={template.id}
-          className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-shadow hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/50"
+          className="group overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
         >
           <div className={`relative h-28 bg-gradient-to-br ${template.accent}`}>
-            <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs text-white backdrop-blur-md">
+            <div className="absolute left-5 top-5 flex items-center gap-2 rounded-md bg-white/15 px-3 py-1 text-xs text-white backdrop-blur-md">
               <Sparkles className="size-3.5" />
               Instant preview
             </div>
-            <div className="absolute -bottom-6 right-6 h-20 w-32 rounded-lg border border-white/50 bg-white/70 shadow-xl backdrop-blur-sm dark:border-white/20 dark:bg-white/10" />
+            <div className="absolute -bottom-6 right-6 h-20 w-32 rounded-md border border-white/50 bg-white/70 shadow-xl backdrop-blur-sm dark:border-white/20 dark:bg-white/10" />
           </div>
           <div className="space-y-4 px-6 pb-6 pt-10">
             <header>

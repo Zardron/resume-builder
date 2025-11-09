@@ -112,11 +112,7 @@ const MinimalTemplate = ({
     const showWatermark = availableCredits <= 0;
     const watermarkText = (
         <>
-            This resume was generated with Resume Builder by Zardron Angelo Pesquera.{" "}
-            <Link to="/dashboard/purchase" className="underline underline-offset-2 cursor-pointer">
-                Buy more credits
-            </Link>
-            .
+            This resume was generated with Resume Builder by Zardron Angelo Pesquera.
         </>
     );
 
@@ -134,11 +130,6 @@ const MinimalTemplate = ({
                         <h1 className={`${getNameFontSize(sectionFontSizes)} font-light text-gray-900 mb-1 tracking-wide capitalize`}>
                             {data.personal_info?.name || "Your Name"}
                         </h1>
-                        {showWatermark && (
-                            <p className="text-xs font-semibold text-red-600">
-                                {watermarkText}
-                            </p>
-                        )}
                         {data.personal_info?.profession && (
                             <p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-600 font-light tracking-wide mb-3`}>
                                 {data.personal_info.profession}

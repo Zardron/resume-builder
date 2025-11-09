@@ -87,7 +87,7 @@ const EmailInputField = ({
       <div
         className={`group relative flex items-center h-12 ${
           width || 'w-full'
-        } bg-white dark:bg-gray-800 border-2 rounded-xl overflow-hidden transition-all duration-300 ${
+        } bg-white dark:bg-gray-800 border-2 rounded-md overflow-hidden transition-all duration-300 ${
           hasError
             ? 'border-red-500 focus-within:border-red-500'
             : 'border-gray-200 dark:border-gray-600 focus-within:border-[var(--primary-color)] dark:focus-within:border-[var(--primary-color)]'
@@ -113,7 +113,7 @@ const EmailInputField = ({
       {showSuggestions && suggestions.length > 0 && (
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl shadow-lg max-h-60 overflow-y-auto"
+          className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
         >
           <div className="p-2">
             {suggestions.map((suggestion, index) => (

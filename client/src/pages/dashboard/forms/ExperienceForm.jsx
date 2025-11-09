@@ -188,7 +188,7 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
           const isLast = index === experiences.length - 1;
           
           return (
-            <div key={experience.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm">
+            <div key={experience.id} className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 shadow-sm">
               {/* Experience Header */}
               <div className="p-6 border-b border-gray-200 dark:border-gray-600">
                 <div className="flex items-center justify-between">
@@ -349,7 +349,7 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
                       placeholder="Describe your role and responsibilities..."
                       value={experience.description}
                       onChange={(e) => updateExperience(experience.id, 'description', e.target.value)}
-                      className="w-full h-24 px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 placeholder:text-xs outline-none focus:border-[var(--primary-color)] dark:focus:border-[var(--primary-color)] transition-colors duration-200 resize-none"
+                      className="w-full h-24 px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 placeholder:text-xs outline-none focus:border-[var(--primary-color)] dark:focus:border-[var(--primary-color)] transition-colors duration-200 resize-none"
                     />
                   </div>
                 </div>
@@ -363,7 +363,7 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
           <button
             type="button"
             onClick={addExperience}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white font-medium rounded-xl hover:opacity-90 transition-opacity duration-200"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white font-medium rounded-md hover:opacity-90 transition-opacity duration-200"
           >
             <Plus className="w-5 h-5" />
             Add Another Experience

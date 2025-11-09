@@ -136,11 +136,7 @@ const ClassicTemplate = ({
     const showWatermark = availableCredits <= 0;
     const watermarkText = (
         <>
-            This resume was generated with Resume Builder by Zardron Angelo Pesquera.{" "}
-            <Link to="/dashboard/purchase" className="underline underline-offset-2 cursor-pointer">
-                Buy more credits
-            </Link>
-            .
+            This resume was generated with Resume Builder by Zardron Angelo Pesquera.
         </>
     );
 

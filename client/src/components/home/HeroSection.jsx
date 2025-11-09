@@ -96,7 +96,7 @@ const HeroSection = () => (
   <div className="relative" id="overview">
     <section className="flex flex-col max-md:gap-20 md:flex-row pb-20 items-center justify-between mt-20 px-4 md:px-16 lg:px-24 xl:px-32" aria-labelledby="hero-heading">
       <div className="flex flex-col items-center md:items-start">
-        <div className="flex flex-wrap items-center justify-center p-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-gray-700 dark:text-gray-400 text-xs" aria-label="Active user count">
+        <div className="flex flex-wrap items-center justify-center p-1.5 rounded-md border border-slate-300 dark:border-slate-600 text-gray-700 dark:text-gray-400 text-xs" aria-label="Active user count">
           <div className="flex items-center">
             {USER_AVATARS.map((avatar, index) => (
               <img
@@ -139,7 +139,7 @@ const HeroSection = () => (
     </section>
 
     <div className="px-4 md:px-16 lg:px-24 xl:px-32">
-      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-slate-200 bg-white/90 px-6 py-10 text-center shadow-lg backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 md:px-12">
+      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-md border border-slate-200 bg-white/90 px-6 py-10 text-center shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 md:px-12">
         <div className="pointer-events-none absolute -top-48 left-1/2 size-[420px] -translate-x-1/2 rounded-full bg-[conic-gradient(from_90deg_at_50%_50%,rgba(37,99,235,0.18),rgba(99,102,241,0),rgba(14,165,233,0.22))] blur-3xl dark:opacity-60" />
         <div className="pointer-events-none absolute -bottom-36 left-10 size-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(15,118,110,0.25),rgba(15,118,110,0))] blur-2xl dark:opacity-80" />
 
@@ -157,7 +157,7 @@ const HeroSection = () => (
           {TRUSTED_COMPANIES.map((company) => (
             <div
               key={company.name}
-              className="group flex flex-col items-center gap-2 rounded-2xl border border-slate-200/80 bg-white/85 px-4 py-4 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-transparent hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/70"
+              className="group flex flex-col items-center gap-2 rounded-md border border-slate-200/80 bg-white/85 px-4 py-4 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-transparent hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/70"
             >
               <div
                 className="flex size-12 items-center justify-center rounded-2xl shadow-sm transition-transform duration-200 group-hover:scale-105"
