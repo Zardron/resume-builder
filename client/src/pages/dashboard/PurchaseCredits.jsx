@@ -92,7 +92,7 @@ const PurchaseCredits = () => {
             <button
               type="button"
               onClick={handleBack}
-              className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300"
+              className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300 cursor-pointer"
             >
               <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
               Go back

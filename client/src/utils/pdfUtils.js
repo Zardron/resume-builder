@@ -136,7 +136,15 @@ const normalizeCustomProperties = (sourceElement, targetElement) => {
   }
 };
 
-export const generateResumePdf = async ({ node, fileName }) => {
+const PAPER_SIZE_CONFIG = {
+  short: { width: 215.9, height: 279.4, format: 'letter' }, // 8.5" × 11"
+  A4: { width: 210, height: 297, format: 'a4' },
+  legal: { width: 215.9, height: 355.6, format: 'legal' }, // 8.5" × 14"
+};
+
+const getPaperConfig = (paperSize) => PAPER_SIZE_CONFIG[paperSize] || PAPER_SIZE_CONFIG.A4;
+
+export const generateResumePdf = async ({ node, fileName, paperSize = 'A4' }) => {
   if (!node) {
     throw new Error('Preview node is not available.');
   }
@@ -270,8 +278,7 @@ export const generateResumePdf = async ({ node, fileName }) => {
   });
 
   const PX_TO_MM = 25.4 / 96; // 96 DPI
-  const maxPdfWidth = 210;
-  const maxPdfHeight = 297;
+  const { width: maxPdfWidth, height: maxPdfHeight, format } = getPaperConfig(paperSize);
 
   let pdfWidth = image.width * PX_TO_MM;
   let pdfHeight = image.height * PX_TO_MM;
@@ -284,7 +291,11 @@ export const generateResumePdf = async ({ node, fileName }) => {
   pdfWidth *= normalizedScale;
   pdfHeight *= normalizedScale;
 
-  const pdf = new jsPDF('p', 'mm', 'a4');
+  const pdf = new jsPDF({
+    orientation: 'p',
+    unit: 'mm',
+    format,
+  });
   const xOffset = pdfWidth < maxPdfWidth ? (maxPdfWidth - pdfWidth) / 2 : 0;
   const yOffset = pdfHeight < maxPdfHeight ? (maxPdfHeight - pdfHeight) / 2 : 0;
   pdf.addImage(dataUrl, 'PNG', xOffset, yOffset, pdfWidth, pdfHeight);
