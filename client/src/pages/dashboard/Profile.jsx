@@ -39,7 +39,7 @@ const Profile = () => {
 
   return (
     <section className="mx-auto flex flex-col gap-6 px-4 py-8 md:px-16">
-      <header className="relative overflow-hidden rounded-3xl border border-blue-100/70 bg-gradient-to-r from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-6 text-white shadow-md dark:border-blue-900/40">
+      <header className="relative overflow-hidden rounded-md border border-blue-100/70 bg-gradient-to-r from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-6 text-white shadow-md dark:border-blue-900/40">
         <div className="absolute -top-24 right-14 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-20 left-8 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
         <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -57,12 +57,12 @@ const Profile = () => {
         </div>
       </header>
 
-      <div className="grid gap-6 rounded-3xl border border-gray-200 bg-white/70 p-4 shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/70">
+      <div className="grid gap-6 rounded-md border border-gray-200 bg-white/70 p-4 shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/70">
         <div className="grid gap-6 md:grid-cols-3">
           {summaryStats.map((stat) => (
             <div
               key={stat.label}
-              className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900"
+              className="rounded-md border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900"
             >
               <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                 {stat.label}
@@ -77,8 +77,8 @@ const Profile = () => {
       <div className="grid gap-6 md:grid-cols-12">
         <div className="md:col-span-4 lg:col-span-3">
           <div className="grid gap-6">
-            <section className="rounded-3xl border border-gray-200 bg-white p-6 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:shadow-none">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-500 text-2xl font-semibold text-white shadow-lg shadow-blue-500/20">
+            <section className="rounded-md border border-gray-200 bg-white p-6 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:shadow-none">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-md bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-500 text-2xl font-semibold text-white shadow-lg shadow-blue-500/20">
                 Z
               </div>
               <h2 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">{mockUser.name}</h2>
@@ -87,7 +87,7 @@ const Profile = () => {
               </p>
               <p className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">{mockUser.email}</p>
 
-              <div className="mt-6 space-y-3 rounded-2xl bg-gray-50 p-4 text-left text-sm dark:bg-gray-800/60">
+              <div className="mt-6 space-y-3 rounded-md bg-gray-50 p-4 text-left text-sm dark:bg-gray-800/60">
                 <p className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                   <ShieldCheck className="h-4 w-4 text-blue-500" />
                   Verified account
@@ -99,22 +99,22 @@ const Profile = () => {
               </div>
             </section>
 
-            <section className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <section className="rounded-md border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Quick links</h3>
               <ul className="mt-4 space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                <li className="flex items-center justify-between rounded-2xl border border-gray-100 px-3 py-2 dark:border-gray-800">
+                <li className="flex items-center justify-between rounded-md border border-gray-100 px-3 py-2 dark:border-gray-800">
                   <span>Export history</span>
                   <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-300">
                     4
                   </span>
                 </li>
-                <li className="flex items-center justify-between rounded-2xl border border-gray-100 px-3 py-2 dark:border-gray-800">
+                <li className="flex items-center justify-between rounded-md border border-gray-100 px-3 py-2 dark:border-gray-800">
                   <span>Saved templates</span>
                   <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-300">
                     3
                   </span>
                 </li>
-                <li className="flex items-center justify-between rounded-2xl border border-blue-100 px-3 py-2 text-blue-600 dark:border-blue-400/40 dark:text-blue-300">
+                <li className="flex items-center justify-between rounded-md border border-blue-100 px-3 py-2 text-blue-600 dark:border-blue-400/40 dark:text-blue-300">
                   <span>Collaboration invites</span>
                   <span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold dark:bg-blue-500/10">
                     Pending
@@ -129,7 +129,7 @@ const Profile = () => {
 
         <div className="md:col-span-6 lg:col-span-6">
           <div className="grid gap-6">
-            <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <section className="rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr),320px] lg:items-start">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Personal details</h2>
@@ -138,25 +138,25 @@ const Profile = () => {
                   </p>
 
                   <div className="mt-6 grid gap-6 md:grid-cols-2">
-                    <div className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
+                    <div className="rounded-md border border-gray-100 p-4 dark:border-gray-800">
                       <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                         Full name
                       </p>
                       <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{mockUser.name}</p>
                     </div>
-                    <div className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
+                    <div className="rounded-md border border-gray-100 p-4 dark:border-gray-800">
                       <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                         Email address
                       </p>
                       <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{mockUser.email}</p>
                     </div>
-                    <div className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
+                    <div className="rounded-md border border-gray-100 p-4 dark:border-gray-800">
                       <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                         Headline
                       </p>
                       <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{mockUser.title}</p>
                     </div>
-                    <div className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
+                    <div className="rounded-md border border-gray-100 p-4 dark:border-gray-800">
                       <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                         Recent activity
                       </p>
@@ -169,14 +169,14 @@ const Profile = () => {
 
                 <aside className="flex flex-col gap-3">
                 
-                  <button className="rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800">
+                  <button className="rounded-md border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800">
                     Edit profile
                   </button>
                 </aside>
               </div>
             </section>
 
-            <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <section className="rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent activity</h2>
@@ -184,7 +184,7 @@ const Profile = () => {
                     Track your latest resume edits and exports.
                   </p>
                 </div>
-                <button className="rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800">
+                <button className="rounded-md border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800">
                   View logs
                 </button>
               </div>
@@ -216,7 +216,7 @@ const Profile = () => {
                     badgeColor: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200',
                   },
                 ].map((item) => (
-                  <div key={item.title} className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
+                  <div key={item.title} className="rounded-md border border-gray-100 p-4 dark:border-gray-800">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">{item.title}</p>
@@ -237,24 +237,24 @@ const Profile = () => {
 
         <div className="md:col-span-2 lg:col-span-3">
           <div className="space-y-6">
-            <section className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-500 to-purple-500 p-6 text-white shadow-lg dark:border-blue-900/40">
+            <section className="rounded-md border border-blue-100 bg-gradient-to-br from-blue-500 to-purple-500 p-6 text-white shadow-lg dark:border-blue-900/40">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-xs uppercase tracking-wide text-blue-100/80">Credits balance</p>
                   <p className="mt-2 text-3xl font-semibold">{mockUser.credits}</p>
                   <p className="text-sm text-blue-100/80">credits remaining</p>
                 </div>
-                <CreditCard className="h-10 w-10 rounded-2xl bg-white/15 p-2 text-white" />
+                <CreditCard className="h-10 w-10 rounded-md bg-white/15 p-2 text-white" />
               </div>
               <p className="mt-4 text-xs text-blue-50">
                 Every download consumes a credit. Purchase more anytime you need to export fresh resumes.
               </p>
-              <button className="mt-6 w-full rounded-xl bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/25">
+              <button className="mt-6 w-full rounded-md bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/25">
                 Buy more credits
               </button>
             </section>
 
-            <section className="overflow-hidden rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <section className="overflow-hidden rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
               <div className="relative">
                 <div className="absolute -top-10 right-8 h-28 w-28 rounded-full bg-blue-200/60 blur-3xl dark:bg-blue-500/10" />
                 <div className="relative">
@@ -263,7 +263,7 @@ const Profile = () => {
                     Keep tabs on who&apos;s viewing your resume link and how engaged they are.
                   </p>
 
-                  <div className="mt-6 grid gap-4 rounded-2xl bg-gray-50 p-4 text-sm dark:bg-gray-800/40">
+                  <div className="mt-6 grid gap-4 rounded-md bg-gray-50 p-4 text-sm dark:bg-gray-800/40">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
@@ -276,11 +276,11 @@ const Profile = () => {
                       </span>
                     </div>
                     <div className="flex gap-4">
-                      <div className="flex-1 rounded-2xl border border-gray-200 p-3 text-center dark:border-gray-700">
+                      <div className="flex-1 rounded-md border border-gray-200 p-3 text-center dark:border-gray-700">
                         <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Unique viewers</p>
                         <p className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">54</p>
                       </div>
-                      <div className="flex-1 rounded-2xl border border-gray-200 p-3 text-center dark:border-gray-700">
+                      <div className="flex-1 rounded-md border border-gray-200 p-3 text-center dark:border-gray-700">
                         <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Downloads</p>
                         <p className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">9</p>
                       </div>
@@ -296,16 +296,16 @@ const Profile = () => {
                     </div>
                   </div>
 
-                  <div className="mt-6 rounded-2xl border border-gray-200 bg-white/60 p-4 text-sm dark:border-gray-700 dark:bg-gray-900/50">
+                  <div className="mt-6 rounded-md border border-gray-200 bg-white/60 p-4 text-sm dark:border-gray-700 dark:bg-gray-900/50">
                     <p className="font-semibold text-gray-900 dark:text-white">Shareable link</p>
                     <p className="mt-1 text-gray-600 dark:text-gray-300">
                       Resume link is live and ready to send to recruiters or collaborators.
                     </p>
                     <div className="mt-4 flex flex-wrap items-center gap-3">
-                      <code className="flex-1 rounded-xl bg-gray-900/90 px-3 py-2 text-xs text-white dark:bg-gray-100 dark:text-gray-900">
+                      <code className="flex-1 rounded-md bg-gray-900/90 px-3 py-2 text-xs text-white dark:bg-gray-100 dark:text-gray-900">
                         resumebuilder.app/zardron
                       </code>
-                      <button className="rounded-xl border border-transparent bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white">
+                      <button className="rounded-md border border-transparent bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white">
                         Copy link
                       </button>
                     </div>

@@ -11,6 +11,10 @@ const MarginPresetDropdown = ({
   const dropdownRef = useRef(null);
 
   useEffect(() => {
+    setIsOpen(false);
+  }, [currentPresetId]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (!dropdownRef.current?.contains(event.target)) {
         setIsOpen(false);
@@ -26,7 +30,9 @@ const MarginPresetDropdown = ({
     };
   }, [isOpen]);
 
-  const handleSelect = (id) => {
+  const handleSelect = (id, event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
     onSelect(id);
     setIsOpen(false);
   };
@@ -55,7 +61,7 @@ const MarginPresetDropdown = ({
           {presets.map((preset) => (
             <button
               key={preset.id}
-              onClick={() => handleSelect(preset.id)}
+              onClick={(event) => handleSelect(preset.id, event)}
               className={`w-full text-left px-2 py-1 text-xs rounded-md transition-colors ${
                 currentPresetId === preset.id
                   ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium"

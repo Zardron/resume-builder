@@ -1,7 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Palette } from "lucide-react";
 
-const ColorPicker = ({ selectedColor, onColorSelect }) => {
+const ColorPicker = ({
+  selectedColor,
+  onColorSelect,
+  title = "Choose Color",
+  description = "Customize your resume's accent color",
+}) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showCustomPicker, setShowCustomPicker] = useState(false);
   const [hue, setHue] = useState(240);
@@ -233,11 +238,13 @@ const ColorPicker = ({ selectedColor, onColorSelect }) => {
           <Palette className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           <div>
             <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-              Choose Color
+              {title}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Customize your resume's accent color
-            </p>
+            {description ? (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {description}
+              </p>
+            ) : null}
           </div>
         </div>
         
