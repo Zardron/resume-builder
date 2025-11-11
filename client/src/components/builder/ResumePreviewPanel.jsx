@@ -117,7 +117,7 @@ const ResumePreviewPanel = ({
 
   return (
     <div
-      className={`w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4 ${containerClassName}`}
+      className={`w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4 ${containerClassName} lg:sticky lg:top-16`}
       onContextMenu={handleContextMenu}
     >
       <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300">

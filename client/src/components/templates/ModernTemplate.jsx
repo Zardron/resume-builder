@@ -230,7 +230,7 @@ const ModernTemplate = ({
 								return (
 									<div key={index} className="flex items-center gap-2">
 										<IconComponent className={`${fontSizes.icon} ${textColorClass}`} />
-										<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'} break-all>{socialLink.displayValue}</span>
+										<span className={`${textColor === 'black' ? 'text-gray-700' : 'text-gray-200'} break-all`}>{socialLink.displayValue}</span>
 									</div>
 								);
 							})}
@@ -325,19 +325,19 @@ const ModernTemplate = ({
 					<div className="pl-6 grid gap-2 md:grid-cols-2">
 						{projectsToRender.map((p, index) => (
 							<div key={index} className="border border-gray-200 rounded p-2">
-								<h3 className="text-xs font-bold text-gray-900 mb-1">{p.title}</h3>
+								<h3 className={`${getSectionFontSize(sectionFontSizes, 'projects', 'small')} font-bold text-gray-900 mb-1`}>{p.title}</h3>
 								{p.technologies && (
-									<p className="text-xs mb-1 font-semibold" style={{ color: accentColor }}>
+									<p className={`${getSectionFontSize(sectionFontSizes, 'projects', 'small')} mb-1 font-semibold`} style={{ color: accentColor }}>
 										{p.technologies}
 									</p>
 								)}
 								{p.description && (
-									<div className="text-gray-700 leading-relaxed text-xs">
+									<div className={`text-gray-700 leading-relaxed ${getSectionFontSize(sectionFontSizes, 'job_descriptions', 'small')}`}>
 										{p.description}
 									</div>
 								)}
 								{p.link && (
-									<p className="text-xs break-all mt-1" style={{ color: accentColor }}>
+									<p className={`${getSectionFontSize(sectionFontSizes, 'projects', 'small')} break-all mt-1`} style={{ color: accentColor }}>
 										{formatUrlForDisplay(p.link)}
 									</p>
 								)}
@@ -393,7 +393,7 @@ const ModernTemplate = ({
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
 									<Star className={`size-2 ${textColorClass}`} />
 								</div>
-								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+								<h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
 									Technical Skills
 								</h2>
 							</div>
@@ -403,7 +403,7 @@ const ModernTemplate = ({
 									{data.skills.map((skill, index) => (
 										<span
 											key={index}
-											className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
+											className={`px-2 py-1 font-medium rounded ${getSectionFontSize(sectionFontSizes, 'skills', 'small')} ${textColorClass}`}
 											style={{ backgroundColor: accentColor }}
 										>
 											{skill}
@@ -421,7 +421,7 @@ const ModernTemplate = ({
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
 									<Sparkles className={`size-2 ${textColorClass}`} />
 								</div>
-								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+								<h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
 									Soft Skills
 								</h2>
 							</div>
@@ -431,7 +431,7 @@ const ModernTemplate = ({
 									{data.soft_skills.map((skill, index) => (
 										<span
 											key={index}
-											className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
+											className={`px-2 py-1 font-medium rounded ${getSectionFontSize(sectionFontSizes, 'soft_skills', 'small')} ${textColorClass}`}
 											style={{ backgroundColor: accentColor }}
 										>
 											{skill}
@@ -449,7 +449,7 @@ const ModernTemplate = ({
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
 									<Languages className={`size-2 ${textColorClass}`} />
 								</div>
-								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+								<h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
 									Languages
 								</h2>
 							</div>
@@ -458,8 +458,8 @@ const ModernTemplate = ({
 								<div className="space-y-1">
 									{data.languages.map((lang, index) => (
 										<div key={index} className="flex justify-between items-center">
-											<span className="text-xs font-medium text-gray-900">{lang.language}</span>
-											<span className="text-xs text-gray-600 capitalize">{lang.proficiency}</span>
+											<span className={`${getSectionFontSize(sectionFontSizes, 'languages', 'small')} font-medium text-gray-900`}>{lang.language}</span>
+											<span className={`${getSectionFontSize(sectionFontSizes, 'languages', 'small')} text-gray-600 capitalize`}>{lang.proficiency}</span>
 										</div>
 									))}
 								</div>
@@ -474,7 +474,7 @@ const ModernTemplate = ({
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
 									<Star className={`size-2 ${textColorClass}`} />
 								</div>
-								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+								<h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
 									Certifications
 								</h2>
 							</div>
@@ -484,13 +484,13 @@ const ModernTemplate = ({
 									<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
 										<div className="flex justify-between items-start">
 											<div>
-												<h3 className="text-xs font-bold text-gray-900">{cert.name}</h3>
-												<p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{cert.issuer}</p>
+												<h3 className={`${getSectionFontSize(sectionFontSizes, 'certifications', 'small')} font-bold text-gray-900`}>{cert.name}</h3>
+												<p className={`${getSectionFontSize(sectionFontSizes, 'certifications', 'small')} font-semibold mb-1`} style={{ color: accentColor }}>{cert.issuer}</p>
 												{cert.credential_id && (
-													<p className="text-xs text-gray-600">ID: {cert.credential_id}</p>
+													<p className={`${getSectionFontSize(sectionFontSizes, 'certifications', 'small')} text-gray-600`}>ID: {cert.credential_id}</p>
 												)}
 											</div>
-											<div className="text-xs text-gray-600 font-medium">
+											<div className={`${getDateFontSize(sectionFontSizes)} text-gray-600 font-medium`}>
 												{cert.date && formatDate(cert.date)}
 											</div>
 										</div>
@@ -507,7 +507,7 @@ const ModernTemplate = ({
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
 									<Sparkles className={`size-2 ${textColorClass}`} />
 								</div>
-								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+								<h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
 									Achievements
 								</h2>
 							</div>
@@ -517,12 +517,12 @@ const ModernTemplate = ({
 									<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
 										<div className="flex justify-between items-start">
 											<div>
-												<h3 className="text-xs font-bold text-gray-900">{achievement.title}</h3>
+												<h3 className={`${getSectionFontSize(sectionFontSizes, 'achievements', 'small')} font-bold text-gray-900`}>{achievement.title}</h3>
 												{achievement.description && (
-													<p className="text-xs text-gray-700 mt-1">{achievement.description}</p>
+													<p className={`${getSectionFontSize(sectionFontSizes, 'job_descriptions', 'small')} text-gray-700 mt-1`}>{achievement.description}</p>
 												)}
 											</div>
-											<div className="text-xs text-gray-600 font-medium">
+											<div className={`${getDateFontSize(sectionFontSizes)} text-gray-600 font-medium`}>
 												{achievement.date && formatDate(achievement.date)}
 											</div>
 										</div>
@@ -539,7 +539,7 @@ const ModernTemplate = ({
 								<div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
 									<Heart className={`size-2 ${textColorClass}`} />
 								</div>
-								<h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+								<h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-900 uppercase tracking-wide`}>
 									Volunteer Work
 								</h2>
 							</div>
@@ -549,15 +549,15 @@ const ModernTemplate = ({
 									<div key={index} className="border-l-3 pl-3" style={{ borderLeftColor: accentColor }}>
 										<div className="flex justify-between items-start mb-1">
 											<div>
-												<h3 className="text-xs font-bold text-gray-900">{volunteer.position}</h3>
-												<p className="text-xs font-semibold mb-1" style={{ color: accentColor }}>{volunteer.organization}</p>
+												<h3 className={`${getSectionFontSize(sectionFontSizes, 'volunteer_work', 'small')} font-bold text-gray-900`}>{volunteer.position}</h3>
+												<p className={`${getSectionFontSize(sectionFontSizes, 'volunteer_work', 'small')} font-semibold mb-1`} style={{ color: accentColor }}>{volunteer.organization}</p>
 											</div>
-											<div className="text-xs text-gray-600 font-medium">
+											<div className={`${getDateFontSize(sectionFontSizes)} text-gray-600 font-medium`}>
 												{formatDate(volunteer.start_date)} - {volunteer.is_current ? "Present" : formatDate(volunteer.end_date)}
 											</div>
 										</div>
 										{volunteer.description && (
-											<div className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
+											<div className={`${getSectionFontSize(sectionFontSizes, 'job_descriptions', 'small')} text-gray-700 leading-relaxed whitespace-pre-line`}>
 												{volunteer.description}
 											</div>
 										)}

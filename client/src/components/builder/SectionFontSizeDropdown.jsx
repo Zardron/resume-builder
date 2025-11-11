@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { ChevronDown, Type } from "lucide-react";
+import { DEFAULT_FONT_SIZES } from "../../utils/fontSizeUtils";
 
 const FONT_SIZE_OPTIONS = [
   { value: "extra_small", label: "Extra Small" },
@@ -50,7 +51,7 @@ const SectionFontSizeDropdown = ({
         items: [
           { key: "experience", label: "Job Position" },
           { key: "company_names", label: "Company Names" },
-          { key: "job_descriptions", label: "Job Descriptions" },
+          { key: "job_descriptions", label: "Descriptions" },
           { key: "location", label: "Location" },
         ],
         visible: sectionsAfter([
@@ -62,15 +63,39 @@ const SectionFontSizeDropdown = ({
         ]),
       },
       {
-        id: "other",
-        title: "Other Sections",
+        id: "education_projects",
+        title: "Education & Projects",
         items: [
           { key: "section_headers", label: "Section Headers" },
           { key: "education", label: "Education" },
           { key: "projects", label: "Projects" },
-          { key: "skills", label: "Skills" },
         ],
-        visible: sectionsAfter(["education", "projects", "skills", "additional"]),
+        visible: sectionsAfter([
+          "education",
+          "projects",
+          "skills",
+          "additional",
+        ]),
+      },
+      {
+        id: "skills_languages",
+        title: "Skills & Languages",
+        items: [
+          { key: "skills", label: "Technical Skills" },
+          { key: "soft_skills", label: "Soft Skills" },
+          { key: "languages", label: "Languages" },
+        ],
+        visible: sectionsAfter(["skills", "additional"]),
+      },
+      {
+        id: "additional_sections",
+        title: "Additional Sections",
+        items: [
+          { key: "certifications", label: "Certifications" },
+          { key: "achievements", label: "Achievements" },
+          { key: "volunteer_work", label: "Volunteer Work" },
+        ],
+        visible: sectionsAfter(["additional"]),
       },
     ].filter((group) => group.visible);
   }, [activeSectionId]);
@@ -130,7 +155,11 @@ const SectionFontSizeDropdown = ({
                         {item.label}
                       </span>
                       <select
-                        value={sectionFontSizes[item.key] || "medium"}
+                        value={
+                          sectionFontSizes[item.key] ??
+                          DEFAULT_FONT_SIZES[item.key] ??
+                          "medium"
+                        }
                         onChange={(event) =>
                           handleChange(item.key, event.target.value)
                         }

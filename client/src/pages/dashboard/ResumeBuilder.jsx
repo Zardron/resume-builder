@@ -914,9 +914,7 @@ const ResumeBuilder = () => {
               isDownloading={isDownloading}
               isDownloadDisabled={false}
               downloadTitle={
-                isDownloading
-                  ? "Generating PDF..."
-                  : "Download Resume"
+                isDownloading ? "Generating PDF..." : "Download Resume"
               }
               marginPresets={MARGIN_PRESETS}
               currentMarginPresetId={currentMarginPresetId}

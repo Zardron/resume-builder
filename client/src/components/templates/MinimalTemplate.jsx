@@ -509,13 +509,23 @@ const MinimalTemplate = ({
                     className="w-1 h-4 rounded-full"
                     style={{ backgroundColor: accentColor }}
                   ></div>
-                  <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-medium text-gray-900 uppercase tracking-widest`}
+                  >
                     Technical Skills
                   </h2>
                 </div>
 
                 <div className="pl-3">
-                  <div className="text-gray-700 text-xs leading-relaxed">
+                  <div
+                    className={`text-gray-700 leading-relaxed ${getSectionFontSize(
+                      sectionFontSizes,
+                      "skills",
+                      "small"
+                    )}`}
+                  >
                     {data.skills.slice(0, 10).join(" • ")}
                   </div>
                 </div>
@@ -530,13 +540,23 @@ const MinimalTemplate = ({
                     className="w-1 h-4 rounded-full"
                     style={{ backgroundColor: accentColor }}
                   ></div>
-                  <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-medium text-gray-900 uppercase tracking-widest`}
+                  >
                     Soft Skills
                   </h2>
                 </div>
 
                 <div className="pl-3">
-                  <div className="text-gray-700 text-xs leading-relaxed">
+                  <div
+                    className={`text-gray-700 leading-relaxed ${getSectionFontSize(
+                      sectionFontSizes,
+                      "soft_skills",
+                      "small"
+                    )}`}
+                  >
                     {data.soft_skills.slice(0, 8).join(" • ")}
                   </div>
                 </div>
@@ -551,7 +571,11 @@ const MinimalTemplate = ({
                     className="w-1 h-4 rounded-full"
                     style={{ backgroundColor: accentColor }}
                   ></div>
-                  <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-medium text-gray-900 uppercase tracking-widest`}
+                  >
                     Languages
                   </h2>
                 </div>
@@ -563,10 +587,22 @@ const MinimalTemplate = ({
                         key={index}
                         className="flex justify-between items-center"
                       >
-                        <span className="text-xs font-medium text-gray-900">
+                        <span
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "languages",
+                            "small"
+                          )} font-medium text-gray-900`}
+                        >
                           {lang.language}
                         </span>
-                        <span className="text-xs text-gray-500 capitalize">
+                        <span
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "languages",
+                            "small"
+                          )} text-gray-500 capitalize`}
+                        >
                           {lang.proficiency}
                         </span>
                       </div>
@@ -584,7 +620,11 @@ const MinimalTemplate = ({
                     className="w-1 h-4 rounded-full"
                     style={{ backgroundColor: accentColor }}
                   ></div>
-                  <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-medium text-gray-900 uppercase tracking-widest`}
+                  >
                     Certifications
                   </h2>
                 </div>
@@ -594,17 +634,41 @@ const MinimalTemplate = ({
                     <div key={index} className="relative">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xs font-medium text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "certifications",
+                              "small"
+                            )} font-medium text-gray-900`}
+                          >
                             {cert.name}
                           </h3>
-                          <p className="text-xs text-gray-600">{cert.issuer}</p>
+                          <p
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "certifications",
+                              "small"
+                            )} text-gray-600`}
+                          >
+                            {cert.issuer}
+                          </p>
                           {cert.credential_id && (
-                            <p className="text-xs text-gray-500">
+                            <p
+                              className={`${getSectionFontSize(
+                                sectionFontSizes,
+                                "certifications",
+                                "small"
+                              )} text-gray-500`}
+                            >
                               ID: {cert.credential_id}
                             </p>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500 font-light">
+                        <span
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-500 font-light`}
+                        >
                           {cert.date && formatDate(cert.date)}
                         </span>
                       </div>
@@ -622,7 +686,11 @@ const MinimalTemplate = ({
                     className="w-1 h-4 rounded-full"
                     style={{ backgroundColor: accentColor }}
                   ></div>
-                  <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-medium text-gray-900 uppercase tracking-widest`}
+                  >
                     Achievements
                   </h2>
                 </div>
@@ -632,16 +700,32 @@ const MinimalTemplate = ({
                     <div key={index} className="relative">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xs font-medium text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "achievements",
+                              "small"
+                            )} font-medium text-gray-900`}
+                          >
                             {achievement.title}
                           </h3>
                           {achievement.description && (
-                            <p className="text-xs text-gray-600 mt-1">
+                            <p
+                              className={`${getSectionFontSize(
+                                sectionFontSizes,
+                                "job_descriptions",
+                                "small"
+                              )} text-gray-600 mt-1`}
+                            >
                               {achievement.description}
                             </p>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500 font-light">
+                        <span
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-500 font-light`}
+                        >
                           {achievement.date && formatDate(achievement.date)}
                         </span>
                       </div>
@@ -659,7 +743,11 @@ const MinimalTemplate = ({
                     className="w-1 h-4 rounded-full"
                     style={{ backgroundColor: accentColor }}
                   ></div>
-                  <h2 className="text-sm font-medium text-gray-900 uppercase tracking-widest">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-medium text-gray-900 uppercase tracking-widest`}
+                  >
                     Volunteer Work
                   </h2>
                 </div>
@@ -669,14 +757,30 @@ const MinimalTemplate = ({
                     <div key={index} className="relative">
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h3 className="text-xs font-medium text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "volunteer_work",
+                              "small"
+                            )} font-medium text-gray-900`}
+                          >
                             {volunteer.position}
                           </h3>
-                          <p className="text-xs text-gray-600">
+                          <p
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "volunteer_work",
+                              "small"
+                            )} text-gray-600`}
+                          >
                             {volunteer.organization}
                           </p>
                         </div>
-                        <span className="text-xs text-gray-500 font-light">
+                        <span
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-500 font-light`}
+                        >
                           {formatDate(volunteer.start_date)} -{" "}
                           {volunteer.is_current
                             ? "Present"
@@ -684,7 +788,13 @@ const MinimalTemplate = ({
                         </span>
                       </div>
                       {volunteer.description && (
-                        <div className="text-xs text-gray-600 leading-relaxed whitespace-pre-line">
+                        <div
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "job_descriptions",
+                            "small"
+                          )} text-gray-600 leading-relaxed whitespace-pre-line`}
+                        >
                           {volunteer.description}
                         </div>
                       )}

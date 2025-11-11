@@ -600,7 +600,11 @@ const ClassicTemplate = ({
                   >
                     <Award className={`size-2 ${textColorClass}`} />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Technology Stack
                   </h2>
                 </div>
@@ -610,7 +614,11 @@ const ClassicTemplate = ({
                     {data.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
+                        className={`px-2 py-1 font-medium rounded ${getSectionFontSize(
+                          sectionFontSizes,
+                          "skills",
+                          "small"
+                        )} ${textColorClass}`}
                         style={{ backgroundColor: accentColor }}
                       >
                         {skill}
@@ -631,7 +639,11 @@ const ClassicTemplate = ({
                   >
                     <Star className={`size-2 ${textColorClass}`} />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Soft Skills
                   </h2>
                 </div>
@@ -641,7 +653,11 @@ const ClassicTemplate = ({
                     {data.soft_skills.map((skill, index) => (
                       <span
                         key={index}
-                        className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
+                        className={`px-2 py-1 font-medium rounded ${getSectionFontSize(
+                          sectionFontSizes,
+                          "soft_skills",
+                          "small"
+                        )} ${textColorClass}`}
                         style={{ backgroundColor: accentColor }}
                       >
                         {skill}
@@ -662,7 +678,11 @@ const ClassicTemplate = ({
                   >
                     <Languages className={`size-2 ${textColorClass}`} />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Languages
                   </h2>
                 </div>
@@ -674,10 +694,22 @@ const ClassicTemplate = ({
                         key={index}
                         className="flex justify-between items-center"
                       >
-                        <span className="text-xs font-medium text-gray-900">
+                        <span
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "languages",
+                            "small"
+                          )} font-medium text-gray-900`}
+                        >
                           {lang.language}
                         </span>
-                        <span className="text-xs text-gray-600 capitalize">
+                        <span
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "languages",
+                            "small"
+                          )} text-gray-600 capitalize`}
+                        >
                           {lang.proficiency}
                         </span>
                       </div>
@@ -697,7 +729,11 @@ const ClassicTemplate = ({
                   >
                     <Award className={`size-2 ${textColorClass}`} />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Certifications
                   </h2>
                 </div>
@@ -711,22 +747,42 @@ const ClassicTemplate = ({
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xs font-bold text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "certifications",
+                              "small"
+                            )} font-bold text-gray-900`}
+                          >
                             {cert.name}
                           </h3>
                           <p
-                            className="text-xs font-semibold"
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "certifications",
+                              "small"
+                            )} font-semibold`}
                             style={{ color: accentColor }}
                           >
                             {cert.issuer}
                           </p>
                           {cert.credential_id && (
-                            <p className="text-xs text-gray-600">
+                            <p
+                              className={`${getSectionFontSize(
+                                sectionFontSizes,
+                                "certifications",
+                                "small"
+                              )} text-gray-600`}
+                            >
                               ID: {cert.credential_id}
                             </p>
                           )}
                         </div>
-                        <div className="text-xs text-gray-600 font-medium">
+                        <div
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-600 font-medium`}
+                        >
                           {cert.date && formatDate(cert.date)}
                         </div>
                       </div>
@@ -746,7 +802,11 @@ const ClassicTemplate = ({
                   >
                     <Star className={`size-2 ${textColorClass}`} />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Achievements
                   </h2>
                 </div>
@@ -760,16 +820,32 @@ const ClassicTemplate = ({
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xs font-bold text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "achievements",
+                              "small"
+                            )} font-bold text-gray-900`}
+                          >
                             {achievement.title}
                           </h3>
                           {achievement.description && (
-                            <p className="text-xs text-gray-700 mt-1">
+                            <p
+                              className={`${getSectionFontSize(
+                                sectionFontSizes,
+                                "job_descriptions",
+                                "small"
+                              )} text-gray-700 mt-1`}
+                            >
                               {achievement.description}
                             </p>
                           )}
                         </div>
-                        <div className="text-xs text-gray-600 font-medium">
+                        <div
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-600 font-medium`}
+                        >
                           {achievement.date && formatDate(achievement.date)}
                         </div>
                       </div>
@@ -789,7 +865,11 @@ const ClassicTemplate = ({
                   >
                     <Heart className={`size-2 ${textColorClass}`} />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Volunteer Work
                   </h2>
                 </div>
@@ -803,17 +883,31 @@ const ClassicTemplate = ({
                     >
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h3 className="text-xs font-bold text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "volunteer_work",
+                              "small"
+                            )} font-bold text-gray-900`}
+                          >
                             {volunteer.position}
                           </h3>
                           <p
-                            className="text-xs font-semibold"
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "volunteer_work",
+                              "small"
+                            )} font-semibold`}
                             style={{ color: accentColor }}
                           >
                             {volunteer.organization}
                           </p>
                         </div>
-                        <div className="text-xs text-gray-600 font-medium">
+                        <div
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-600 font-medium`}
+                        >
                           {formatDate(volunteer.start_date)} -{" "}
                           {volunteer.is_current
                             ? "Present"
@@ -821,7 +915,13 @@ const ClassicTemplate = ({
                         </div>
                       </div>
                       {volunteer.description && (
-                        <div className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
+                        <div
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "job_descriptions",
+                            "small"
+                          )} text-gray-700 leading-relaxed whitespace-pre-line`}
+                        >
                           {volunteer.description}
                         </div>
                       )}

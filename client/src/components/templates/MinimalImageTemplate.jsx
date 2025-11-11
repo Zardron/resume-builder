@@ -353,7 +353,11 @@ const MinimalImageTemplate = ({
                     >
                       <Award className={`size-3 ${textColorClass}`} />
                     </div>
-                    <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
+                    <h2
+                      className={`${getSectionHeaderFontSize(
+                        sectionFontSizes
+                      )} font-bold text-gray-800 uppercase tracking-wide`}
+                    >
                       Technical Skills
                     </h2>
                   </div>
@@ -361,7 +365,11 @@ const MinimalImageTemplate = ({
                     {data.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
+                        className={`px-2 py-1 font-medium rounded ${getSectionFontSize(
+                          sectionFontSizes,
+                          "skills",
+                          "small"
+                        )} ${textColorClass}`}
                         style={{ backgroundColor: accentColor }}
                       >
                         {skill}
@@ -381,7 +389,11 @@ const MinimalImageTemplate = ({
                     >
                       <Star className={`size-3 ${textColorClass}`} />
                     </div>
-                    <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
+                    <h2
+                      className={`${getSectionHeaderFontSize(
+                        sectionFontSizes
+                      )} font-bold text-gray-800 uppercase tracking-wide`}
+                    >
                       Soft Skills
                     </h2>
                   </div>
@@ -389,7 +401,11 @@ const MinimalImageTemplate = ({
                     {data.soft_skills.map((skill, index) => (
                       <span
                         key={index}
-                        className={`px-2 py-1 text-xs font-medium rounded ${textColorClass}`}
+                        className={`px-2 py-1 font-medium rounded ${getSectionFontSize(
+                          sectionFontSizes,
+                          "soft_skills",
+                          "small"
+                        )} ${textColorClass}`}
                         style={{ backgroundColor: accentColor }}
                       >
                         {skill}
@@ -409,21 +425,37 @@ const MinimalImageTemplate = ({
                     >
                       <Languages className={`size-3 ${textColorClass}`} />
                     </div>
-                    <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
+                    <h2
+                      className={`${getSectionHeaderFontSize(
+                        sectionFontSizes
+                      )} font-bold text-gray-800 uppercase tracking-wide`}
+                    >
                       Languages
                     </h2>
                   </div>
-                  <div className="space-y-2 text-xs">
+                  <div className="space-y-2">
                     {data.languages.map((lang, index) => (
                       <div
                         key={index}
                         className="bg-white rounded-lg p-2 shadow-sm border border-gray-200"
                       >
                         <div className="flex justify-between items-center">
-                          <span className="font-medium text-gray-800">
+                          <span
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "languages",
+                              "small"
+                            )} font-medium text-gray-800`}
+                          >
                             {lang.language}
                           </span>
-                          <span className="text-gray-600 capitalize">
+                          <span
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "languages",
+                              "small"
+                            )} text-gray-600 capitalize`}
+                          >
                             {lang.proficiency}
                           </span>
                         </div>
@@ -443,27 +475,55 @@ const MinimalImageTemplate = ({
                     >
                       <Award className={`size-3 ${textColorClass}`} />
                     </div>
-                    <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
+                    <h2
+                      className={`${getSectionHeaderFontSize(
+                        sectionFontSizes
+                      )} font-bold text-gray-800 uppercase tracking-wide`}
+                    >
                       Certifications
                     </h2>
                   </div>
-                  <div className="space-y-2 text-xs">
+                  <div className="space-y-2">
                     {data.certifications.map((cert, index) => (
                       <div
                         key={index}
                         className="bg-white rounded-lg p-2 shadow-sm border border-gray-200"
                       >
-                        <p className="font-bold text-gray-800 mb-1">
+                        <p
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "certifications",
+                            "small"
+                          )} font-bold text-gray-800 mb-1`}
+                        >
                           {cert.name}
                         </p>
-                        <p className="text-gray-600 mb-1">{cert.issuer}</p>
+                        <p
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "certifications",
+                            "small"
+                          )} text-gray-600 mb-1`}
+                        >
+                          {cert.issuer}
+                        </p>
                         {cert.credential_id && (
-                          <p className="text-xs text-gray-500">
+                          <p
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "certifications",
+                              "small"
+                            )} text-gray-500`}
+                          >
                             ID: {cert.credential_id}
                           </p>
                         )}
                         {cert.date && (
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p
+                            className={`${getDateFontSize(
+                              sectionFontSizes
+                            )} text-gray-500 mt-1`}
+                          >
                             {formatDate(cert.date)}
                           </p>
                         )}
@@ -619,7 +679,11 @@ const MinimalImageTemplate = ({
                   >
                     <Award className="size-2 ${textColorClass}" />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Key Projects
                   </h2>
                 </div>
@@ -629,25 +693,45 @@ const MinimalImageTemplate = ({
                       key={index}
                       className="border border-gray-200 rounded p-2"
                     >
-                      <h3 className="text-xs font-bold text-gray-900 mb-1">
+                      <h3
+                        className={`${getSectionFontSize(
+                          sectionFontSizes,
+                          "projects",
+                          "small"
+                        )} font-bold text-gray-900 mb-1`}
+                      >
                         {project.title}
                       </h3>
                       {project.technologies && (
                         <p
-                          className="text-xs mb-2 font-semibold"
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "projects",
+                            "small"
+                          )} mb-2 font-semibold`}
                           style={{ color: accentColor }}
                         >
                           {project.technologies}
                         </p>
                       )}
                       {project.description && (
-                        <div className="text-gray-700 leading-relaxed text-xs mb-1">
+                        <div
+                          className={`text-gray-700 leading-relaxed ${getSectionFontSize(
+                            sectionFontSizes,
+                            "job_descriptions",
+                            "small"
+                          )} mb-1`}
+                        >
                           {project.description}
                         </div>
                       )}
                       {project.link && (
                         <p
-                          className="text-xs break-all"
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "projects",
+                            "small"
+                          )} break-all`}
                           style={{ color: accentColor }}
                         >
                           {formatUrlForDisplay(project.link)}
@@ -669,7 +753,11 @@ const MinimalImageTemplate = ({
                   >
                     <Award className="size-2 ${textColorClass}" />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Achievements
                   </h2>
                 </div>
@@ -682,16 +770,32 @@ const MinimalImageTemplate = ({
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xs font-bold text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "achievements",
+                              "small"
+                            )} font-bold text-gray-900`}
+                          >
                             {achievement.title}
                           </h3>
                           {achievement.description && (
-                            <p className="text-xs text-gray-700 mt-1">
+                            <p
+                              className={`${getSectionFontSize(
+                                sectionFontSizes,
+                                "job_descriptions",
+                                "small"
+                              )} text-gray-700 mt-1`}
+                            >
                               {achievement.description}
                             </p>
                           )}
                         </div>
-                        <div className="text-xs text-gray-600 font-medium">
+                        <div
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-600 font-medium`}
+                        >
                           {achievement.date && formatDate(achievement.date)}
                         </div>
                       </div>
@@ -711,7 +815,11 @@ const MinimalImageTemplate = ({
                   >
                     <Heart className="size-2 ${textColorClass}" />
                   </div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2
+                    className={`${getSectionHeaderFontSize(
+                      sectionFontSizes
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
+                  >
                     Volunteer Work
                   </h2>
                 </div>
@@ -724,17 +832,31 @@ const MinimalImageTemplate = ({
                     >
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h3 className="text-xs font-bold text-gray-900">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "volunteer_work",
+                              "small"
+                            )} font-bold text-gray-900`}
+                          >
                             {volunteer.position}
                           </h3>
                           <p
-                            className="text-xs font-semibold mb-1"
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "volunteer_work",
+                              "small"
+                            )} font-semibold mb-1`}
                             style={{ color: accentColor }}
                           >
                             {volunteer.organization}
                           </p>
                         </div>
-                        <div className="text-xs text-gray-600 font-medium">
+                        <div
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-600 font-medium`}
+                        >
                           {formatDate(volunteer.start_date)} -{" "}
                           {volunteer.is_current
                             ? "Present"
@@ -742,7 +864,13 @@ const MinimalImageTemplate = ({
                         </div>
                       </div>
                       {volunteer.description && (
-                        <div className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
+                        <div
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "job_descriptions",
+                            "small"
+                          )} text-gray-700 leading-relaxed whitespace-pre-line`}
+                        >
                           {volunteer.description}
                         </div>
                       )}
