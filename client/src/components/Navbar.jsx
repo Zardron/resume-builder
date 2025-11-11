@@ -14,7 +14,9 @@ const NAV_LINKS = [
 const Navbar = () => {
   const [isLoggedIn] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const profileMenuRef = useRef(null);
   const headerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -69,20 +71,38 @@ const Navbar = () => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsMenuOpen(false);
       }
+
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target)
+      ) {
+        setIsProfileMenuOpen(false);
+      }
     };
 
-    if (isMenuOpen) {
+    if (isMenuOpen || isProfileMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      document.removeEventListener('mousedown', handleClickOutside);
     }
+
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.body.style.overflow = 'unset';
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, isProfileMenuOpen]);
+
+  const handleProfileNavigate = (path) => {
+    setIsProfileMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleLogout = () => {
+    setIsProfileMenuOpen(false);
+    navigate('/sign-in', { state: { fromHome: true } });
+  };
 
   return (
     <>
@@ -95,7 +115,7 @@ const Navbar = () => {
 
       <header
         ref={headerRef}
-        className={`flex items-center justify-between px-4 md:px-14 shadow dark:shadow-white/5 w-full transition-all sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${
+        className={`flex items-center justify-between px-4 md:px-16 shadow dark:shadow-white/5 w-full transition-all sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${
           isMenuOpen ? 'hidden md:flex' : 'flex'
         }`}
       >
@@ -129,16 +149,68 @@ const Navbar = () => {
               Welcome, <span className="font-bold">Zardron</span>
             </span>
           )}
-          <ThemeSwitcher />
-          {isLoggedIn ? (
-            <Link
-              to="/sign-in"
-              state={{ fromHome: true }}
-              className="hidden md:flex bg-[var(--error-color)] text-white px-4 py-1.5 rounded-md text-sm font-medium hover:opacity-80 transition"
-            >
-              Logout
-            </Link>
-          ) : (
+          {isLoggedIn && (
+            <div className="relative" ref={profileMenuRef}>
+              <button
+                onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                className="size-8 flex items-center justify-center rounded-md bg-gradient-to-br from-blue-500/90 to-purple-500/90 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-400 dark:shadow-none cursor-pointer"
+                aria-haspopup="menu"
+                aria-expanded={isProfileMenuOpen}
+              >
+                Z
+              </button>
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 mt-3 w-56 origin-top-right rounded-xl border border-gray-200/70 bg-white p-2 text-sm shadow-xl ring-1 ring-black/5 dark:border-gray-700/60 dark:bg-gray-800 dark:text-gray-100">
+                  <div className="px-3 py-2">
+                    <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                      Signed in as
+                    </p>
+                    <p className="mt-1 font-semibold text-gray-900 dark:text-white">Zardron</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">zardron@example.com</p>
+                  </div>
+                  <div className="my-2 border-t border-gray-100 dark:border-gray-700" />
+                  <div className="flex items-center justify-between rounded-md px-3 py-2 text-gray-700 dark:text-gray-200">
+                    <span>Theme</span>
+                    <ThemeSwitcher />
+                  </div>
+                  <div className="my-2 border-t border-gray-100 dark:border-gray-700" />
+                  <button
+                    onClick={() => handleProfileNavigate('/dashboard')}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <span>Dashboard</span>
+                  </button>
+                  <button
+                    onClick={() => handleProfileNavigate('/dashboard/purchase')}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <span>Buy Credits</span>
+                  </button>
+                  <div className="my-2 border-t border-gray-100 dark:border-gray-700" />
+                  <button
+                    onClick={() => handleProfileNavigate('/dashboard/profile')}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <span>Profile</span>
+                  </button>
+                  <button
+                    onClick={() => handleProfileNavigate('/dashboard/settings')}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <span>Settings</span>
+                  </button>
+                  <div className="my-2 border-t border-gray-100 dark:border-gray-700" />
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left font-medium text-[var(--error-color)] transition hover:bg-red-50 hover:text-[var(--error-color)] dark:hover:bg-red-500/10"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          {!isLoggedIn && (
             <Link
               to="/sign-in"
               state={{ fromHome: true }}
