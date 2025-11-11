@@ -11,7 +11,7 @@ const PaperSizeDropdown = ({
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (revent) => {
       if (!dropdownRef.current?.contains(event.target)) {
         setIsOpen(false);
       }

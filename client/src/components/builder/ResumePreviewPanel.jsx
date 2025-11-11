@@ -4,6 +4,7 @@ import {
   Eye,
   EyeOff,
   Loader2,
+  Lock,
   Share2,
 } from "lucide-react";
 import PaperSizeDropdown from "./PaperSizeDropdown";
@@ -50,6 +51,12 @@ const ResumePreviewPanel = ({
   renderTemplate,
   previewFooterText = "Preview updates in real-time as you fill out the form",
   containerClassName = "",
+  isPreviewLocked = false,
+  lockedPreviewImage = null,
+  previewLockMessage = "Live preview locked — you're out of credits.",
+  previewLockSubtext = "Buy more credits to unlock the full live preview experience.",
+  purchaseButtonLabel = "Buy more credits",
+  onPurchaseCredits,
 }) => {
   const totalPages =
     typeof previewPageCount === "number" && previewPageCount > 0
@@ -94,10 +101,24 @@ const ResumePreviewPanel = ({
   const downloadButtonLabel = isDownloading
     ? downloadButtonLoadingLabel
     : downloadButtonIdleLabel;
+  const handlePurchaseCredits = onPurchaseCredits || (() => {});
+  const handleContextMenu = (event) => {
+    if (isPreviewLocked) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+
+  const shouldRenderTemplateContent = !(
+    isPreviewLocked &&
+    typeof lockedPreviewImage === "string" &&
+    lockedPreviewImage.length > 0
+  );
 
   return (
     <div
-      className={`w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4 sticky top-18 ${containerClassName}`}
+      className={`w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4 ${containerClassName}`}
+      onContextMenu={handleContextMenu}
     >
       <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -231,11 +252,13 @@ const ResumePreviewPanel = ({
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
             <div
               ref={previewContainerRef}
-              className="max-h-[600px] overflow-y-auto overflow-x-hidden"
+              className={`max-h-[600px] overflow-x-hidden ${
+                isPreviewLocked ? "overflow-hidden" : "overflow-y-auto"
+              }`}
             >
           <div className="flex justify-center">
                 <div
-                  className="resume-preview-scale-wrapper"
+                  className="resume-preview-scale-wrapper relative"
                   style={{
                     width: scaledWrapperWidth,
                     height: scaledWrapperHeight,
@@ -250,94 +273,171 @@ const ResumePreviewPanel = ({
                     width: pageWidthValue,
                   }}
                 >
-                  <div
-                    className="flex flex-col items-center"
-                    style={{
-                      gap: `${pageGapValue}px`,
-                      width: "100%",
-                    }}
-                  >
-                    {Array.from({ length: totalPages }, (_, index) => {
-                      const effectiveContentHeight =
-                        contentSliceHeight > 0
-                          ? contentSliceHeight
-                          : Math.max(
-                              numericPageHeight - marginTopPx - marginBottomPx,
-                              0
-                            );
-                      const viewportHeight =
-                        effectiveContentHeight > 0
-                          ? effectiveContentHeight
-                          : numericPageHeight;
-                      const sliceOffset =
-                        marginTopPx +
-                        index *
-                          (effectiveContentHeight > 0
+                  {shouldRenderTemplateContent ? (
+                    <div
+                      className="flex flex-col items-center"
+                      style={{
+                        gap: `${pageGapValue}px`,
+                        width: "100%",
+                      }}
+                    >
+                      {Array.from({ length: totalPages }, (_, index) => {
+                        const effectiveContentHeight =
+                          contentSliceHeight > 0
+                            ? contentSliceHeight
+                            : Math.max(
+                                numericPageHeight -
+                                  marginTopPx -
+                                  marginBottomPx,
+                                0
+                              );
+                        const viewportHeight =
+                          effectiveContentHeight > 0
                             ? effectiveContentHeight
-                            : numericPageHeight);
+                            : numericPageHeight;
+                        const sliceOffset =
+                          marginTopPx +
+                          index *
+                            (effectiveContentHeight > 0
+                              ? effectiveContentHeight
+                              : numericPageHeight);
 
-                      return (
-                        <div
-                          key={`preview-page-${index}`}
-                          className="relative bg-white border border-gray-200 dark:border-gray-700 shadow-sm rounded-md overflow-hidden"
-                          style={{
-                            width: pageWidthValue,
-                            height: pageHeightValue,
-                          }}
-                        >
-                          {marginTopPx > 0 ? (
-                            <div
-                              style={{
-                                height: `${marginTopPx}px`,
-                                width: "100%",
-                                backgroundColor: "#ffffff",
-                              }}
-                            />
-                          ) : null}
+                        return (
                           <div
+                            key={`preview-page-${index}`}
+                            className="relative bg-white border border-gray-200 dark:border-gray-700 shadow-sm rounded-md overflow-hidden"
                             style={{
-                              width: "100%",
-                              height: viewportHeight
-                                ? `${viewportHeight}px`
-                                : "100%",
-                              overflow: "hidden",
-                              position: "relative",
+                              width: pageWidthValue,
+                              height: pageHeightValue,
                             }}
                           >
+                            {marginTopPx > 0 ? (
+                              <div
+                                style={{
+                                  height: `${marginTopPx}px`,
+                                  width: "100%",
+                                  backgroundColor: "#ffffff",
+                                }}
+                              />
+                            ) : null}
                             <div
-                              className="text-[1em] resume-preview-content"
-                              data-preview-environment="true"
                               style={{
-                                width: pageWidthValue,
-                                height: isFullHeightTemplate
-                                  ? previewDimensions.height
-                                  : "auto",
-                                transform:
-                                  sliceOffset > 0
-                                    ? `translateY(-${sliceOffset}px)`
-                                    : undefined,
-                                transformOrigin: "top left",
+                                width: "100%",
+                                height: viewportHeight
+                                  ? `${viewportHeight}px`
+                                  : "100%",
+                                overflow: "hidden",
+                                position: "relative",
                               }}
                             >
-                              {renderTemplate(false)}
+                              <div
+                                className="text-[1em] resume-preview-content"
+                                data-preview-environment="true"
+                                style={{
+                                  width: pageWidthValue,
+                                  height: isFullHeightTemplate
+                                    ? previewDimensions.height
+                                    : "auto",
+                                  transform:
+                                    sliceOffset > 0
+                                      ? `translateY(-${sliceOffset}px)`
+                                      : undefined,
+                                  transformOrigin: "top left",
+                                }}
+                              >
+                                {renderTemplate(false, isPreviewLocked)}
+                              </div>
                             </div>
+                            {marginBottomPx > 0 ? (
+                              <div
+                                style={{
+                                  height: `${marginBottomPx}px`,
+                                  width: "100%",
+                                  backgroundColor: "#ffffff",
+                                }}
+                              />
+                            ) : null}
                           </div>
-                          {marginBottomPx > 0 ? (
-                            <div
-                              style={{
-                                height: `${marginBottomPx}px`,
-                                width: "100%",
-                                backgroundColor: "#ffffff",
-                              }}
-                            />
-                          ) : null}
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  ) : lockedPreviewImage ? (
+                    <div className="flex w-full items-center justify-center">
+                      <img
+                        src={lockedPreviewImage}
+                        alt="Locked resume preview"
+                        draggable={false}
+                        className="max-w-full rounded-md border border-gray-200 dark:border-gray-700 shadow-sm select-none pointer-events-none"
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                        }}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
                 </div>
+              {isPreviewLocked ? (
+                <div className="absolute p-4 inset-x-0 bottom-0 top-1/2 z-20 pointer-events-none">
+                    <div className="relative h-full overflow-hidden">
+                      <div className="absolute inset-0">
+                        <div
+                          className="absolute inset-0 backdrop-blur-sm"
+                          style={{
+                            maskImage:
+                              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,1) 100%)",
+                            WebkitMaskImage:
+                              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,1) 100%)",
+                          }}
+                        />
+                        <div
+                          className="absolute inset-0 backdrop-blur-md"
+                          style={{
+                            maskImage:
+                              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 45%, rgba(0,0,0,1) 75%, rgba(0,0,0,1) 100%)",
+                            WebkitMaskImage:
+                              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 45%, rgba(0,0,0,1) 75%, rgba(0,0,0,1) 100%)",
+                          }}
+                        />
+                        <div
+                          className="absolute inset-0 backdrop-blur-lg"
+                          style={{
+                            maskImage:
+                              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 70%, rgba(0,0,0,1) 100%)",
+                            WebkitMaskImage:
+                              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 70%, rgba(0,0,0,1) 100%)",
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white/95 dark:via-gray-900/70 dark:to-gray-900/90" />
+                      </div>
+                    <div className="relative pointer-events-auto flex h-full flex-col items-center justify-center gap-3 px-6 py-8 text-center">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg shadow-[var(--primary-color)]/25">
+                        <Lock className="h-6 w-6" />
+                      </div>
+                      <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                        {previewLockMessage}
+                      </p>
+                      {previewLockSubtext ? (
+                        <p className="max-w-xs text-xs text-gray-600 dark:text-gray-300">
+                          {previewLockSubtext}
+                        </p>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          handlePurchaseCredits();
+                        }}
+                        className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[var(--primary-color)]/20 transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 cursor-pointer"
+                      >
+                        {purchaseButtonLabel}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
               </div>
             </div>
         {canRenderTemplate ? (
@@ -364,7 +464,7 @@ const ResumePreviewPanel = ({
                   : "auto",
               }}
             >
-              {renderTemplate(false)}
+              {renderTemplate(false, isPreviewLocked)}
             </div>
           </div>
         ) : null}

@@ -1,4 +1,10 @@
-import { useState, useCallback, useEffect, useRef, useLayoutEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeftIcon,
@@ -39,6 +45,8 @@ import {
   PAPER_DIMENSIONS,
   MARGIN_PRESETS,
 } from "./BuilderConstants";
+import { toPng } from "html-to-image";
+import { createHalfBlurredPreviewImage } from "../../utils/previewImageUtils";
 
 const getPreviewDimensions = (size) =>
   PAPER_DIMENSIONS[size] || PAPER_DIMENSIONS.A4;
@@ -64,6 +72,7 @@ const ExistingResumeBuilder = () => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [availableCredits, setAvailableCredits] = useState(getStoredCredits);
+  const [lockedPreviewImage, setLockedPreviewImage] = useState(null);
   const formSectionRef = useRef(null);
   const previewRef = useRef(null);
   const previewContainerRef = useRef(null);
@@ -79,9 +88,15 @@ const ExistingResumeBuilder = () => {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
+  const isPreviewLocked = availableCredits <= 0;
+  const captureInFlightRef = useRef(false);
+  const lastLockedDataSignatureRef = useRef(null);
+
   const handleDownload = async () => {
+    if (isDownloading) return;
+
     const targetNode = exportRef.current || previewRef.current;
-    if (isDownloading || !targetNode) return;
+    if (!targetNode) return;
 
     setIsDownloading(true);
 
@@ -275,7 +290,7 @@ const ExistingResumeBuilder = () => {
     }));
   };
 
-  const renderTemplate = (isDownloadMode = false) => {
+  const renderTemplate = (isDownloadMode = false, _useLockedData = false) => {
     const templateProps = {
       data: resumeData,
       accentColor: resumeData.accent_color || "#3B82F6",
@@ -419,6 +434,59 @@ const ExistingResumeBuilder = () => {
     totalUnscaledPreviewHeight > 0 && previewScale
       ? `${totalUnscaledPreviewHeight * previewScale}px`
       : previewDimensions.height;
+
+  const captureLockedPreviewImage = useCallback(
+    async (nextSignature) => {
+      if (!isPreviewLocked) {
+        return;
+      }
+      if (captureInFlightRef.current) {
+        return;
+      }
+      const node = previewRef.current;
+      if (!node) {
+        return;
+      }
+
+      captureInFlightRef.current = true;
+      try {
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        const dataUrl = await toPng(node, {
+          pixelRatio: window.devicePixelRatio || 2,
+          cacheBust: true,
+          backgroundColor: "#ffffff",
+        });
+        const blurredDataUrl = await createHalfBlurredPreviewImage(dataUrl);
+        setLockedPreviewImage(blurredDataUrl);
+        lastLockedDataSignatureRef.current = nextSignature;
+      } catch (error) {
+        console.error("Failed to capture locked preview:", error);
+      } finally {
+        captureInFlightRef.current = false;
+      }
+    },
+    [isPreviewLocked]
+  );
+
+  useEffect(() => {
+    if (!isPreviewLocked) {
+      setLockedPreviewImage(null);
+      lastLockedDataSignatureRef.current = null;
+      return;
+    }
+
+    const signature = JSON.stringify(resumeData);
+    const hasDataChanged = lastLockedDataSignatureRef.current !== signature;
+
+    if (!lockedPreviewImage || hasDataChanged) {
+      captureLockedPreviewImage(signature);
+    }
+  }, [
+    isPreviewLocked,
+    captureLockedPreviewImage,
+    lockedPreviewImage,
+    resumeData,
+  ]);
 
   const navigate = useNavigate();
 
@@ -777,13 +845,11 @@ const ExistingResumeBuilder = () => {
               }
               onDownload={handleDownload}
               isDownloading={isDownloading}
-              isDownloadDisabled={isDownloading || !isTitleConfirmed}
+              isDownloadDisabled={false}
               downloadTitle={
                 isDownloading
                   ? "Generating PDF..."
-                  : isTitleConfirmed
-                  ? "Download Resume"
-                  : "Upload a file or enter a resume title to download"
+                  : "Download Resume"
               }
               marginPresets={MARGIN_PRESETS}
               currentMarginPresetId={currentMarginPresetId}
@@ -804,6 +870,9 @@ const ExistingResumeBuilder = () => {
               previewContainerRef={previewContainerRef}
               previewRef={previewRef}
               renderTemplate={renderTemplate}
+              isPreviewLocked={isPreviewLocked}
+              lockedPreviewImage={lockedPreviewImage}
+              onPurchaseCredits={() => navigate("/dashboard/purchase")}
             />
           </div>
         </div>
@@ -832,7 +901,7 @@ const ExistingResumeBuilder = () => {
               margin: "0 auto",
             }}
           >
-            {renderTemplate(true)}
+            {renderTemplate(true, isPreviewLocked)}
           </div>
         </div>
       </div>
