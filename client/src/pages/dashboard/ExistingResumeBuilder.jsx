@@ -564,9 +564,9 @@ const ExistingResumeBuilder = () => {
       <div ref={formSectionRef} className="w-full flex items-center mt-2">
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Left Side - Form Sections */}
-          <div className="w-full">
+          <div className="w-full ">
             <div className="w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4">
-              <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300">
+              <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 dark:bg-gray-900">
                 {/* Progress Bar */}
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">

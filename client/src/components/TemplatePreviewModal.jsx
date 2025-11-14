@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X, FileText, Maximize2, Minimize2 } from "lucide-react";
 import ClassicTemplate from "./templates/ClassicTemplate";
@@ -25,6 +25,8 @@ const TemplatePreviewModal = ({
   const [isClosing, setIsClosing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [previewScale, setPreviewScale] = useState(1);
+  const previewContainerRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -93,22 +95,22 @@ const TemplatePreviewModal = ({
         width: "816px",        // 8.5" × 11" at 96 DPI
         height: "1056px",
         aspectRatio: "8.5/11",
-        maxWidth: "816px",
-        maxHeight: "1056px"
+        maxWidth: "100%",
+        maxHeight: "none"
       },
       A4: {
         width: "794px",        // 210mm × 297mm at 96 DPI
         height: "1123px",
         aspectRatio: "8.27/11.69",
-        maxWidth: "794px",
-        maxHeight: "1123px"
+        maxWidth: "100%",
+        maxHeight: "none"
       },
       legal: {
         width: "816px",        // 8.5" × 14" at 96 DPI
         height: "1344px",
         aspectRatio: "8.5/14",
-        maxWidth: "816px",
-        maxHeight: "1344px"
+        maxWidth: "100%",
+        maxHeight: "none"
       }
     };
     return styles[size] || styles.A4;
@@ -142,6 +144,39 @@ const TemplatePreviewModal = ({
       setCurrentPage(1);
     }
   }, [paperSize, sampleData, currentPage]);
+
+  // Calculate preview scale for mobile responsiveness
+  useEffect(() => {
+    const container = previewContainerRef.current;
+    if (!container || !isOpen) return;
+
+    const updateScale = () => {
+      const containerWidth = container.clientWidth;
+      const paperStyles = getPaperSizeStyles(paperSize);
+      const paperWidth = parseFloat(paperStyles.width) || 794;
+      const padding = window.innerWidth < 640 ? 16 : 32; // Account for padding
+      const availableWidth = containerWidth - padding;
+      const calculatedScale = Math.min(availableWidth / paperWidth, 1);
+      setPreviewScale(calculatedScale > 0 ? calculatedScale : 1);
+    };
+
+    updateScale();
+
+    if (typeof ResizeObserver !== "undefined") {
+      const resizeObserver = new ResizeObserver(updateScale);
+      resizeObserver.observe(container);
+      window.addEventListener("resize", updateScale);
+      return () => {
+        resizeObserver.disconnect();
+        window.removeEventListener("resize", updateScale);
+      };
+    } else {
+      window.addEventListener("resize", updateScale);
+      return () => {
+        window.removeEventListener("resize", updateScale);
+      };
+    }
+  }, [paperSize, isOpen]);
 
   // Component to render template with page breaks
   const PageBasedTemplate = ({ data, accentColor, paperSize, currentPage, totalPages }) => {
@@ -237,87 +272,118 @@ const TemplatePreviewModal = ({
 
       {/* Modal Container */}
       <div 
-        className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col ${
-          isFullscreen ? 'w-full h-full max-h-none' : 'w-full max-w-7xl h-[95vh]'
+        className={`relative bg-white dark:bg-gray-900 rounded-lg sm:rounded-2xl shadow-2xl flex flex-col ${
+          isFullscreen ? 'w-full h-full max-h-none' : 'w-full max-w-7xl h-[95vh] max-h-[95vh]'
         } animate__animated animate__faster ${isClosing ? 'animate__zoomOut' : 'animate__zoomIn'}`}
       >
+        {/* Close Button - Fixed position in upper right corner of modal */}
+        {!isFullscreen && (
+          <button
+            onClick={handleClose}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-2 lg:right-2 p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors z-50 bg-white dark:bg-gray-900 shadow-lg"
+            title="Close"
+          >
+            <X className="size-4 sm:size-5" />
+          </button>
+        )}
+        
         {/* Modal Content */}
         <div className="flex flex-col h-full gap-0">
           {/* Header */}
-          <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-            <div className="flex items-center justify-between p-8">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-md flex items-center justify-center shadow-lg" style={{ backgroundColor: accentColor }}>
-                  <FileText className="size-6 text-white" />
+          {!isFullscreen && (
+            <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 sm:p-6 lg:p-8 pr-12 sm:pr-14 ">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md flex items-center justify-center shadow-lg flex-shrink-0" style={{ backgroundColor: accentColor }}>
+                    <FileText className="size-5 sm:size-6 text-white" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 truncate">
+                      {templateName}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                      {templateDescription}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                    {templateName}
-                  </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {templateDescription}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                {/* Paper Size Selector */}
-                <div className="flex items-center gap-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Paper Size:
-                  </label>
-                  <select
-                    value={paperSize}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setPaperSize(value);
-                      onPaperSizeChange?.(value);
-                    }}
-                    className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                  >
-                    {paperSizes.map((size) => (
-                      <option key={size.id} value={size.id}>
-                        {size.name} ({size.dimensions})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-
-                {/* Action Buttons */}
-                <div className="flex items-center gap-2">
-                  {/* Fullscreen Toggle */}
-                  <button
-                    onClick={() => setIsFullscreen(!isFullscreen)}
-                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                    title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                  >
-                    {isFullscreen ? <Minimize2 className="size-5" /> : <Maximize2 className="size-5" />}
-                  </button>
-
-                  {/* Close Button */}
-                  <button
-                    onClick={handleClose}
-                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    <X className="size-5" />
-                  </button>
+                
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3">
+                  {/* Paper Size Selector */}
+                  <div className="flex items-center gap-2 flex-1 sm:flex-initial">
+                    <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                      Paper Size:
+                    </label>
+                    <select
+                      value={paperSize}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setPaperSize(value);
+                        onPaperSizeChange?.(value);
+                      }}
+                      className="flex-1 sm:flex-initial px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm min-w-0"
+                    >
+                      {paperSizes.map((size) => (
+                        <option key={size.id} value={size.id}>
+                          {size.name} ({size.dimensions})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
+          
+          {/* Fullscreen Header - Minimal controls when in fullscreen */}
+          {isFullscreen && (
+            <div className="absolute top-0 right-0 z-50 flex items-center gap-2 p-4">
+              <button
+                onClick={() => setIsFullscreen(false)}
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors bg-white dark:bg-gray-900 shadow-lg"
+                title="Exit Fullscreen"
+              >
+                <Minimize2 className="size-5" />
+              </button>
+              <button
+                onClick={handleClose}
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors bg-white dark:bg-gray-900 shadow-lg"
+                title="Close"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+          )}
 
           {/* Content */}
           <div className="flex-1 flex flex-col overflow-hidden">
 
             {/* Template Preview */}
-            <div className="flex-1 template-preview-scroll bg-gray-100 dark:bg-gray-800 overflow-auto">
-              <div className="p-8 min-h-full flex justify-center items-start">
+            <div 
+              ref={previewContainerRef}
+              className="flex-1 template-preview-scroll bg-gray-100 dark:bg-gray-800 overflow-auto relative"
+            >
+              {/* Fullscreen Toggle - Sticky position in upper right of preview area */}
+              {!isFullscreen && (
+                <div className="sticky top-0 right-0 z-20 flex justify-end pointer-events-none" style={{ padding: '8px' }}>
+                  <button
+                    onClick={() => setIsFullscreen(!isFullscreen)}
+                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors bg-white dark:bg-gray-900 shadow-lg pointer-events-auto"
+                    title="Enter Fullscreen"
+                  >
+                    <Maximize2 className="size-4 sm:size-5" />
+                  </button>
+                </div>
+              )}
+              
+              <div className="py-2 sm:py-3 lg:py-4 px-2 sm:px-3 lg:px-4 min-h-full flex justify-center items-center">
                 <div 
                   className={`bg-white ${totalPages === 1 ? 'shadow-lg' : 'shadow-2xl'} rounded-lg`}
                   style={{
                     ...getPaperSizeStyles(paperSize),
-                    ...(totalPages === 1 && { minHeight: 'auto' })
+                    ...(totalPages === 1 && { minHeight: 'auto' }),
+                    transform: `scale(${previewScale})`,
+                    transformOrigin: 'top center',
+                    maxWidth: '100%'
                   }}
                 >
                   <PageBasedTemplate 
@@ -329,33 +395,39 @@ const TemplatePreviewModal = ({
                   />
                 </div>
               </div>
+
+              <div className="sticky top-0 right-0 z-20 flex justify-end pointer-events-none" style={{ padding: '8px' }}>
+               &nbsp;
+                </div>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-            <div className="px-6 py-6">
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Preview shows sample data. Your actual resume content will appear when you fill out the form.
-                </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={handleClose}
-                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSelectTemplate}
-                    className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm shadow-sm"
-                  >
-                    Use This Template
-                  </button>
+          {!isFullscreen && (
+            <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+              <div className="px-4 sm:px-6 py-4 sm:py-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                    Preview shows sample data. Your actual resume content will appear when you fill out the form.
+                  </div>
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <button
+                      onClick={handleClose}
+                      className="flex-1 sm:flex-initial px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm font-medium"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSelectTemplate}
+                      className="flex-1 sm:flex-initial px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm shadow-sm"
+                    >
+                      Use This Template
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

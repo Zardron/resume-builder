@@ -121,35 +121,33 @@ const ResumePreviewPanel = ({
       onContextMenu={handleContextMenu}
     >
       <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div className="w-full flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {title}
-              </h3>
-              <div className="flex items-center gap-2">
-                <PaperSizeDropdown
-                  paperSizes={paperSizes}
-                  selectedPaperSize={selectedPaperSize}
-                  onSelect={onPaperSizeChange}
-                />
-                {templateDisplayName ? (
-                  <span
-                    className={
-                      templateBadgeClassName ||
-                      "px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg"
-                    }
-                  >
-                    {templateDisplayName} Template
-                  </span>
-                ) : null}
-              </div>
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {title}
+            </h3>
+            <div className="flex items-center gap-2 flex-wrap">
+              <PaperSizeDropdown
+                paperSizes={paperSizes}
+                selectedPaperSize={selectedPaperSize}
+                onSelect={onPaperSizeChange}
+              />
+              {templateDisplayName ? (
+                <span
+                  className={
+                    templateBadgeClassName ||
+                    "px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg whitespace-nowrap"
+                  }
+                >
+                  {templateDisplayName} Template
+                </span>
+              ) : null}
             </div>
           </div>
         </div>
 
-        <div className="w-full p-4 flex flex-col gap-3">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="w-full p-4 flex flex-col gap-3 dark:bg-gray-900">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <button
                 onClick={handleTogglePublic}
@@ -248,20 +246,22 @@ const ResumePreviewPanel = ({
 
         <hr className="border-gray-200 dark:border-gray-700 mx-4" />
 
-        <div className="p-4">
+        <div className="p-4 dark:bg-gray-900">
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
             <div
               ref={previewContainerRef}
-              className={`max-h-[600px] overflow-x-hidden ${
+              className={`max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-x-auto ${
                 isPreviewLocked ? "overflow-hidden" : "overflow-y-auto"
               }`}
             >
-          <div className="flex justify-center">
+          <div className="flex justify-center min-w-0">
                 <div
                   className="resume-preview-scale-wrapper relative"
                   style={{
                     width: scaledWrapperWidth,
                     height: scaledWrapperHeight,
+                    minWidth: 0,
+                    maxWidth: "100%",
                   }}
                 >
               {canRenderTemplate ? (
@@ -269,8 +269,10 @@ const ResumePreviewPanel = ({
                   className="resume-preview-page-container"
                   style={{
                     transform: `scale(${previewScale})`,
-                    transformOrigin: "top left",
+                    transformOrigin: "top center",
                     width: pageWidthValue,
+                    minWidth: 0,
+                    maxWidth: "100%",
                   }}
                 >
                   {shouldRenderTemplateContent ? (

@@ -438,7 +438,10 @@ const ResumeBuilder = () => {
     const updateScale = () => {
       const availableWidth = container.clientWidth;
       if (!availableWidth) return;
-      const calculatedScale = Math.min(availableWidth / previewWidth, 1);
+      // Account for padding on mobile (32px = 16px on each side)
+      const padding = window.innerWidth < 640 ? 32 : 0;
+      const effectiveWidth = Math.max(availableWidth - padding, 0);
+      const calculatedScale = Math.min(effectiveWidth / previewWidth, 1);
       setPreviewScale(calculatedScale > 0 ? calculatedScale : 1);
     };
 
@@ -559,7 +562,7 @@ const ResumeBuilder = () => {
   ]);
 
   return (
-    <div className="mx-auto px-16 pt-8">
+    <div className="mx-auto px-4 lg:px-16 pt-4 lg:pt-8">
       <header className="w-full mt-2">
         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div className="flex flex-col gap-2">
@@ -590,7 +593,7 @@ const ResumeBuilder = () => {
           <InputField
             type="text"
             icon="title"
-            width="w-1/4"
+            width="sm:w-full lg:w-1/4"
             placeholder="Enter your resume title"
             value={resumeData.title}
             onChange={(value) => handleInputChange("title", value)}
@@ -603,13 +606,13 @@ const ResumeBuilder = () => {
       </header>
 
       <div ref={formSectionRef} className="w-full flex items-center mt-2">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 dark:bg-gray-900">
           {/* Left Side */}
           <div className="w-full">
             {/* Section Navigation */}
             <div className="w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4">
               <div
-                className={`bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300`}
+                className={`bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 dark:bg-gray-900`}
               >
                 {/* Progress Bar */}
                 <div className="mb-6">
@@ -630,8 +633,8 @@ const ResumeBuilder = () => {
                     />
                   </div>
                 </div>
-                <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-4">
-                  <div className="flex items-center gap-3 overflow-x-auto">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between mb-6 border-b border-gray-300 py-4">
+                  <div className="flex items-center gap-3 overflow-x-auto sm:overflow-visible min-w-0">
                     <button
                       onClick={() => setIsTemplateSelected(!isTemplateSelected)}
                       className="flex items-center gap-1 p-2 rounded-md text-sm font-medium text-white transition-all bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] cursor-pointer hover:opacity-80 flex-shrink-0"
@@ -649,14 +652,14 @@ const ResumeBuilder = () => {
                     {!isTemplateSelected && (
                       <button
                         onClick={() => setShowColorPicker(!showColorPicker)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors border flex-shrink-0 ${
+                        className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors border flex-shrink-0 whitespace-nowrap ${
                           showColorPicker
                             ? "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 border-blue-300 dark:border-blue-600"
                             : "text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-600"
                         }`}
                       >
                         <div
-                          className="w-4 h-4 rounded border border-gray-300 dark:border-gray-600"
+                          className="w-4 h-4 rounded border border-gray-300 dark:border-gray-600 flex-shrink-0"
                           style={{
                             backgroundColor:
                               resumeData.accent_color || "#3B82F6",
@@ -667,24 +670,21 @@ const ResumeBuilder = () => {
                     )}
                   </div>
                   {!isTemplateSelected && (
-                    <div className="flex items-center">
-                      {activeSectionIndex !== 0 && (
-                        <button
-                          onClick={handlePreviousClick}
-                          className="flex items-center gap-1 p-3 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all"
-                          disabled={activeSectionIndex === 0}
-                        >
-                          <ChevronLeftIcon className="size-4" /> Previous
-                        </button>
-                      )}
-                      {activeSectionIndex !== SECTIONS.length - 1 && (
-                        <button
-                          onClick={handleNextClick}
-                          className="flex items-center gap-1 p-3 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all cursor-pointer"
-                        >
-                          Next <ChevronRightIcon className="size-4" />
-                        </button>
-                      )}
+                    <div className="flex items-center justify-between sm:justify-end sm:gap-3 w-full sm:w-auto">
+                      <button
+                        onClick={handlePreviousClick}
+                        className="flex items-center gap-1 p-3 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={activeSectionIndex === 0}
+                      >
+                        <ChevronLeftIcon className="size-4" /> Previous
+                      </button>
+                      <button
+                        onClick={handleNextClick}
+                        className="flex items-center gap-1 p-3 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={activeSectionIndex === SECTIONS.length - 1}
+                      >
+                        Next <ChevronRightIcon className="size-4" />
+                      </button>
                     </div>
                   )}
                 </div>
@@ -893,7 +893,7 @@ const ResumeBuilder = () => {
             </div>
           </div>
           {/* Right Side */}
-          <div className="w-full">
+          <div className="w-full dark:bg-gray-900">
             <ResumePreviewPanel
               paperSizes={PAPER_SIZES}
               selectedPaperSize={resumeData.paper_size}

@@ -1,6 +1,14 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import InputField from "../../../components/InputField";
-import { Plus, Trash2, Award, Star, Heart, Calendar, MapPin } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Award,
+  Star,
+  Heart,
+  Calendar,
+  MapPin,
+} from "lucide-react";
 
 const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
   const [validationErrors, setValidationErrors] = useState({});
@@ -8,7 +16,10 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
 
   // Add new certification
   const addCertification = () => {
-    const newCertifications = [...(data.certifications || []), { name: "", issuer: "", date: "", credential_id: "" }];
+    const newCertifications = [
+      ...(data.certifications || []),
+      { name: "", issuer: "", date: "", credential_id: "" },
+    ];
     onChange({ ...data, certifications: newCertifications });
   };
 
@@ -28,7 +39,10 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
 
   // Add new achievement
   const addAchievement = () => {
-    const newAchievements = [...(data.achievements || []), { title: "", description: "", date: "" }];
+    const newAchievements = [
+      ...(data.achievements || []),
+      { title: "", description: "", date: "" },
+    ];
     onChange({ ...data, achievements: newAchievements });
   };
 
@@ -48,7 +62,17 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
 
   // Add new volunteer work
   const addVolunteerWork = () => {
-    const newVolunteerWork = [...(data.volunteer_work || []), { organization: "", position: "", description: "", start_date: "", end_date: "", is_current: false }];
+    const newVolunteerWork = [
+      ...(data.volunteer_work || []),
+      {
+        organization: "",
+        position: "",
+        description: "",
+        start_date: "",
+        end_date: "",
+        is_current: false,
+      },
+    ];
     onChange({ ...data, volunteer_work: newVolunteerWork });
   };
 
@@ -87,21 +111,22 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">7</span>
           </div>
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <div className="w-5/6">
+            <h3 className="sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100">
               Additional Sections
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Add certifications, achievements, and volunteer work to make your resume stand out
+            <p className="text-gray-600 dark:text-gray-400 text-xs lg:text-sm">
+              Boost your resume by adding this to your resume.
             </p>
           </div>
         </div>
         <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-4">
           <p className="text-sm text-green-800 dark:text-green-200">
-            <span className="font-semibold">💡 Tip:</span> These sections are optional but can help differentiate you from other candidates.
+            <span className="font-semibold">💡 Tip:</span> These sections are
+            optional but can help differentiate you from other candidates.
           </p>
         </div>
       </div>
@@ -117,10 +142,13 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
               Certifications
             </h4>
           </div>
-          
+
           <div className="space-y-4">
             {(data.certifications || []).map((cert, index) => (
-              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div
+                key={index}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+              >
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
                     Certification Name
@@ -131,7 +159,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder="AWS Certified Solutions Architect"
                     value={cert.name || ""}
-                    onChange={(value) => updateCertification(index, "name", value)}
+                    onChange={(value) =>
+                      updateCertification(index, "name", value)
+                    }
                   />
                 </div>
                 <div>
@@ -144,7 +174,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder="Amazon Web Services"
                     value={cert.issuer || ""}
-                    onChange={(value) => updateCertification(index, "issuer", value)}
+                    onChange={(value) =>
+                      updateCertification(index, "issuer", value)
+                    }
                   />
                 </div>
                 <div>
@@ -157,7 +189,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder=""
                     value={cert.date || ""}
-                    onChange={(value) => updateCertification(index, "date", value)}
+                    onChange={(value) =>
+                      updateCertification(index, "date", value)
+                    }
                   />
                 </div>
                 <div>
@@ -170,7 +204,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder="AWS-123456"
                     value={cert.credential_id || ""}
-                    onChange={(value) => updateCertification(index, "credential_id", value)}
+                    onChange={(value) =>
+                      updateCertification(index, "credential_id", value)
+                    }
                   />
                 </div>
                 <div className="md:col-span-2 flex justify-end">
@@ -184,7 +220,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                 </div>
               </div>
             ))}
-            
+
             <button
               type="button"
               onClick={addCertification}
@@ -206,10 +242,13 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
               Achievements & Awards
             </h4>
           </div>
-          
+
           <div className="space-y-4">
             {(data.achievements || []).map((achievement, index) => (
-              <div key={index} className="grid grid-cols-1 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div
+                key={index}
+                className="grid grid-cols-1 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+              >
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
                     Achievement Title
@@ -220,7 +259,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder="Employee of the Year 2023"
                     value={achievement.title || ""}
-                    onChange={(value) => updateAchievement(index, "title", value)}
+                    onChange={(value) =>
+                      updateAchievement(index, "title", value)
+                    }
                   />
                 </div>
                 <div>
@@ -229,7 +270,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                   </label>
                   <textarea
                     value={achievement.description || ""}
-                    onChange={(e) => updateAchievement(index, "description", e.target.value)}
+                    onChange={(e) =>
+                      updateAchievement(index, "description", e.target.value)
+                    }
                     placeholder="Describe the achievement and its impact..."
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
                     rows="3"
@@ -245,7 +288,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder=""
                     value={achievement.date || ""}
-                    onChange={(value) => updateAchievement(index, "date", value)}
+                    onChange={(value) =>
+                      updateAchievement(index, "date", value)
+                    }
                   />
                 </div>
                 <div className="flex justify-end">
@@ -259,7 +304,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                 </div>
               </div>
             ))}
-            
+
             <button
               type="button"
               onClick={addAchievement}
@@ -281,10 +326,13 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
               Volunteer Work
             </h4>
           </div>
-          
+
           <div className="space-y-4">
             {(data.volunteer_work || []).map((volunteer, index) => (
-              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div
+                key={index}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+              >
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
                     Organization
@@ -295,7 +343,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder="Red Cross, Local Food Bank"
                     value={volunteer.organization || ""}
-                    onChange={(value) => updateVolunteerWork(index, "organization", value)}
+                    onChange={(value) =>
+                      updateVolunteerWork(index, "organization", value)
+                    }
                   />
                 </div>
                 <div>
@@ -308,7 +358,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder="Volunteer Coordinator, Event Organizer"
                     value={volunteer.position || ""}
-                    onChange={(value) => updateVolunteerWork(index, "position", value)}
+                    onChange={(value) =>
+                      updateVolunteerWork(index, "position", value)
+                    }
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -317,7 +369,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                   </label>
                   <textarea
                     value={volunteer.description || ""}
-                    onChange={(e) => updateVolunteerWork(index, "description", e.target.value)}
+                    onChange={(e) =>
+                      updateVolunteerWork(index, "description", e.target.value)
+                    }
                     placeholder="Describe your volunteer work and impact..."
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
                     rows="3"
@@ -333,7 +387,9 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                     width="w-full"
                     placeholder=""
                     value={volunteer.start_date || ""}
-                    onChange={(value) => updateVolunteerWork(index, "start_date", value)}
+                    onChange={(value) =>
+                      updateVolunteerWork(index, "start_date", value)
+                    }
                   />
                 </div>
                 <div>
@@ -347,17 +403,27 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                       width="w-full"
                       placeholder=""
                       value={volunteer.end_date || ""}
-                      onChange={(value) => updateVolunteerWork(index, "end_date", value)}
+                      onChange={(value) =>
+                        updateVolunteerWork(index, "end_date", value)
+                      }
                       disabled={volunteer.is_current}
                     />
                     <label className="flex items-center gap-2">
                       <input
                         type="checkbox"
                         checked={volunteer.is_current || false}
-                        onChange={(e) => updateVolunteerWork(index, "is_current", e.target.checked)}
+                        onChange={(e) =>
+                          updateVolunteerWork(
+                            index,
+                            "is_current",
+                            e.target.checked
+                          )
+                        }
                         className="rounded border-gray-300 text-[var(--primary-color)] focus:ring-[var(--primary-color)]"
                       />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Currently volunteering</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        Currently volunteering
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -372,7 +438,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                 </div>
               </div>
             ))}
-            
+
             <button
               type="button"
               onClick={addVolunteerWork}

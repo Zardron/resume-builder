@@ -169,20 +169,20 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">3</span>
           </div>
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <div className="w-5/6">
+            <h3 className="sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100">
               Work Experience
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <p className="text-gray-600 dark:text-gray-400 text-xs lg:text-sm">
               Add your professional work experience to showcase your career journey
             </p>
           </div>
         </div>
         <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
-          <p className="text-sm text-blue-800 dark:text-blue-200">
+          <p className="text-xs md:text-sm text-blue-800 dark:text-blue-200">
             <span className="font-semibold">💡 Tip:</span> Fields marked with <span className="text-red-500 font-semibold">*</span> are required. 
             Be specific about your role and responsibilities.
           </p>
