@@ -22,6 +22,14 @@ import ClassicTemplate from "../../components/templates/ClassicTemplate";
 import ModernTemplate from "../../components/templates/ModernTemplate";
 import MinimalTemplate from "../../components/templates/MinimalTemplate";
 import SpotlightTemplate from "../../components/templates/SpotlightTemplate";
+import ExecutiveTemplate from "../../components/templates/ExecutiveTemplate";
+import CreativeTemplate from "../../components/templates/CreativeTemplate";
+import TechnicalTemplate from "../../components/templates/TechnicalTemplate";
+import ElegantTemplate from "../../components/templates/ElegantTemplate";
+import CorporateTemplate from "../../components/templates/CorporateTemplate";
+import ProfessionalTemplate from "../../components/templates/ProfessionalTemplate";
+import BusinessTemplate from "../../components/templates/BusinessTemplate";
+import FormalTemplate from "../../components/templates/FormalTemplate";
 import ProfessionalSummary from "./forms/ProfessionalSummary";
 import ExperienceForm from "./forms/ExperienceForm";
 import EducationForm from "./forms/EducationForm";
@@ -306,6 +314,14 @@ const ExistingResumeBuilder = () => {
       modern: ModernTemplate,
       minimal: MinimalTemplate,
       spotlight: SpotlightTemplate,
+      executive: ExecutiveTemplate,
+      creative: CreativeTemplate,
+      technical: TechnicalTemplate,
+      elegant: ElegantTemplate,
+      corporate: CorporateTemplate,
+      professional: ProfessionalTemplate,
+      business: BusinessTemplate,
+      formal: FormalTemplate,
     };
 
     const Template = templates[resumeData.template] || ClassicTemplate;

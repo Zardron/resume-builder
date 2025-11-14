@@ -53,6 +53,14 @@ export const TEMPLATE_DISPLAY_NAMES = {
   modern: "Modern",
   minimal: "Minimal",
   spotlight: "Spotlight",
+  executive: "Executive",
+  creative: "Creative",
+  technical: "Technical",
+  elegant: "Elegant",
+  corporate: "Corporate",
+  professional: "Professional",
+  business: "Business",
+  formal: "Formal",
 };
 
 export const PAPER_SIZES = [

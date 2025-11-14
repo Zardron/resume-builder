@@ -246,7 +246,7 @@ const ResumePreviewPanel = ({
 
         <hr className="border-gray-200 dark:border-gray-700 mx-4" />
 
-        <div className="p-4 dark:bg-gray-900">
+        <div className="py-6 dark:bg-gray-900">
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
             <div
               ref={previewContainerRef}
@@ -254,7 +254,7 @@ const ResumePreviewPanel = ({
                 isPreviewLocked ? "overflow-hidden" : "overflow-y-auto"
               }`}
             >
-          <div className="flex justify-center min-w-0">
+          <div className="flex justify-center items-center min-w-0 py-4">
                 <div
                   className="resume-preview-scale-wrapper relative"
                   style={{

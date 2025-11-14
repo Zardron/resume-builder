@@ -4,6 +4,14 @@ import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
 import SpotlightTemplate from "./templates/SpotlightTemplate";
+import ExecutiveTemplate from "./templates/ExecutiveTemplate";
+import CreativeTemplate from "./templates/CreativeTemplate";
+import TechnicalTemplate from "./templates/TechnicalTemplate";
+import ElegantTemplate from "./templates/ElegantTemplate";
+import CorporateTemplate from "./templates/CorporateTemplate";
+import ProfessionalTemplate from "./templates/ProfessionalTemplate";
+import BusinessTemplate from "./templates/BusinessTemplate";
+import FormalTemplate from "./templates/FormalTemplate";
 import TemplatePreviewModal from "./TemplatePreviewModal";
 import ColorPicker from "../util/ColorPicker";
 
@@ -97,6 +105,54 @@ const TemplateSelector = ({
       name: "Spotlight",
       description: "Minimalist design with professional photo space",
       component: SpotlightTemplate
+    },
+    {
+      id: "executive",
+      name: "Executive",
+      description: "Two-column layout with sidebar for executive positions",
+      component: ExecutiveTemplate
+    },
+    {
+      id: "creative",
+      name: "Creative",
+      description: "Colorful, artistic design perfect for creative professionals",
+      component: CreativeTemplate
+    },
+    {
+      id: "technical",
+      name: "Technical",
+      description: "Code-focused design ideal for developers and engineers",
+      component: TechnicalTemplate
+    },
+    {
+      id: "elegant",
+      name: "Elegant",
+      description: "Sophisticated, refined design with elegant typography",
+      component: ElegantTemplate
+    },
+    {
+      id: "corporate",
+      name: "Corporate",
+      description: "Structured, formal layout perfect for corporate environments",
+      component: CorporateTemplate
+    },
+    {
+      id: "professional",
+      name: "Professional",
+      description: "Clean, ATS-friendly design optimized for applicant tracking systems",
+      component: ProfessionalTemplate
+    },
+    {
+      id: "business",
+      name: "Business",
+      description: "Professional design with subtle accent bars and structured layout",
+      component: BusinessTemplate
+    },
+    {
+      id: "formal",
+      name: "Formal",
+      description: "Very formal, traditional layout with centered sections",
+      component: FormalTemplate
     }
   ];
 
