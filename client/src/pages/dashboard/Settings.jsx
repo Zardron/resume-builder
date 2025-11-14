@@ -133,7 +133,7 @@ const Settings = () => {
     fullName: 'Alex Rivera',
     email: 'alex@createcv.io',
     role: 'Product Designer',
-    company: 'Resume Builder Labs',
+    company: 'ResumeIQ Labs',
     timezone: 'UTC−05:00 Eastern Time (US & Canada)',
     bio: 'Crafting design-first job materials that help candidates shine.',
   };
@@ -276,10 +276,10 @@ const Settings = () => {
   ];
 
   useEffect(() => {
-    document.title = 'Dashboard Settings • Resume Builder';
+    document.title = 'Dashboard Settings • ResumeIQ';
 
     return () => {
-      document.title = 'Resume Builder';
+      document.title = 'ResumeIQ';
     };
   }, []);
 
@@ -372,7 +372,7 @@ const Settings = () => {
     experience: [
       {
         position: 'Lead Product Designer',
-        company: 'Resume Builder Labs',
+        company: 'ResumeIQ Labs',
         start_date: '2023-02',
         end_date: '',
         is_current: true,
@@ -400,9 +400,9 @@ const Settings = () => {
     ],
     project: [
       {
-        name: 'Guided Resume Builder',
+        name: 'Guided ResumeIQ',
         description:
-          'Launched a modular resume builder with inline AI guidance, improving first-session publish rate by 24%.',
+          'Launched a modular ResumeIQ with inline AI guidance, improving first-session publish rate by 24%.',
       },
       {
         name: 'Insight Dashboard',

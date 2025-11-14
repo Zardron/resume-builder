@@ -93,7 +93,7 @@ const SpotlightTemplate = ({
     const showWatermark = availableCredits <= 0;
     const watermarkText = (
         <>
-            This resume was generated with Resume Builder by Zardron Angelo Pesquera.
+            This resume was generated with ResumeIQ by Zardron Angelo Pesquera.
         </>
     );
 

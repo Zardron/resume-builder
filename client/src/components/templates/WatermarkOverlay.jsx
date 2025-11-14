@@ -10,7 +10,7 @@ const PAGE_HEIGHT_MAP = {
 const WatermarkOverlay = ({
   className = "",
   logo = WATERMARK_LOGO,
-  logoAlt = "Resume Builder watermark",
+  logoAlt = "ResumeIQ watermark",
   paperSize = "A4",
 }) => {
   const containerRef = useRef(null);
@@ -84,7 +84,7 @@ const WatermarkOverlay = ({
         className="max-w-[60%] w-[320px] opacity-10 print:opacity-20"
       />
           <p className="mt-6 px-6 text-center text-[10px] text-gray-400 italic">
-            This resume was generated with Resume Builder by Zardron Angelo
+            This resume was generated with ResumeIQ by Zardron Angelo
             Pesquera.
           </p>
         </div>

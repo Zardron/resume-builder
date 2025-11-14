@@ -96,7 +96,7 @@ const Register = () => {
         }`}
       >
         <AuthSidebar
-          title="Resume Builder"
+          title="ResumeIQ"
           description="Join thousands of professionals building smarter resumes with AI-powered tools and templates"
         />
 

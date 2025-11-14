@@ -65,7 +65,7 @@ const Login = () => {
         }`}
       >
         <AuthSidebar
-          title="Resume Builder"
+          title="ResumeIQ"
           description="Unlock your career potential with AI-powered tools that build resumes faster, smarter, and better"
         />
 

@@ -35,7 +35,7 @@ const InfoPanel = () => {
                   Spotlight Story
                 </div>
                 <p className="text-sm text-slate-600 dark:text-slate-300">
-                  “The resume builder helped me rewrite my story in minutes. Two weeks later, I had
+                  “The ResumeIQ helped me rewrite my story in minutes. Two weeks later, I had
                   three interviews lined up. Sharing your wins gives others the same boost.”
                 </p>
                 <div className="flex items-center gap-3">

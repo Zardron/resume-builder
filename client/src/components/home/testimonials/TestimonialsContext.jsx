@@ -10,7 +10,7 @@ const initialTestimonials = [
     role: 'Marketing Strategist',
     date: 'March 5, 2024',
     testimonial:
-      'Got my dream job within 2 weeks! This resume builder made my application stand out from the crowd.',
+      'Got my dream job within 2 weeks! This ResumeIQ made my application stand out from the crowd.',
     rating: 4,
   },
   {

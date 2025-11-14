@@ -133,7 +133,7 @@ const HeroSection = () => (
 
       <img
         src={HERO_IMAGE}
-        alt="Resume Builder Hero"
+        alt="ResumeIQ Hero"
         className="max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-300"
       />
     </section>

@@ -113,7 +113,7 @@ const Features = () => (
         Powerful features that keep your resumes interview-ready
       </h1>
       <p className='mt-3 text-sm text-slate-500 dark:text-slate-400 md:text-base'>
-        Resume Builder unifies AI content guidance, template automation, and export-ready outputs into a single
+        ResumeIQ unifies AI content guidance, template automation, and export-ready outputs into a single
         streamlined experience—so you can focus on landing the interview.
       </p>
     </div>
@@ -162,7 +162,7 @@ const Features = () => (
         ))}
       </div>
       <div className='mt-8 rounded-md border border-dashed border-slate-300 px-6 py-5 text-center text-sm text-slate-600 dark:border-slate-600 dark:text-slate-300'>
-        Resume Builder keeps everything synced—switch templates, adjust margins, and re-run AI suggestions without
+        ResumeIQ keeps everything synced—switch templates, adjust margins, and re-run AI suggestions without
         losing formatting or data fidelity.
       </div>
     </div>

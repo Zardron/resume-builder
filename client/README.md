@@ -1,6 +1,6 @@
-# Resume Builder
+# ResumeIQ
 
-Modern, template-driven resume builder built with React and Tailwind CSS. Craft, preview, and export polished resumes without leaving the browser.
+Modern, template-driven ResumeIQ built with React and Tailwind CSS. Craft, preview, and export polished resumes without leaving the browser.
 
 **Author:** Zardron Angelo Pesquera
 
@@ -8,7 +8,7 @@ Modern, template-driven resume builder built with React and Tailwind CSS. Craft,
 
 ## Overview
 
-This repository contains the front-end client for an AI-inspired resume builder. The application focuses on a smooth authoring experience: users can switch between templates, customize typography and colors, adjust page margins, and generate PDF exports—all with instant visual feedback. Authentication views are currently UI-only; no backend services ship with this codebase.
+This repository contains the front-end client for an AI-inspired ResumeIQ. The application focuses on a smooth authoring experience: users can switch between templates, customize typography and colors, adjust page margins, and generate PDF exports—all with instant visual feedback. Authentication views are currently UI-only; no backend services ship with this codebase.
 
 ## Key Features
 
@@ -78,7 +78,7 @@ client/
 │   │   ├── templates/          # Resume template renderers
 │   │   └── ...                 # Shared UI controls (navbar, footer, etc.)
 │   ├── pages/                  # Route-level pages (home, auth, dashboard)
-│   │   └── dashboard/          # Resume builder workflows & forms
+│   │   └── dashboard/          # ResumeIQ workflows & forms
 │   ├── util/                   # UI utilities (color picker, modal, etc.)
 │   ├── utils/                  # Helper libraries (font sizing, margins, PDF)
 │   ├── ThemeContext.jsx        # Light/dark theme provider

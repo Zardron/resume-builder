@@ -67,7 +67,7 @@ const FullScreenLoader = ({ isExiting = false }) => {
           <div className="initial-loader__ring" aria-hidden="true" />
           <span className="initial-loader__spark initial-loader__spark--one" aria-hidden="true" />
           <span className="initial-loader__spark initial-loader__spark--two" aria-hidden="true" />
-          <img src={LOGO} alt="Resume Builder logo" className="initial-loader__logo" />
+          <img src={LOGO} alt="ResumeIQ logo" className="initial-loader__logo" />
         </div>
         <p className="initial-loader__message">
           <span

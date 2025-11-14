@@ -14,11 +14,11 @@ const AuthSidebar = ({ title, description }) => (
     <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
 
     <div className="flex flex-col items-center text-center space-y-8 relative z-10">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col items-center gap-2">
         <img
           src={logo}
-          alt="Resume Builder Logo"
-          className="w-10 h-10 object-contain bg-white rounded-md p-1 shadow-lg"
+          alt="ResumeIQ Logo"
+          className="w-24 h-24 object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.45)]"
         />
         <h1 className="text-3xl font-bold">{title}</h1>
       </div>

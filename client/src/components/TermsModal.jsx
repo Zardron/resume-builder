@@ -101,7 +101,7 @@ const TermsModal = ({
                   1. Acceptance of Terms
                 </h4>
                 <p>
-                  By accessing and using this AI-powered Resume Builder service, you accept
+                  By accessing and using this AI-powered ResumeIQ service, you accept
                   and agree to be bound by the terms and provision of this
                   agreement. This service is created and maintained by <strong>Zardron Angelo Pesquera</strong>.
                 </p>
@@ -110,7 +110,7 @@ const TermsModal = ({
                   2. Service Description
                 </h4>
                 <p>
-                  Our Resume Builder is an AI-powered platform that helps users create professional, 
+                  Our ResumeIQ is an AI-powered platform that helps users create professional, 
                   ATS-optimized resumes using smart templates, real-time optimization, and AI suggestions. 
                   The service includes multiple resume templates (Classic, Modern, Minimal, and Minimal Image), 
                   AI-powered content suggestions, and seamless export capabilities.
@@ -120,7 +120,7 @@ const TermsModal = ({
                   3. Use License
                 </h4>
                 <p>
-                  Permission is granted to use this Resume Builder for personal and professional 
+                  Permission is granted to use this ResumeIQ for personal and professional 
                   resume creation. You may create, store, and manage multiple resumes. This is
                   the grant of a license, not a transfer of title. Commercial use of the service
                   for resume writing services to third parties is prohibited without written consent.

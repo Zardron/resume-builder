@@ -158,7 +158,7 @@ const MinimalImageTemplate = ({
 
   const watermarkText = (
     <>
-      This resume was generated with Resume Builder by Zardron Angelo Pesquera.
+      This resume was generated with ResumeIQ by Zardron Angelo Pesquera.
     </>
   );
 

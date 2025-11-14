@@ -92,7 +92,7 @@ const Testimonials = () => {
           What Our Users Say
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
-          Join thousands of professionals who've transformed their careers with our AI-powered resume builder.
+          Join thousands of professionals who've transformed their careers with our AI-powered ResumeIQ.
         </p>
         <div className="mt-2 flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 drop-shadow-sm" aria-hidden="true" />

@@ -12,7 +12,7 @@ const NAV_LINKS = [
 ];
 
 const Navbar = () => {
-  const [isLoggedIn] = useState(true);
+  const [isLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -122,10 +122,10 @@ const Navbar = () => {
         <Link to={isLoggedIn ? '/dashboard' : '/'} className="flex items-center gap-2">
           <img
             src={LOGO}
-            alt="Resume Builder"
-            className="w-8 h-8 object-contain bg-white rounded-lg p-1 shadow-lg"
+            alt="ResumeIQ"
+            className="h-10 object-contain"
           />
-          <span className="text-lg font-bold text-black dark:text-white">Resume Builder</span>
+          <span className="text-lg font-bold text-black dark:text-white">ResumeIQ</span>
         </Link>
 
         {!isLoggedIn && (
@@ -241,8 +241,8 @@ const Navbar = () => {
           <div>
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 mb-4">
               <div className="flex items-center gap-2">
-                <img src={LOGO} alt="Resume Builder" className="w-8 h-8" />
-                <span className="text-lg font-bold text-black dark:text-white">Resume Builder</span>
+                <img src={LOGO} alt="ResumeIQ" className="w-8 h-8" />
+                <span className="text-lg font-bold text-black dark:text-white">ResumeIQ</span>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}

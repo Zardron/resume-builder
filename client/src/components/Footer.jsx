@@ -27,8 +27,8 @@ const Footer = () => (
   <footer className="w-full bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-slate-300">
     <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center">
       <a href="/" className="flex items-center gap-2 mb-6">
-        <img src={LOGO} alt="Resume Builder" className="w-8 h-8 object-contain bg-white rounded-lg p-1 shadow-lg" />
-        <span className="text-lg font-bold text-slate-800 dark:text-slate-100">Resume Builder</span>
+        <img src={LOGO} alt="ResumeIQ" className="w-8 h-8 object-contain bg-white rounded-lg p-1 shadow-lg" />
+        <span className="text-lg font-bold text-slate-800 dark:text-slate-100">ResumeIQ</span>
       </a>
 
       <p className="text-center max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
@@ -56,7 +56,7 @@ const Footer = () => (
     <div className="border-t border-slate-200 dark:border-slate-700">
       <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-slate-600 dark:text-slate-400">
         <a href="/" className="hover:text-blue-500 dark:hover:text-blue-400 transition">
-          Resume Builder
+          ResumeIQ
         </a>{' '}
         ©2025 Zardron Angelo Pesquera. All rights reserved.
       </div>

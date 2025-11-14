@@ -80,7 +80,7 @@ const About = () => {
             <img
               className="w-full rounded-md h-auto shadow-lg"
               src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80"
-              alt="Resume Builder AI Features"
+              alt="ResumeIQ AI Features"
             />
           </div>
           <div className="w-full md:w-1/2">

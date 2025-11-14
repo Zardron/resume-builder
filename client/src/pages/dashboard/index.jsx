@@ -65,7 +65,7 @@ const Dashboard = () => {
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="text-center md:text-left">
               <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                Welcome to your Smart Resume Builder Dashboard
+                Welcome to your Smart ResumeIQ Dashboard
               </h1>
               <p className="text-sm font-light text-gray-700 dark:text-gray-300 mt-2">
                 Craft a professional, standout resume in minutes — powered by AI

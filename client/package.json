@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "AI-powered Resume Builder - Build professional resumes in minutes",
+  "description": "AI-powered ResumeIQ - Build professional resumes in minutes",
   "author": "Zardron Angelo Pesquera",
   "scripts": {
     "dev": "vite",
