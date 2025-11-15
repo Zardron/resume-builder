@@ -75,7 +75,7 @@ const CORE_FEATURES = [
 
 const PRODUCT_STATS = [
   { label: 'Resumes generated', value: '12k+' },
-  { label: 'Templates optimized', value: '4' },
+  { label: 'Templates optimized', value: '15' },
   { label: 'Avg. time to export', value: '6 mins' },
 ];
 

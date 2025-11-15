@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Sparkles, Eye, CheckCircle2, Zap, Award, TrendingUp, Circle, ChevronDown, Loader2 } from 'lucide-react';
+import { LayoutGrid, Sparkles, Eye, CheckCircle2, Zap, Award, TrendingUp, Circle, ChevronDown, Loader2, Rocket } from 'lucide-react';
 import SectionBadge from './SectionBadge';
 import ClassicTemplate from '../templates/ClassicTemplate';
 import ModernTemplate from '../templates/ModernTemplate';
@@ -13,6 +13,9 @@ import CorporateTemplate from '../templates/CorporateTemplate';
 import ProfessionalTemplate from '../templates/ProfessionalTemplate';
 import BusinessTemplate from '../templates/BusinessTemplate';
 import FormalTemplate from '../templates/FormalTemplate';
+import DynamicTemplate from '../templates/DynamicTemplate';
+import AcademicTemplate from '../templates/AcademicTemplate';
+import StartupTemplate from '../templates/StartupTemplate';
 import TemplatePreviewModal from '../TemplatePreviewModal';
 import { templateDummyData } from '../../util/templateDummyData';
 
@@ -113,6 +116,30 @@ const TEMPLATE_GROUPS = [
     highlights: ['Traditional layout', 'Centered sections', 'Formal design'],
     icon: Award,
   },
+  {
+    id: 'dynamic',
+    name: 'Dynamic',
+    description: 'Energetic design with bold sections and modern styling perfect for tech professionals.',
+    accent: 'from-orange-500/90 to-red-500/80',
+    highlights: ['Bold sections', 'Modern styling', 'Tech focused'],
+    icon: Zap,
+  },
+  {
+    id: 'academic',
+    name: 'Academic',
+    description: 'Perfect for researchers, academics, and PhD holders with emphasis on publications.',
+    accent: 'from-blue-600/90 to-indigo-700/80',
+    highlights: ['Research focused', 'Publication ready', 'Academic style'],
+    icon: Award,
+  },
+  {
+    id: 'startup',
+    name: 'Startup',
+    description: 'Modern, fresh design perfect for startup culture and entrepreneurial roles.',
+    accent: 'from-green-500/90 to-emerald-600/80',
+    highlights: ['Startup culture', 'Modern design', 'Entrepreneurial'],
+    icon: Rocket,
+  },
 ];
 
 // Template ID to dummy data index mapping
@@ -129,6 +156,9 @@ const TEMPLATE_DATA_MAP = {
   executive: 9,      // Business Analyst (James Wilson)
   spotlight: 10,     // Sales Manager (Robert Anderson)
   formal: 11,        // HR Manager (Lisa Thompson)
+  dynamic: 12,       // Full Stack Developer (Jordan Mitchell)
+  academic: 13,      // Research Scientist (Dr. Christopher Lee)
+  startup: 14,       // Product Manager & Entrepreneur (Taylor Morgan)
 };
 
 // Get template-specific dummy data
@@ -173,6 +203,9 @@ const templateComponents = {
   professional: ProfessionalTemplate,
   business: BusinessTemplate,
   formal: FormalTemplate,
+  dynamic: DynamicTemplate,
+  academic: AcademicTemplate,
+  startup: StartupTemplate,
 };
 
 // A4 Paper Dimensions Constants (at 96 DPI)
@@ -202,7 +235,7 @@ const TemplatePreview = ({ templateId, onPreviewClick, templateName, accentColor
 
   return (
     <div 
-      className="relative w-full bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 rounded-t-xl overflow-hidden group cursor-pointer transition-all duration-500"
+      className="relative w-full bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 rounded-t-md overflow-hidden group transition-all duration-500"
       style={{
         padding: '16px',
         height: `${scaledHeight + 32}px`, // Fixed height based on A4 scale + padding
@@ -409,7 +442,7 @@ const TemplateShowcase = () => {
   return (
   <section
     id="templates"
-    className="relative mt-24 px-4 md:px-16 lg:px-24 xl:px-32 pb-20"
+    className="relative mt-24 px-4 md:px-16 lg:px-24 xl:px-32"
     aria-labelledby="template-showcase-heading"
   >
     {/* Enhanced background effects */}
@@ -446,7 +479,7 @@ const TemplateShowcase = () => {
     </header>
 
       {/* Grid Layout - 3 templates side by side */}
-      <div className="relative mt-16 px-4 md:px-8 pb-20">
+      <div className="relative mt-16 px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {visibleTemplates.map((template, index) => {
             const TemplateIcon = template.icon || LayoutGrid;

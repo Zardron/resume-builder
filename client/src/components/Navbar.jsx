@@ -12,7 +12,7 @@ const NAV_LINKS = [
 ];
 
 const Navbar = () => {
-  const [isLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const menuRef = useRef(null);

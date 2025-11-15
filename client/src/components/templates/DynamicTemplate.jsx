@@ -18,7 +18,7 @@ import {
   MessageCircle,
   Languages,
   Heart,
-  Sparkles,
+  Zap,
 } from "lucide-react";
 import {
   getSectionFontSize,
@@ -36,7 +36,7 @@ import {
 import { filterPopulatedProjects, formatUrlForDisplay } from "../../utils/sectionUtils";
 import WatermarkOverlay from "./WatermarkOverlay";
 
-const CreativeTemplate = ({
+const DynamicTemplate = ({
   data,
   accentColor,
   availableCredits = 0,
@@ -58,17 +58,6 @@ const CreativeTemplate = ({
       year: "numeric",
       month: "short",
     });
-  };
-
-  const hexToRgba = (hex, alpha = 0.08) => {
-    if (!hex) return `rgba(59, 130, 246, ${alpha})`;
-    const cleanHex = hex.replace("#", "").trim();
-    if (cleanHex.length !== 6) return `rgba(59, 130, 246, ${alpha})`;
-    const r = parseInt(cleanHex.substring(0, 2), 16);
-    const g = parseInt(cleanHex.substring(2, 4), 16);
-    const b = parseInt(cleanHex.substring(4, 6), 16);
-    if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(59, 130, 246, ${alpha})`;
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
   const getProfileImageSrc = (image) => {
@@ -190,7 +179,7 @@ const CreativeTemplate = ({
     <div
       id={isDownloadMode ? "resume-print-content" : undefined}
       data-paper-size={paperSize}
-      className={`relative max-w-4xl mx-auto bg-white text-gray-900 font-sans ${containerOverflowClass} ${printHeightClass}`}
+      className={`relative max-w-6xl mx-auto bg-white text-gray-900 font-sans ${containerOverflowClass} ${printHeightClass}`}
       style={pageStyle}
     >
       {isDownloadMode && showWatermark && (
@@ -201,98 +190,110 @@ const CreativeTemplate = ({
         style={{ minHeight: "100%", ...contentPaddingStyle }}
       >
         <div className="flex-1">
-          {/* Colorful Header */}
+          {/* Dynamic Header with diagonal accent */}
           {showHeader && (
-            <header
-              className="mb-6 p-6 rounded-2xl text-white relative overflow-hidden"
-              style={{ backgroundColor: accentColor }}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-20 bg-white transform translate-x-16 -translate-y-16"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-20 bg-white transform -translate-x-12 translate-y-12"></div>
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex-1">
-                  <h1
-                    className={`${getNameFontSize(
-                      sectionFontSizes
-                    )} font-bold mb-2 text-white`}
-                  >
-                    {data.personal_info?.name || "Your Name"}
-                  </h1>
-                  {data.personal_info?.profession && (
-                    <p
-                      className={`${getSectionFontSize(
-                        sectionFontSizes,
-                        "title"
-                      )} text-white/90 font-medium mb-4`}
+            <header className="mb-6 relative">
+              <div
+                className="absolute top-0 left-0 right-0 h-16 rounded-t-lg opacity-10"
+                style={{ backgroundColor: accentColor }}
+              ></div>
+              <div className="relative z-10 pt-4">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <h1
+                      className={`${getNameFontSize(
+                        sectionFontSizes
+                      )} font-extrabold mb-2 text-gray-900`}
+                      style={{ textShadow: `2px 2px 4px rgba(0,0,0,0.1)` }}
                     >
-                      {data.personal_info.profession}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-3">
-                    {data.personal_info?.email && (
-                      <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
-                        <Mail className="size-3" />
-                        <span className="text-sm">{data.personal_info.email}</span>
-                      </div>
-                    )}
-                    {data.personal_info?.phone && (
-                      <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
-                        <Phone className="size-3" />
-                        <span className="text-sm">{data.personal_info.phone}</span>
-                      </div>
-                    )}
-                    {data.personal_info?.address && (
-                      <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
-                        <MapPin className="size-3" />
-                        <span className="text-sm">{data.personal_info.address}</span>
-                      </div>
-                    )}
-                    {getSocialLinks().map((socialLink, index) => {
-                      const IconComponent = socialLink.icon;
-                      return (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1"
+                      {data.personal_info?.name || "Your Name"}
+                    </h1>
+                    {data.personal_info?.profession && (
+                      <div className="inline-block">
+                        <p
+                          className={`${getSectionFontSize(
+                            sectionFontSizes,
+                            "title"
+                          )} font-bold px-4 py-1 rounded-full inline-block`}
+                          style={{ 
+                            backgroundColor: accentColor,
+                            color: textColorClass
+                          }}
                         >
-                          <IconComponent className="size-3" />
-                          <span className="text-sm">{socialLink.displayValue}</span>
-                        </div>
-                      );
-                    })}
+                          {data.personal_info.profession}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="ml-6">
+                    {getProfileImageSrc(data.personal_info?.image) ? (
+                      <img
+                        src={getProfileImageSrc(data.personal_info?.image)}
+                        alt="Profile"
+                        className="w-28 h-28 rounded-full object-cover border-4 shadow-lg"
+                        style={{ borderColor: accentColor }}
+                      />
+                    ) : (
+                      <div
+                        className="w-28 h-28 rounded-full border-4 bg-gray-100 flex items-center justify-center shadow-lg"
+                        style={{ borderColor: accentColor }}
+                      >
+                        <User className="size-14 text-gray-400" />
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="ml-6">
-                  {getProfileImageSrc(data.personal_info?.image) ? (
-                    <img
-                      src={getProfileImageSrc(data.personal_info?.image)}
-                      alt="Profile"
-                      className="w-28 h-28 rounded-2xl object-cover border-4 border-white shadow-lg"
-                    />
-                  ) : (
-                    <div className="w-28 h-28 rounded-2xl border-4 border-white bg-white/20 flex items-center justify-center shadow-lg">
-                      <User className="size-14 text-white" />
+                <div className="flex flex-wrap gap-3 text-sm">
+                  {data.personal_info?.email && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                      <Mail className="size-4" style={{ color: accentColor }} />
+                      <span className="text-gray-700">{data.personal_info.email}</span>
                     </div>
                   )}
+                  {data.personal_info?.phone && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                      <Phone className="size-4" style={{ color: accentColor }} />
+                      <span className="text-gray-700">{data.personal_info.phone}</span>
+                    </div>
+                  )}
+                  {data.personal_info?.address && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                      <MapPin className="size-4" style={{ color: accentColor }} />
+                      <span className="text-gray-700">{data.personal_info.address}</span>
+                    </div>
+                  )}
+                  {getSocialLinks().map((socialLink, index) => {
+                    const IconComponent = socialLink.icon;
+                    return (
+                      <div key={index} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                        <IconComponent className="size-4" style={{ color: accentColor }} />
+                        <span className="text-gray-700 break-all">{socialLink.displayValue}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </header>
           )}
 
-          {/* Professional Summary */}
+          {/* Professional Summary with icon */}
           {showProfessionalSummary && data.professional_summary && (
             <section className="mb-6">
               <div className="flex items-center gap-3 mb-3">
-                <Sparkles className="size-5" style={{ color: accentColor }} />
+                <div
+                  className="w-2 h-10 rounded-full"
+                  style={{ backgroundColor: accentColor }}
+                ></div>
+                <Zap className="size-5" style={{ color: accentColor }} />
                 <h2
                   className={`${getSectionHeaderFontSize(
                     sectionFontSizes
-                  )} font-bold text-gray-900`}
+                  )} font-bold text-gray-900 uppercase tracking-wide`}
                 >
                   Professional Summary
                 </h2>
-                <div className="flex-1 h-0.5 rounded-full" style={{ backgroundColor: accentColor, opacity: 0.3 }}></div>
               </div>
-              <div className="bg-gray-50 rounded-xl p-4 border-l-4" style={{ borderLeftColor: accentColor }}>
+              <div className="pl-9">
                 <p
                   className={`text-gray-700 leading-relaxed ${getSectionFontSize(
                     sectionFontSizes,
@@ -305,27 +306,23 @@ const CreativeTemplate = ({
             </section>
           )}
 
-          {/* Experience */}
+          {/* Experience with dynamic styling */}
           {showExperience && data.experience && data.experience.length > 0 && (
             <section className="mb-6">
               <div className="flex items-center gap-3 mb-4">
-                <Briefcase className="size-5" style={{ color: accentColor }} />
+                <Briefcase className="size-6" style={{ color: accentColor }} />
                 <h2
                   className={`${getSectionHeaderFontSize(
                     sectionFontSizes
-                  )} font-bold text-gray-900`}
+                  )} font-bold text-gray-900 uppercase tracking-wide`}
                 >
                   Professional Experience
                 </h2>
-                <div className="flex-1 h-0.5 rounded-full" style={{ backgroundColor: accentColor, opacity: 0.3 }}></div>
+                <div className="flex-1 h-0.5" style={{ backgroundColor: accentColor }}></div>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {data.experience.map((exp, index) => (
-                  <div
-                    key={index}
-                    className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border-l-4 shadow-sm hover:shadow-md transition-shadow"
-                    style={{ borderLeftColor: accentColor }}
-                  >
+                  <div key={index} className="relative pl-6 border-l-4" style={{ borderColor: accentColor }}>
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3
@@ -357,7 +354,7 @@ const CreativeTemplate = ({
                       <span
                         className={`${getDateFontSize(
                           sectionFontSizes
-                        )} text-gray-600 font-medium bg-gray-100 px-2 py-1 rounded`}
+                        )} text-gray-600 font-medium px-3 py-1 rounded-full bg-gray-50`}
                       >
                         {formatDate(exp.start_date)} -{" "}
                         {exp.is_current ? "Present" : formatDate(exp.end_date)}
@@ -383,39 +380,29 @@ const CreativeTemplate = ({
           {showProjects && projectsToRender.length > 0 && (
             <section className="mb-6">
               <div className="flex items-center gap-3 mb-4">
-                <Code2 className="size-5" style={{ color: accentColor }} />
+                <Code2 className="size-6" style={{ color: accentColor }} />
                 <h2
                   className={`${getSectionHeaderFontSize(
                     sectionFontSizes
-                  )} font-bold text-gray-900`}
+                  )} font-bold text-gray-900 uppercase tracking-wide`}
                 >
                   Key Projects
                 </h2>
-                <div className="flex-1 h-0.5 rounded-full" style={{ backgroundColor: accentColor, opacity: 0.3 }}></div>
+                <div className="flex-1 h-0.5" style={{ backgroundColor: accentColor }}></div>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-4">
                 {projectsToRender.map((proj, index) => (
-                  <div
-                    key={index}
-                    className="rounded-xl p-4 border-2 shadow-sm hover:shadow-md transition-shadow"
-                    style={{ 
-                      borderColor: accentColor,
-                      background: `linear-gradient(135deg, ${hexToRgba(accentColor, 0.08)} 0%, white 100%)`
-                    }}
-                  >
+                  <div key={index} className="p-4 rounded-lg border-2" style={{ borderColor: accentColor }}>
                     <h3
                       className={`${getSectionFontSize(
                         sectionFontSizes,
                         "projects"
                       )} font-bold text-gray-900 mb-2`}
                     >
-                      {proj.title}
+                      {proj.title || proj.name}
                     </h3>
                     {proj.technologies && (
-                      <p
-                        className="text-xs font-semibold mb-2 px-2 py-1 rounded inline-block"
-                        style={{ backgroundColor: accentColor, color: textColorClass }}
-                      >
+                      <p className="text-sm font-semibold mb-2" style={{ color: accentColor }}>
                         {proj.technologies}
                       </p>
                     )}
@@ -424,17 +411,9 @@ const CreativeTemplate = ({
                         className={`text-gray-700 leading-relaxed ${getSectionFontSize(
                           sectionFontSizes,
                           "job_descriptions"
-                        )} mt-2`}
+                        )}`}
                       >
                         {proj.description}
-                      </p>
-                    )}
-                    {proj.link && (
-                      <p
-                        className="text-xs break-all mt-2 font-semibold"
-                        style={{ color: accentColor }}
-                      >
-                        {formatUrlForDisplay(proj.link)}
                       </p>
                     )}
                   </div>
@@ -448,24 +427,18 @@ const CreativeTemplate = ({
             {showEducation && data.education && data.education.length > 0 && (
               <section className="mb-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <GraduationCap className="size-5" style={{ color: accentColor }} />
+                  <GraduationCap className="size-6" style={{ color: accentColor }} />
                   <h2
                     className={`${getSectionHeaderFontSize(
                       sectionFontSizes
-                    )} font-bold`}
-                    style={{ color: accentColor }}
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
                   >
                     Education
                   </h2>
-                  <div className="flex-1 h-0.5 rounded-full" style={{ backgroundColor: accentColor, opacity: 0.3 }}></div>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {data.education.map((edu, index) => (
-                    <div
-                      key={index}
-                      className="bg-gray-50 rounded-xl p-4 border-l-4"
-                      style={{ borderLeftColor: accentColor }}
-                    >
+                    <div key={index} className="p-3 rounded-lg bg-gray-50">
                       <h3
                         className={`${getSectionFontSize(
                           sectionFontSizes,
@@ -482,25 +455,12 @@ const CreativeTemplate = ({
                       >
                         {edu.institution}
                       </p>
-                      <p className={`${getDateFontSize(
-                          sectionFontSizes
-                        )} text-gray-600`}>
-                       {edu.graduation_date}
-                      </p>
                       <span
                         className={`${getDateFontSize(
                           sectionFontSizes
                         )} text-gray-600`}
                       >
-                        {formatDate(edu.start_date)} -{" "}
-                        {edu.is_current
-                          ? "Present"
-                          : formatDate(edu.end_date)}
-                          {edu.gpa && (
-                            <span className="text-gray-600">
-                              GPA: {edu.gpa}
-                            </span>
-                          )}
+                        {formatDate(edu.graduation_date)}
                       </span>
                     </div>
                   ))}
@@ -512,22 +472,20 @@ const CreativeTemplate = ({
             {showSkills && data.skills && data.skills.length > 0 && (
               <section className="mb-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Award className="size-5" style={{ color: accentColor }} />
+                  <Star className="size-6" style={{ color: accentColor }} />
                   <h2
                     className={`${getSectionHeaderFontSize(
                       sectionFontSizes
-                    )} font-bold`}
-                    style={{ color: accentColor }}
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
                   >
                     Skills
                   </h2>
-                  <div className="flex-1 h-0.5 rounded-full" style={{ backgroundColor: accentColor, opacity: 0.3 }}></div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {data.skills.map((skill, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 rounded-full font-medium text-sm"
+                      className="px-3 py-1.5 rounded-full font-medium text-sm shadow-sm"
                       style={{ backgroundColor: accentColor, color: textColorClass }}
                     >
                       {skill}
@@ -543,5 +501,5 @@ const CreativeTemplate = ({
   );
 };
 
-export default CreativeTemplate;
+export default DynamicTemplate;
 

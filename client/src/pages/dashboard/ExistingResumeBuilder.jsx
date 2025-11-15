@@ -30,6 +30,9 @@ import CorporateTemplate from "../../components/templates/CorporateTemplate";
 import ProfessionalTemplate from "../../components/templates/ProfessionalTemplate";
 import BusinessTemplate from "../../components/templates/BusinessTemplate";
 import FormalTemplate from "../../components/templates/FormalTemplate";
+import DynamicTemplate from "../../components/templates/DynamicTemplate";
+import AcademicTemplate from "../../components/templates/AcademicTemplate";
+import StartupTemplate from "../../components/templates/StartupTemplate";
 import ProfessionalSummary from "./forms/ProfessionalSummary";
 import ExperienceForm from "./forms/ExperienceForm";
 import EducationForm from "./forms/EducationForm";
@@ -322,6 +325,9 @@ const ExistingResumeBuilder = () => {
       professional: ProfessionalTemplate,
       business: BusinessTemplate,
       formal: FormalTemplate,
+      dynamic: DynamicTemplate,
+      academic: AcademicTemplate,
+      startup: StartupTemplate,
     };
 
     const Template = templates[resumeData.template] || ClassicTemplate;

@@ -193,14 +193,14 @@ const ModernTemplate = ({
 			<div className="flex-1">
 			{/* Header */}
 			{showHeader && (
-			<header className={`${textColorClass} ${fontSizes.padding} mb-4`} style={{ backgroundColor: accentColor }}>
+			<header className={`${fontSizes.padding} mb-4`}>
 				<div className="flex items-start justify-between mb-4">
 					<div className="flex-1">
-						<h1 className={`${getNameFontSize(sectionFontSizes)} font-bold ${textColorClass} mb-1 capitalize`}>
+						<h1 className={`${getNameFontSize(sectionFontSizes)} font-bold text-gray-900 mb-1 capitalize`}>
 							{data.personal_info?.name || "Your Name"}
 						</h1>
 						{data.personal_info?.profession && (
-							<p className={`${getSectionFontSize(sectionFontSizes, 'title')} ${textColor === 'black' ? 'text-gray-700' : 'text-gray-300'} font-light mb-3`}>
+							<p className={`${getSectionFontSize(sectionFontSizes, 'title')} text-gray-700 font-light mb-3`}>
 								{data.personal_info.profession}
 							</p>
 						)}
@@ -208,20 +208,20 @@ const ModernTemplate = ({
 						<div className={`flex flex-wrap gap-3 ${getSectionFontSize(sectionFontSizes, 'contact_details')}`}>
 							{data.personal_info?.email && (
 								<div className="flex items-center gap-2">
-									<Mail className={`${fontSizes.icon} ${textColorClass}`} />
-									<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'}>{data.personal_info.email}</span>
+									<Mail className={`${fontSizes.icon} text-gray-700`} />
+									<span className="text-gray-700">{data.personal_info.email}</span>
 								</div>
 							)}
 							{data.personal_info?.phone && (
 								<div className="flex items-center gap-2">
-									<Phone className={`${fontSizes.icon} ${textColorClass}`} />
-									<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'}>{data.personal_info.phone}</span>
+									<Phone className={`${fontSizes.icon} text-gray-700`} />
+									<span className="text-gray-700">{data.personal_info.phone}</span>
 								</div>
 							)}
 							{data.personal_info?.address && (
 								<div className="flex items-center gap-2">
-									<MapPin className={`${fontSizes.icon} ${textColorClass}`} />
-									<span className={textColor === 'black' ? 'text-gray-700' : 'text-gray-200'}>{data.personal_info.address}</span>
+									<MapPin className={`${fontSizes.icon} text-gray-700`} />
+									<span className="text-gray-700">{data.personal_info.address}</span>
 								</div>
 							)}
 							{/* Dynamic social links */}
@@ -229,8 +229,8 @@ const ModernTemplate = ({
 								const IconComponent = socialLink.icon;
 								return (
 									<div key={index} className="flex items-center gap-2">
-										<IconComponent className={`${fontSizes.icon} ${textColorClass}`} />
-										<span className={`${textColor === 'black' ? 'text-gray-700' : 'text-gray-200'} break-all`}>{socialLink.displayValue}</span>
+										<IconComponent className={`${fontSizes.icon} text-gray-700`} />
+										<span className="text-gray-700 break-all">{socialLink.displayValue}</span>
 									</div>
 								);
 							})}

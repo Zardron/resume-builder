@@ -6,7 +6,7 @@
 
 export const templateDummyData = [
   {
-    // ----------------------------------------------------- Resume 1: Software Engineer ------------------------------------------------------
+    // ----------------------------------------------------- Resume 1: Classic ------------------------------------------------------
     personal_info: {
       full_name: "Sarah Chen",
       name: "Sarah Chen",
@@ -105,7 +105,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 2: Product Designer ------------------------------------------------------
+    // ----------------------------------------------------- Resume 2: Modern ------------------------------------------------------
     personal_info: {
       full_name: "Marcus Johnson",
       name: "Marcus Johnson",
@@ -198,7 +198,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 3: Data Scientist ------------------------------------------------------
+    // ----------------------------------------------------- Resume 3: Technical ------------------------------------------------------
     personal_info: {
       full_name: "Dr. Emily Rodriguez",
       name: "Dr. Emily Rodriguez",
@@ -212,7 +212,7 @@ export const templateDummyData = [
       profile_image: null,
     },
     professional_summary:
-      "Data scientist with 7+ years of experience in machine learning and predictive modeling. PhD in Statistics with expertise in deep learning and NLP. Published 15+ research papers.",
+      "Data scientist with 7+ years of experience in machine learning and predictive modeling. PhD in Statistics with expertise in deep learning and NLP. Published 15+ research papers. Proven track record of delivering data-driven solutions that drive business growth and innovation. Skilled in Python, TensorFlow, and cloud platforms with a passion for transforming complex data into actionable insights.",
     experience: [
       {
         position: "Senior Data Scientist",
@@ -278,7 +278,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 4: Marketing Manager ------------------------------------------------------
+    // ----------------------------------------------------- Resume 4: Business ------------------------------------------------------
     personal_info: {
       full_name: "Jessica Williams",
       name: "Jessica Williams",
@@ -292,7 +292,7 @@ export const templateDummyData = [
       profile_image: null,
     },
     professional_summary:
-      "Results-driven marketing manager with 8+ years of experience in digital marketing and campaign strategy. Expert in SEO, SEM, and social media marketing. Successfully launched campaigns that generated $10M+ in revenue.",
+      "Results-driven marketing manager with 8+ years of experience in digital marketing and campaign strategy. Expert in SEO, SEM, and social media marketing. Successfully launched campaigns that generated $10M+ in revenue. Proficient in data analytics tools including Google Analytics, HubSpot, and Salesforce to track performance and optimize ROI. Strong leadership skills with experience managing cross-functional teams of 10+ members and collaborating with C-level executives to align marketing strategies with business objectives.",
     experience: [
       {
         position: "Marketing Manager",
@@ -311,6 +311,15 @@ export const templateDummyData = [
         is_current: false,
         description:
           "Managed digital marketing campaigns for 20+ clients. Developed SEO strategies that increased organic traffic by 200%.",
+      },
+      {
+        position: "Marketing Specialist",
+        company: "Growth Marketing Co",
+        start_date: "2016-08",
+        end_date: "2018-12",
+        is_current: false,
+        description:
+          "Executed multi-channel marketing campaigns including email, social media, and content marketing. Created and optimized landing pages that improved conversion rates by 35%. Analyzed campaign performance data to provide insights and recommendations.",
       },
     ],
     education: [
@@ -351,7 +360,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 5: Financial Analyst ------------------------------------------------------
+    // ----------------------------------------------------- Resume 5: Corporate ------------------------------------------------------
     personal_info: {
       full_name: "David Kim",
       name: "David Kim",
@@ -400,7 +409,7 @@ export const templateDummyData = [
         name: "Financial Forecasting Model",
         type: "Financial Analysis",
         description:
-          "Developed a comprehensive financial forecasting model that improved budget accuracy by 25%. Model used for strategic planning and investment decisions.",
+          "Developed a comprehensive financial forecasting model that improved budget accuracy by 25%.",
       },
     ],
     skills: [
@@ -425,7 +434,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 6: UX Researcher ------------------------------------------------------
+    // ----------------------------------------------------- Resume 6: Creative ------------------------------------------------------
     personal_info: {
       full_name: "Alexandra Taylor",
       name: "Alexandra Taylor",
@@ -439,7 +448,7 @@ export const templateDummyData = [
       profile_image: null,
     },
     professional_summary:
-      "User experience researcher with 5+ years of experience conducting user research and usability testing. Expert in qualitative and quantitative research methods. Passionate about understanding user needs.",
+      "User experience researcher with 5+ years of experience conducting user research and usability testing. Expert in qualitative and quantitative research methods. Passionate about understanding user needs. Proven track record of translating research insights into actionable product improvements that enhance user satisfaction and drive business outcomes.",
     experience: [
       {
         position: "Senior UX Researcher",
@@ -495,7 +504,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 7: DevOps Engineer ------------------------------------------------------
+    // ----------------------------------------------------- Resume 7: Minimal ------------------------------------------------------
     personal_info: {
       full_name: "Michael Brown",
       name: "Michael Brown",
@@ -604,7 +613,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 8: Project Manager ------------------------------------------------------
+    // ----------------------------------------------------- Resume 8: Professional ------------------------------------------------------
     personal_info: {
       full_name: "Rachel Green",
       name: "Rachel Green",
@@ -638,6 +647,24 @@ export const templateDummyData = [
         description:
           "Managed software development projects from initiation to closure. Coordinated with stakeholders, developers, and designers.",
       },
+      {
+        position: "Associate Project Manager",
+        company: "Tech Innovations Inc",
+        start_date: "2016-06",
+        end_date: "2018-03",
+        is_current: false,
+        description:
+          "Supported senior project managers in planning and executing technology projects. Tracked project milestones, managed documentation, and facilitated team communication. Assisted in budget planning and resource allocation.",
+      },
+      {
+        position: "Project Coordinator",
+        company: "Digital Solutions Group",
+        start_date: "2015-01",
+        end_date: "2016-05",
+        is_current: false,
+        description:
+          "Coordinated project activities and maintained project schedules. Prepared status reports and organized team meetings. Managed project documentation and ensured compliance with company standards.",
+      },
     ],
     education: [
       {
@@ -654,6 +681,12 @@ export const templateDummyData = [
         type: "Project Management",
         description:
           "Led implementation of enterprise software for 500+ users. Project completed on time and 10% under budget. Improved operational efficiency by 40%.",
+      },
+      {
+        name: "Agile Transformation Initiative",
+        type: "Project Management",
+        description:
+          "Spearheaded company-wide Agile transformation affecting 8 development teams. Trained 50+ team members on Scrum methodologies. Reduced project delivery time by 25% and increased team satisfaction scores by 35%.",
       },
     ],
     skills: [
@@ -684,7 +717,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 9: Content Writer ------------------------------------------------------
+    // ----------------------------------------------------- Resume 9: Elegant ------------------------------------------------------
     personal_info: {
       full_name: "Olivia Martinez",
       name: "Olivia Martinez",
@@ -698,7 +731,7 @@ export const templateDummyData = [
       profile_image: null,
     },
     professional_summary:
-      "Creative content writer with 6+ years of experience creating engaging content for digital platforms. Expert in SEO writing and copywriting. Published 500+ articles with over 10M total views.",
+      "Creative content writer with 6+ years of experience creating engaging content for digital platforms. Expert in SEO writing and copywriting. Published 500+ articles with over 10M total views. Specializes in storytelling that connects brands with their target audiences and drives measurable engagement.",
     experience: [
       {
         position: "Senior Content Writer",
@@ -749,7 +782,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 10: Business Analyst ------------------------------------------------------
+    // ----------------------------------------------------- Resume 10: Executive ------------------------------------------------------
     personal_info: {
       full_name: "James Wilson",
       name: "James Wilson",
@@ -785,6 +818,24 @@ export const templateDummyData = [
         description:
           "Analyzed business processes and identified improvement opportunities. Created process flow diagrams and business requirement documents.",
       },
+      {
+        position: "Junior Business Analyst",
+        company: "Tech Solutions Group",
+        start_date: "2016-09",
+        end_date: "2018-02",
+        is_current: false,
+        description:
+          "Supported senior analysts in requirements gathering and documentation. Created user stories and acceptance criteria. Participated in Agile ceremonies and stakeholder meetings.",
+      },
+      {
+        position: "Business Process Intern",
+        company: "Consulting Firm",
+        start_date: "2016-05",
+        end_date: "2016-08",
+        is_current: false,
+        description:
+          "Assisted with business process mapping and documentation. Conducted research and data collection for process improvement projects. Created visual process flow diagrams using Visio.",
+      },
     ],
     education: [
       {
@@ -801,6 +852,12 @@ export const templateDummyData = [
         type: "Business Analysis",
         description:
           "Led process improvement initiative that reduced operational costs by $500K annually. Analyzed workflows and implemented automation solutions.",
+      },
+      {
+        name: "Enterprise System Requirements Analysis",
+        type: "Requirements Analysis",
+        description:
+          "Conducted comprehensive requirements analysis for enterprise CRM implementation. Gathered requirements from 50+ stakeholders across 8 departments. Created detailed functional specifications and use cases.",
       },
     ],
     skills: [
@@ -825,13 +882,20 @@ export const templateDummyData = [
         date: "2020-01",
         credential_id: "BA-12345",
       },
+      {
+        name: "Certified Scrum Product Owner (CSPO)",
+        issuer: "Scrum Alliance",
+        date: "2019-06",
+        credential_id: "CSPO-34567",
+      },
+      
     ],
     template: "executive",
     accent_color: "#3b82f6",
   },
 
   {
-    // ----------------------------------------------------- Resume 11: Sales Manager ------------------------------------------------------
+    // ----------------------------------------------------- Resume 11: Spotlight ------------------------------------------------------
     personal_info: {
       full_name: "Robert Anderson",
       name: "Robert Anderson",
@@ -865,6 +929,24 @@ export const templateDummyData = [
         description:
           "Sold SaaS products to enterprise clients. Built relationships with C-level executives. Consistently ranked in top 10% of sales team.",
       },
+      {
+        position: "Sales Representative",
+        company: "Global Solutions Group",
+        start_date: "2015-03",
+        end_date: "2017-04",
+        is_current: false,
+        description:
+          "Managed portfolio of 50+ mid-market accounts. Achieved 120% of quota in first year. Developed expertise in consultative selling approach.",
+      },
+      {
+        position: "Account Executive",
+        company: "Regional Business Services",
+        start_date: "2013-08",
+        end_date: "2015-02",
+        is_current: false,
+        description:
+          "Generated new business opportunities through cold calling and networking. Closed deals worth $500K+ annually. Maintained 95% customer retention rate.",
+      },
     ],
     education: [
       {
@@ -881,6 +963,24 @@ export const templateDummyData = [
         type: "Sales Strategy",
         description:
           "Developed and implemented new sales process that reduced sales cycle time by 30% and increased close rate by 20%. Process adopted company-wide.",
+      },
+      {
+        name: "Enterprise Client Acquisition Program",
+        type: "Business Development",
+        description:
+          "Led initiative to expand into Fortune 500 market segment. Developed targeting strategy and sales playbook. Resulted in 15 new enterprise accounts worth $2.5M in annual recurring revenue.",
+      },
+      {
+        name: "Sales Team Training & Development",
+        type: "Team Leadership",
+        description:
+          "Created comprehensive training program for new sales hires. Reduced onboarding time from 6 months to 3 months while improving first-year performance by 35%. Program now used across all regional offices.",
+      },
+      {
+        name: "CRM Integration & Automation",
+        type: "Sales Technology",
+        description:
+          "Spearheaded migration to new CRM platform and automated reporting workflows. Eliminated 10+ hours of manual work per week per rep. Improved data accuracy and forecasting precision by 40%.",
       },
     ],
     skills: [
@@ -918,7 +1018,7 @@ export const templateDummyData = [
   },
 
   {
-    // ----------------------------------------------------- Resume 12: HR Manager ------------------------------------------------------
+    // ----------------------------------------------------- Resume 12: Formal ------------------------------------------------------
     personal_info: {
       full_name: "Lisa Thompson",
       name: "Lisa Thompson",
@@ -991,6 +1091,270 @@ export const templateDummyData = [
     ],
     languages: [{ language: "English", proficiency: "Native" }],
     template: "formal",
+    accent_color: "#3b82f6",
+  },
+
+  {
+    // ----------------------------------------------------- Resume 13: Dynamic ------------------------------------------------------
+    personal_info: {
+      full_name: "Jordan Mitchell",
+      name: "Jordan Mitchell",
+      email: "jordan.mitchell@email.com",
+      phone: "+1 (415) 555-0901",
+      location: "San Francisco, CA",
+      linkedin: "linkedin.com/in/jordanmitchell",
+      website: "jordanmitchell.io",
+      profession: "Full Stack Developer",
+      image: null,
+      profile_image: null,
+    },
+    professional_summary:
+      "Dynamic full-stack developer with 5+ years of experience building scalable web applications and mobile apps. Passionate about modern technologies and clean code. Led development of products used by 500K+ users. Expert in React, Node.js, and cloud architecture with a track record of delivering high-performance solutions.",
+    experience: [
+      {
+        position: "Senior Full Stack Developer",
+        company: "Innovation Labs",
+        start_date: "2021-08",
+        end_date: "",
+        is_current: true,
+        description:
+          "Lead development of microservices architecture serving 500K+ users. Built real-time features using WebSockets and Redis. Reduced API response time by 60% through optimization.",
+      },
+    ],
+    education: [
+      {
+        degree: "Bachelor of Science",
+        field: "Computer Science",
+        institution: "Stanford University",
+        graduation_date: "2017-05",
+        gpa: "3.9",
+      },
+      {
+        degree: "Master of Science",
+        field: "Computer Science",
+        institution: "Stanford University",
+        graduation_date: "2019-05",
+        gpa: "3.95",
+      },
+    ],
+    projects: [
+      {
+        name: "Real-time Collaboration Platform",
+        type: "Web Application",
+        description:
+          "Built a real-time collaboration platform with WebSocket support. Handles 10K+ concurrent users with sub-second latency. Features include live editing, video calls, and file sharing.",
+      },
+      {
+        name: "E-commerce Mobile App",
+        type: "Mobile Application",
+        description:
+          "Developed a cross-platform mobile app using React Native. Achieved 4.8+ star rating with 100K+ downloads. Integrated payment processing and push notifications.",
+      },
+    ],
+    skills: [
+      "React",
+      "Node.js",
+      "TypeScript",
+      "Python",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "GraphQL",
+      "MongoDB",
+      "PostgreSQL",
+      "Redis",
+      "WebSockets",
+      "React Native",
+      "CI/CD",
+    ],
+    languages: [{ language: "English", proficiency: "Native" }],
+    template: "dynamic",
+    accent_color: "#3b82f6",
+  },
+
+  {
+    // ----------------------------------------------------- Resume 14: Academic ------------------------------------------------------
+    personal_info: {
+      full_name: "Dr. Christopher Lee",
+      name: "Dr. Christopher Lee",
+      email: "christopher.lee@email.com",
+      phone: "+1 (617) 555-0345",
+      location: "Cambridge, MA",
+      linkedin: "linkedin.com/in/christopherlee",
+      website: "christopherlee.research",
+      profession: "Research Scientist",
+      image: null,
+      profile_image: null,
+    },
+    professional_summary:
+      "Distinguished research scientist with 10+ years of experience in computational biology and machine learning. Published 30+ peer-reviewed papers in top-tier journals. Expert in developing novel algorithms for biological data analysis. Led research teams and secured $2M+ in grant funding.",
+    experience: [
+      {
+        position: "Senior Research Scientist",
+        company: "MIT Research Lab",
+        start_date: "2018-09",
+        end_date: "",
+        is_current: true,
+        description:
+          "Lead research on machine learning applications in genomics. Published 12 papers in Nature, Science, and Cell. Secured $1.5M in research grants. Supervised 5 PhD students and postdocs.",
+      },
+      {
+        position: "Research Scientist",
+        company: "Harvard Medical School",
+        start_date: "2015-07",
+        end_date: "2018-08",
+        is_current: false,
+        description:
+          "Conducted research on computational methods for drug discovery. Developed novel algorithms for protein structure prediction. Published 8 papers in top journals.",
+      },
+    ],
+    education: [
+      {
+        degree: "PhD",
+        field: "Computational Biology",
+        institution: "Massachusetts Institute of Technology",
+        graduation_date: "2013-05",
+        gpa: "3.95",
+      },
+    ],
+    projects: [
+      {
+        name: "Deep Learning Framework for Genomics",
+        type: "Research Project",
+        description:
+          "Developed a deep learning framework for analyzing genomic data. Framework used by 500+ researchers. Published in Nature Methods. Open-source project with 2K+ GitHub stars.",
+      },
+    ],
+    skills: [
+      "Python",
+      "R",
+      "Machine Learning",
+      "Deep Learning",
+      "Bioinformatics",
+      "Genomics",
+      "TensorFlow",
+      "PyTorch",
+      "Statistical Analysis",
+      "Data Visualization",
+      "High-Performance Computing",
+      "Linux",
+    ],
+    languages: [
+      { language: "English", proficiency: "Native" },
+      { language: "Mandarin", proficiency: "Fluent" },
+    ],
+    certifications: [
+      {
+        name: "Certified Machine Learning Engineer",
+        issuer: "Google Cloud",
+        date: "2020-03",
+        credential_id: "GCP-MLE-12345",
+      },
+    ],
+    template: "academic",
+    accent_color: "#3b82f6",
+  },
+
+  {
+    // ----------------------------------------------------- Resume 15: Startup ------------------------------------------------------
+    personal_info: {
+      full_name: "Taylor Morgan",
+      name: "Taylor Morgan",
+      email: "taylor.morgan@email.com",
+      phone: "+1 (650) 555-0567",
+      location: "Palo Alto, CA",
+      linkedin: "linkedin.com/in/taylormorgan",
+      website: "taylormorgan.co",
+      profession: "Product Manager & Entrepreneur",
+      image: null,
+      profile_image: null,
+    },
+    professional_summary:
+      "Entrepreneurial product manager with 7+ years of experience building and scaling products from 0 to 1M+ users. Founded 2 successful startups, one acquired for $5M. Expert in product strategy, user research, and growth hacking.",
+    experience: [
+      {
+        position: "Founder & CEO",
+        company: "GrowthTech Startup",
+        start_date: "2020-01",
+        end_date: "",
+        is_current: true,
+        description:
+          "Founded and scaled SaaS platform to 50K+ users and $2M ARR. Raised $3M in seed funding. Built and managed team of 15. Achieved product-market fit in 12 months.",
+      },
+      {
+        position: "Product Manager",
+        company: "Tech Unicorn",
+        start_date: "2018-06",
+        end_date: "2019-12",
+        is_current: false,
+        description:
+          "Led product development for mobile app feature used by 1M+ users. Increased user engagement by 40% through data-driven iterations. Collaborated with engineering and design teams.",
+      },
+      {
+        position: "Co-Founder",
+        company: "Social App Startup",
+        start_date: "2016-03",
+        end_date: "2018-05",
+        is_current: false,
+        description:
+          "Co-founded social networking app. Grew to 100K users. Company acquired for $5M. Led product development and user acquisition strategies.",
+      },
+    ],
+    education: [
+      {
+        degree: "Bachelor of Science",
+        field: "Business Administration",
+        institution: "University of California, Berkeley",
+        graduation_date: "2015-05",
+        gpa: "3.8",
+      },
+      {
+        degree: "Certificate",
+        field: "Product Management",
+        institution: "Stanford Continuing Studies",
+        graduation_date: "2016-12",
+        gpa: "",
+      },
+      {
+        degree: "Executive Education",
+        field: "Entrepreneurship & Innovation",
+        institution: "Harvard Business School",
+        graduation_date: "2018-08",
+        gpa: "",
+      },
+    ],
+    projects: [
+      {
+        name: "SaaS Platform MVP",
+        type: "Product Development",
+        description:
+          "Built MVP of SaaS platform in 3 months. Achieved 1K paying customers in first 6 months. Platform now generates $500K ARR.",
+      },
+      {
+        name: "Mobile App Launch",
+        type: "Product Launch",
+        description:
+          "Launched mobile app that reached #1 in App Store category. Achieved 100K downloads in first month. Featured in TechCrunch and Product Hunt.",
+      },
+    ],
+    skills: [
+      "Product Management",
+      "Product Strategy",
+      "User Research",
+      "Growth Hacking",
+      "Data Analysis",
+      "A/B Testing",
+      "Agile",
+      "Scrum",
+      "Figma",
+      "SQL",
+      "Analytics",
+      "Startup Experience",
+      "Fundraising",
+      "Team Leadership",
+    ],
+    languages: [{ language: "English", proficiency: "Native" }],
+    template: "startup",
     accent_color: "#3b82f6",
   },
 ];

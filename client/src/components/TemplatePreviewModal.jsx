@@ -13,6 +13,9 @@ import CorporateTemplate from "./templates/CorporateTemplate";
 import ProfessionalTemplate from "./templates/ProfessionalTemplate";
 import BusinessTemplate from "./templates/BusinessTemplate";
 import FormalTemplate from "./templates/FormalTemplate";
+import DynamicTemplate from "./templates/DynamicTemplate";
+import AcademicTemplate from "./templates/AcademicTemplate";
+import StartupTemplate from "./templates/StartupTemplate";
 
 const TemplatePreviewModal = ({ 
   isOpen, 
@@ -128,6 +131,21 @@ const TemplatePreviewModal = ({
       component: FormalTemplate,
       name: "Formal",
       description: "Very formal, traditional layout with centered sections"
+    },
+    dynamic: {
+      component: DynamicTemplate,
+      name: "Dynamic",
+      description: "Energetic design with bold sections and modern styling"
+    },
+    academic: {
+      component: AcademicTemplate,
+      name: "Academic",
+      description: "Perfect for researchers, academics, and PhD holders"
+    },
+    startup: {
+      component: StartupTemplate,
+      name: "Startup",
+      description: "Modern, fresh design perfect for startup culture"
     }
   };
 

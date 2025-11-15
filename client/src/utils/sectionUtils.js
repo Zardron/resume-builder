@@ -3,7 +3,7 @@ export const hasProjectContent = (project) => {
     return false;
   }
 
-  const contentFields = ["title", "description", "technologies", "link"];
+  const contentFields = ["title", "name", "description", "technologies", "link"];
 
   return contentFields.some((field) => {
     const value = project[field];
