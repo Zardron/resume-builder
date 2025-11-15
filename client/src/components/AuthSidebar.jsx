@@ -28,7 +28,7 @@ const AuthSidebar = ({ title, description }) => (
 
         <div className="grid grid-cols-2 gap-4 text-sm">
           {features.map((feature) => (
-            <div key={feature} className="flex items-center gap-2 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+            <div key={feature} className="flex items-center gap-2 bg-white/10 rounded-md p-3 backdrop-blur-sm">
               <div className="w-2 h-2 bg-white rounded-full" />
               <span>{feature}</span>
             </div>

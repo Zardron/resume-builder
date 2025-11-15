@@ -111,7 +111,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-lg">7</span>
           </div>
           <div className="w-5/6">
@@ -123,7 +123,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
             </p>
           </div>
         </div>
-        <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-4">
+        <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-md p-4">
           <p className="text-sm text-green-800 dark:text-green-200">
             <span className="font-semibold">💡 Tip:</span> These sections are
             optional but can help differentiate you from other candidates.
@@ -135,7 +135,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
         {/* Certifications Section */}
         <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
               <Award className="w-4 h-4 text-white" />
             </div>
             <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -147,7 +147,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
             {(data.certifications || []).map((cert, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-md"
               >
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
@@ -213,7 +213,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                   <button
                     type="button"
                     onClick={() => removeCertification(index)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors duration-200"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -235,7 +235,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
         {/* Achievements Section */}
         <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
               <Star className="w-4 h-4 text-white" />
             </div>
             <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -247,7 +247,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
             {(data.achievements || []).map((achievement, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+                className="grid grid-cols-1 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-md"
               >
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
@@ -274,7 +274,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                       updateAchievement(index, "description", e.target.value)
                     }
                     placeholder="Describe the achievement and its impact..."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
                     rows="3"
                   />
                 </div>
@@ -297,7 +297,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                   <button
                     type="button"
                     onClick={() => removeAchievement(index)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors duration-200"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -319,7 +319,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
         {/* Volunteer Work Section */}
         <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
               <Heart className="w-4 h-4 text-white" />
             </div>
             <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -331,7 +331,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
             {(data.volunteer_work || []).map((volunteer, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-md"
               >
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
@@ -373,7 +373,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                       updateVolunteerWork(index, "description", e.target.value)
                     }
                     placeholder="Describe your volunteer work and impact..."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-xs focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent resize-none"
                     rows="3"
                   />
                 </div>
@@ -431,7 +431,7 @@ const AdditionalSectionsForm = ({ data, onChange, onValidationChange }) => {
                   <button
                     type="button"
                     onClick={() => removeVolunteerWork(index)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors duration-200"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

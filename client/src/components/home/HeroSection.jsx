@@ -160,7 +160,7 @@ const HeroSection = () => (
               className="group flex flex-col items-center gap-2 rounded-md border border-slate-200/80 bg-white/85 px-4 py-4 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-transparent hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/70"
             >
               <div
-                className="flex size-12 items-center justify-center rounded-2xl shadow-sm transition-transform duration-200 group-hover:scale-105"
+                className="flex size-12 items-center justify-center rounded-md shadow-sm transition-transform duration-200 group-hover:scale-105"
                 style={{
                   backgroundImage: `linear-gradient(135deg, ${company.accent} 0%, ${company.accentSecondary} 100%)`,
                 }}

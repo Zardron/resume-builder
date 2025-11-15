@@ -27,7 +27,7 @@ const Footer = () => (
   <footer className="w-full bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-slate-300">
     <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center">
       <a href="/" className="flex items-center gap-2 mb-6">
-        <img src={LOGO} alt="ResumeIQ" className="w-8 h-8 object-contain bg-white rounded-lg p-1 shadow-lg" />
+        <img src={LOGO} alt="ResumeIQ" className="h-8" />
         <span className="text-lg font-bold text-slate-800 dark:text-slate-100">ResumeIQ</span>
       </a>
 

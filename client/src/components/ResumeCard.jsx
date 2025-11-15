@@ -2,7 +2,7 @@ import { File, PencilIcon, TrashIcon } from 'lucide-react';
 
 const ResumeCard = ({ name, lastUpdated, onEdit, onDelete }) => (
   <button
-    className="group w-full relative h-48 flex flex-col items-center justify-center rounded-lg border border-[var(--primary-color)] dark:border-white/50 hover:shadow-xs hover:shadow-gray-500 dark:hover:shadow-black hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300"
+    className="group w-full relative h-48 flex flex-col items-center justify-center rounded-md border border-[var(--primary-color)] dark:border-white/50 hover:shadow-xs hover:shadow-gray-500 dark:hover:shadow-black hover:translate-x-[2px] hover:translate-y-[-2px] bg-gradient-to-r from-[var(--gradient-primary-color)] to-[var(--gradient-accent-color)] transition-all duration-300"
   >
     <File className="size-11 p-2.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full text-white border border-white" />
     <p className="text-xs group-hover:text-[var(--primary-color)] transition-all duration-300 mt-2">

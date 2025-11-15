@@ -86,7 +86,7 @@ const Dashboard = () => {
               key={action.id}
               type="button"
               onClick={() => handleCreateAction(action.id)}
-              className="w-full bg-white dark:bg-gray-800 max-w-36 h-48 flex flex-col items-center justify-center rounded-lg border border-gray-300 dark:border-white/50 hover:shadow-md hover:border-dashed transition-all duration-300 cursor-pointer"
+              className="w-full bg-white dark:bg-gray-800 max-w-36 h-48 flex flex-col items-center justify-center rounded-md border border-gray-300 dark:border-white/50 hover:shadow-md hover:border-dashed transition-all duration-300 cursor-pointer"
             >
               <PlusIcon className={`size-11 p-2.5 bg-gradient-to-r ${action.gradient} rounded-full text-white`} />
               <p className="text-xs mt-2 text-gray-900 dark:text-gray-100">{action.label}</p>

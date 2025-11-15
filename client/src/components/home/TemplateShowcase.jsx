@@ -258,7 +258,7 @@ const TemplatePreview = ({ templateId, onPreviewClick, templateName, accentColor
       >
         {/* Container that shows full A4 template - fixed size */}
         <div 
-          className="relative bg-white rounded-lg shadow-2xl overflow-hidden transform transition-all duration-500 group-hover:shadow-[0_25px_80px_rgba(0,0,0,0.2)] group-hover:scale-[1.04]"
+          className="relative bg-white rounded-md shadow-2xl overflow-hidden transform transition-all duration-500 group-hover:shadow-[0_25px_80px_rgba(0,0,0,0.2)] group-hover:scale-[1.04]"
           style={{ 
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             width: `${scaledWidth}px`,
@@ -498,7 +498,7 @@ const TemplateShowcase = () => {
             return (
               <article 
                 key={template.id} 
-                className={`group overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col backdrop-blur-sm hover:border-blue-300/50 dark:hover:border-blue-600/50 ${
+                className={`group overflow-hidden rounded-md border border-slate-200/60 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col backdrop-blur-sm hover:border-blue-300/50 dark:hover:border-blue-600/50 ${
                   isNewlyAdded 
                     ? 'animate-fade-in-up opacity-0' 
                     : 'opacity-100'
@@ -537,7 +537,7 @@ const TemplateShowcase = () => {
             <button
               onClick={handleSeeMore}
               disabled={isLoadingMore}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-700 hover:to-cyan-700 disabled:opacity-75 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-700 hover:to-cyan-700 disabled:opacity-75 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {isLoadingMore ? (
                 <>

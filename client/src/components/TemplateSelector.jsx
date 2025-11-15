@@ -112,7 +112,7 @@ const TemplatePreview = ({ templateId, accentColor }) => {
       >
         {/* Container that shows full A4 template - fixed size */}
         <div
-          className="relative bg-white rounded-md shadow-2xl overflow-hidden transition-transform duration-300 ease-in-out group-hover:scale-105"
+          className="relative bg-white rounded-md shadow-2xl overflow-hidden scale-105"
           style={{
             boxShadow:
               "0 20px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05)",
@@ -294,14 +294,14 @@ const TemplateSelector = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {templates.map((template) => {
             const isSelected = selectedTemplate === template.id;
 
             return (
               <div
                 key={template.id}
-                className={`group relative rounded-md border-2 overflow-hidden transition-all duration-200 bg-white dark:bg-gray-600 border-blue-500`}
+                className={`group relative rounded-md border-1 overflow-hidden transition-all duration-200 bg-white dark:bg-gray-600 border-blue-500`}
               >
                 {/* Template Preview */}
                 <div className="relative">

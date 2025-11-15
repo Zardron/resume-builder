@@ -374,7 +374,7 @@ const ElegantTemplate = ({
                 {projectsToRender.map((proj, index) => (
                   <div
                     key={index}
-                    className="border rounded-lg p-4 hover:shadow-lg transition-shadow"
+                    className="border rounded-md p-4 hover:shadow-lg transition-shadow"
                     style={{ borderColor: accentColor }}
                   >
                     <h3

@@ -136,7 +136,7 @@ const ResumePreviewPanel = ({
                 <span
                   className={
                     templateBadgeClassName ||
-                    "px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg whitespace-nowrap"
+                    "px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md whitespace-nowrap"
                   }
                 >
                   {templateDisplayName} Template
@@ -151,7 +151,7 @@ const ResumePreviewPanel = ({
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <button
                 onClick={handleTogglePublic}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-80 cursor-pointer"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all hover:opacity-80 cursor-pointer"
                 style={
                   isPublic
                     ? {
@@ -185,7 +185,7 @@ const ResumePreviewPanel = ({
               <button
                 onClick={handleDownload}
                 disabled={isDownloadDisabled}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor:
                     "rgba(var(--accent-color-rgb, 139, 92, 246), 0.1)",
@@ -207,7 +207,7 @@ const ResumePreviewPanel = ({
               <button
                 onClick={handleShare}
                 disabled={shareButtonDisabled}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor:
                     "rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)",
@@ -247,7 +247,7 @@ const ResumePreviewPanel = ({
         <hr className="border-gray-200 dark:border-gray-700 mx-4" />
 
         <div className="py-6 dark:bg-gray-900">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-md overflow-hidden">
             <div
               ref={previewContainerRef}
               className={`max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-x-auto ${

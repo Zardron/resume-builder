@@ -169,7 +169,7 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-lg">3</span>
           </div>
           <div className="w-5/6">
@@ -181,7 +181,7 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
             </p>
           </div>
         </div>
-        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-md p-4">
           <p className="text-xs md:text-sm text-blue-800 dark:text-blue-200">
             <span className="font-semibold">💡 Tip:</span> Fields marked with <span className="text-red-500 font-semibold">*</span> are required. 
             Be specific about your role and responsibilities.
@@ -200,7 +200,7 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
               <div className="p-6 border-b border-gray-200 dark:border-gray-600">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
                       <Briefcase className="w-4 h-4 text-white" />
                     </div>
                     <div>

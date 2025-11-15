@@ -252,7 +252,7 @@ const StartupTemplate = ({
                     <img
                       src={getProfileImageSrc(data.personal_info?.image)}
                       alt="Profile"
-                      className="w-24 h-24 rounded-lg object-cover border-2 shadow-md"
+                      className="w-24 h-24 rounded-md object-cover border-2 shadow-md"
                       style={{ borderColor: accentColor }}
                     />
                   </div>
@@ -373,7 +373,7 @@ const StartupTemplate = ({
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 {projectsToRender.map((proj, index) => (
-                  <div key={index} className="p-4 rounded-lg border-2 border-gray-200 hover:border-opacity-50 transition-colors" style={{ borderColor: accentColor }}>
+                  <div key={index} className="p-4 rounded-md border-2 border-gray-200 hover:border-opacity-50 transition-colors" style={{ borderColor: accentColor }}>
                     <h3
                       className={`${getSectionFontSize(
                         sectionFontSizes,

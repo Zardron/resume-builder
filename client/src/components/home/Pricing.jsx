@@ -113,7 +113,7 @@ const Pricing = () => (
 
             <button
               type="button"
-              className={`mt-8 w-full rounded-lg px-5 py-3 text-sm font-semibold transition ${
+              className={`mt-8 w-full rounded-md px-5 py-3 text-sm font-semibold transition ${
                 plan.isFree
                   ? 'border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white'
                   : 'bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white hover:shadow-lg'

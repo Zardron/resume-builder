@@ -7,7 +7,7 @@ const Banner = () => (
     <Link
       to="/sign-in"
       state={{ fromHome: true }}
-      className="flex items-center gap-1 px-3 py-1 rounded-lg text-white bg-white/20 hover:bg-white/30 transition active:scale-95 ml-3"
+      className="flex items-center gap-1 px-3 py-1 rounded-md text-white bg-white/20 hover:bg-white/30 transition active:scale-95 ml-3"
     >
       Explore now
       <ArrowRight size={14} />

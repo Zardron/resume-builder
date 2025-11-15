@@ -473,7 +473,7 @@ const Settings = () => {
                     />
                    
                     {selectedFontOption ? (
-                      <div className="mt-3 rounded-lg border border-gray-200 bg-white/70 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
+                      <div className="mt-3 rounded-md border border-gray-200 bg-white/70 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
                         <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                           Sample preview
                         </span>

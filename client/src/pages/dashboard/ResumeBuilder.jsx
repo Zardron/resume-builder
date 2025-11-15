@@ -634,7 +634,7 @@ const ResumeBuilder = () => {
             {/* Section Navigation */}
             <div className="w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4">
               <div
-                className={`bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 dark:bg-gray-900`}
+                className={`bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-4 transition-all duration-300 dark:bg-gray-900`}
               >
                 {/* Progress Bar */}
                 <div className="mb-6">
@@ -924,7 +924,7 @@ const ResumeBuilder = () => {
                 TEMPLATE_DISPLAY_NAMES[resumeData.template] ||
                 resumeData.template
               }
-              templateBadgeClassName="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg"
+              templateBadgeClassName="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md"
               isPublic={resumeData.public}
               onTogglePublic={() =>
                 setResumeData((prev) => ({

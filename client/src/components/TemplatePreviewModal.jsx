@@ -338,7 +338,7 @@ const TemplatePreviewModal = ({
 
       {/* Modal Container */}
       <div 
-        className={`relative bg-white dark:bg-gray-900 rounded-lg sm:rounded-2xl shadow-2xl flex flex-col ${
+        className={`relative bg-white dark:bg-gray-900 rounded-md sm:rounded-md shadow-2xl flex flex-col ${
           isFullscreen ? 'w-full h-full max-h-none' : 'w-full max-w-7xl h-[95vh] max-h-[95vh]'
         } animate__animated animate__faster ${isClosing ? 'animate__zoomOut' : 'animate__zoomIn'}`}
       >
@@ -346,7 +346,7 @@ const TemplatePreviewModal = ({
         {!isFullscreen && (
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-2 lg:right-2 p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors z-50 bg-white dark:bg-gray-900 shadow-lg"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-2 lg:right-2 p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors z-50 bg-white dark:bg-gray-900 shadow-lg"
             title="Close"
           >
             <X className="size-4 sm:size-5" />
@@ -386,7 +386,7 @@ const TemplatePreviewModal = ({
                         setPaperSize(value);
                         onPaperSizeChange?.(value);
                       }}
-                      className="flex-1 sm:flex-initial px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm min-w-0"
+                      className="flex-1 sm:flex-initial px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm min-w-0"
                     >
                       {paperSizes.map((size) => (
                         <option key={size.id} value={size.id}>
@@ -405,14 +405,14 @@ const TemplatePreviewModal = ({
             <div className="absolute top-0 right-0 z-50 flex items-center gap-2 p-4">
               <button
                 onClick={() => setIsFullscreen(false)}
-                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors bg-white dark:bg-gray-900 shadow-lg"
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors bg-white dark:bg-gray-900 shadow-lg"
                 title="Exit Fullscreen"
               >
                 <Minimize2 className="size-5" />
               </button>
               <button
                 onClick={handleClose}
-                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors bg-white dark:bg-gray-900 shadow-lg"
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors bg-white dark:bg-gray-900 shadow-lg"
                 title="Close"
               >
                 <X className="size-5" />
@@ -433,7 +433,7 @@ const TemplatePreviewModal = ({
                 <div className="sticky top-0 right-0 z-20 flex justify-end pointer-events-none" style={{ padding: '8px' }}>
                   <button
                     onClick={() => setIsFullscreen(!isFullscreen)}
-                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors bg-white dark:bg-gray-900 shadow-lg pointer-events-auto"
+                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors bg-white dark:bg-gray-900 shadow-lg pointer-events-auto"
                     title="Enter Fullscreen"
                   >
                     <Maximize2 className="size-4 sm:size-5" />
@@ -443,7 +443,7 @@ const TemplatePreviewModal = ({
               
               <div className="py-2 sm:py-3 lg:py-4 px-2 sm:px-3 lg:px-4 min-h-full flex justify-center items-center">
                 <div 
-                  className={`bg-white ${totalPages === 1 ? 'shadow-lg' : 'shadow-2xl'} rounded-lg`}
+                  className={`bg-white ${totalPages === 1 ? 'shadow-lg' : 'shadow-2xl'} rounded-md`}
                   style={{
                     ...getPaperSizeStyles(paperSize),
                     ...(totalPages === 1 && { minHeight: 'auto' }),
@@ -479,13 +479,13 @@ const TemplatePreviewModal = ({
                   <div className="flex items-center gap-3 sm:gap-4">
                     <button
                       onClick={handleClose}
-                      className="flex-1 sm:flex-initial px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm font-medium"
+                      className="flex-1 sm:flex-initial px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors text-sm font-medium"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSelectTemplate}
-                      className="flex-1 sm:flex-initial px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm shadow-sm"
+                      className="flex-1 sm:flex-initial px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors text-sm shadow-sm"
                     >
                       Use This Template
                     </button>

@@ -160,7 +160,7 @@ const Navbar = () => {
                 Z
               </button>
               {isProfileMenuOpen && (
-                <div className="absolute right-0 mt-3 w-56 origin-top-right rounded-xl border border-gray-200/70 bg-white p-2 text-sm shadow-xl ring-1 ring-black/5 dark:border-gray-700/60 dark:bg-gray-800 dark:text-gray-100">
+                <div className="absolute right-0 mt-3 w-56 origin-top-right rounded-md border border-gray-200/70 bg-white p-2 text-sm shadow-xl ring-1 ring-black/5 dark:border-gray-700/60 dark:bg-gray-800 dark:text-gray-100">
                   <div className="px-3 py-2">
                     <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                       Signed in as

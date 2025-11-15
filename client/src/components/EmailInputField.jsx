@@ -121,7 +121,7 @@ const EmailInputField = ({
                 key={index}
                 type="button"
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-lg transition-colors flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-md transition-colors flex items-center gap-2"
               >
                 <Mail className="w-4 h-4 text-gray-400" />
                 <span>{suggestion}</span>

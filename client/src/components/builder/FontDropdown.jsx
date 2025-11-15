@@ -59,7 +59,7 @@ const FontDropdown = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center gap-3 font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ${hasCustomButtonSizing ? "" : "px-3 py-2 text-sm"} ${buttonClassName}`}
+        className={`flex items-center gap-3 font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors ${hasCustomButtonSizing ? "" : "px-3 py-2 text-sm"} ${buttonClassName}`}
         type="button"
       >
         {icon}
@@ -101,7 +101,7 @@ const FontDropdown = ({
 
       {isOpen && (
         <div
-          className={`absolute right-0 top-full mt-2 ${menuWidthClass} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 space-y-1 ${dropdownClassName}`}
+          className={`absolute right-0 top-full mt-2 ${menuWidthClass} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-50 p-3 space-y-1 ${dropdownClassName}`}
         >
           {options.map((option) => {
             const fallback = describeFontFamily(option?.description ?? "");

@@ -338,7 +338,7 @@ const PersonalInfoForm = ({
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-lg">1</span>
           </div>
           <div className="w-5/6">
@@ -350,7 +350,7 @@ const PersonalInfoForm = ({
             </p>
           </div>
         </div>
-        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-md p-4">
           <p className="text-xs md:text-sm text-blue-800 dark:text-blue-200">
             <span className="font-semibold">💡 Tip:</span> Fields marked with <span className="text-red-500 font-semibold">*</span> are required. A professional photo can increase your chances of getting noticed by recruiters.
           </p>
@@ -403,9 +403,9 @@ const PersonalInfoForm = ({
               </div>
 
               {/* AI Background Removal */}
-              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-500">
+              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-500">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-lg text-xs font-medium">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-md text-xs font-medium">
                     <SparklesIcon className="w-3 h-3" />
                     AI
                   </div>
@@ -458,7 +458,7 @@ const PersonalInfoForm = ({
             htmlFor="profile-upload"
             className="block w-full"
           >
-            <div className="w-full py-3 px-4 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white text-sm font-medium rounded-lg text-center cursor-pointer hover:opacity-90 transition-opacity duration-200">
+            <div className="w-full py-3 px-4 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white text-sm font-medium rounded-md text-center cursor-pointer hover:opacity-90 transition-opacity duration-200">
               {data?.image ? "Change Photo" : "Upload Photo"}
             </div>
           </label>
@@ -491,7 +491,7 @@ const PersonalInfoForm = ({
 
         {/* Platform Selector */}
         {showSocialLinks && (
-          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600">
             <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 mb-4">
               Choose platforms to add:
             </h5>
@@ -506,7 +506,7 @@ const PersonalInfoForm = ({
                     type="button"
                     onClick={() => addSocialLink(platform)}
                     disabled={isSelected || isAlreadyAdded}
-                    className={`p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2 text-sm font-medium cursor-pointer ${
+                    className={`p-3 rounded-md border-2 transition-all duration-200 flex items-center gap-2 text-sm font-medium cursor-pointer ${
                       isSelected || isAlreadyAdded
                         ? 'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/20 dark:border-green-700 dark:text-green-400 cursor-not-allowed'
                         : 'bg-white border-gray-200 text-gray-700 hover:border-[var(--primary-color)] hover:bg-[var(--primary-color)]/5 hover:text-[var(--primary-color)] dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:border-[var(--primary-color)]'

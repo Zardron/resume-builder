@@ -204,7 +204,7 @@ const CreativeTemplate = ({
           {/* Colorful Header */}
           {showHeader && (
             <header
-              className="mb-6 p-6 rounded-2xl text-white relative overflow-hidden"
+              className="mb-6 p-6 rounded-md text-white relative overflow-hidden"
               style={{ backgroundColor: accentColor }}
             >
               <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-20 bg-white transform translate-x-16 -translate-y-16"></div>
@@ -266,10 +266,10 @@ const CreativeTemplate = ({
                     <img
                       src={getProfileImageSrc(data.personal_info?.image)}
                       alt="Profile"
-                      className="w-28 h-28 rounded-2xl object-cover border-4 border-white shadow-lg"
+                      className="w-28 h-28 rounded-md object-cover border-4 border-white shadow-lg"
                     />
                   ) : (
-                    <div className="w-28 h-28 rounded-2xl border-4 border-white bg-white/20 flex items-center justify-center shadow-lg">
+                    <div className="w-28 h-28 rounded-md border-4 border-white bg-white/20 flex items-center justify-center shadow-lg">
                       <User className="size-14 text-white" />
                     </div>
                   )}
@@ -292,7 +292,7 @@ const CreativeTemplate = ({
                 </h2>
                 <div className="flex-1 h-0.5 rounded-full" style={{ backgroundColor: accentColor, opacity: 0.3 }}></div>
               </div>
-              <div className="bg-gray-50 rounded-xl p-4 border-l-4" style={{ borderLeftColor: accentColor }}>
+              <div className="bg-gray-50 rounded-md p-4 border-l-4" style={{ borderLeftColor: accentColor }}>
                 <p
                   className={`text-gray-700 leading-relaxed ${getSectionFontSize(
                     sectionFontSizes,
@@ -323,7 +323,7 @@ const CreativeTemplate = ({
                 {data.experience.map((exp, index) => (
                   <div
                     key={index}
-                    className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border-l-4 shadow-sm hover:shadow-md transition-shadow"
+                    className="bg-gradient-to-r from-gray-50 to-white rounded-md p-4 border-l-4 shadow-sm hover:shadow-md transition-shadow"
                     style={{ borderLeftColor: accentColor }}
                   >
                     <div className="flex justify-between items-start mb-2">
@@ -397,7 +397,7 @@ const CreativeTemplate = ({
                 {projectsToRender.map((proj, index) => (
                   <div
                     key={index}
-                    className="rounded-xl p-4 border-2 shadow-sm hover:shadow-md transition-shadow"
+                    className="rounded-md p-4 border-2 shadow-sm hover:shadow-md transition-shadow"
                     style={{ 
                       borderColor: accentColor,
                       background: `linear-gradient(135deg, ${hexToRgba(accentColor, 0.08)} 0%, white 100%)`
@@ -463,7 +463,7 @@ const CreativeTemplate = ({
                   {data.education.map((edu, index) => (
                     <div
                       key={index}
-                      className="bg-gray-50 rounded-xl p-4 border-l-4"
+                      className="bg-gray-50 rounded-md p-4 border-l-4"
                       style={{ borderLeftColor: accentColor }}
                     >
                       <h3

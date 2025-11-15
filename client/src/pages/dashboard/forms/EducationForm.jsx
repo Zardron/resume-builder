@@ -230,7 +230,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-lg">4</span>
           </div>
           <div className="w-5/6">
@@ -242,7 +242,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
             </p>
           </div>
         </div>
-        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-md p-4">
           <p className="text-xs md:text-sm text-blue-800 dark:text-blue-200">
             <span className="font-semibold">💡 Tip:</span> Fields marked with <span className="text-red-500 font-semibold">*</span> are required. 
             Include relevant coursework, honors, or academic achievements.
@@ -261,7 +261,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
               <div className="p-6 border-b border-gray-200 dark:border-gray-600">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
                       <GraduationCap className="w-4 h-4 text-white" />
                     </div>
                     <div>
@@ -332,7 +332,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
                           <button
                             type="button"
                             onClick={() => setShowDegreeDropdown(prev => ({ ...prev, [education.id]: !prev[education.id] }))}
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
                             aria-label="Toggle dropdown"
                           >
                             <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${showDegreeDropdown[education.id] ? 'rotate-180' : ''}`} />
@@ -349,7 +349,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
                                     key={idx}
                                     type="button"
                                     onClick={() => handleDegreeSelect(education.id, degree)}
-                                    className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-lg transition-colors duration-150"
+                                    className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-md transition-colors duration-150"
                                   >
                                     {degree}
                                   </button>
@@ -394,7 +394,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
                           <button
                             type="button"
                             onClick={() => setShowInstitutionDropdown(prev => ({ ...prev, [education.id]: !prev[education.id] }))}
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
                             aria-label="Toggle dropdown"
                           >
                             <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${showInstitutionDropdown[education.id] ? 'rotate-180' : ''}`} />
@@ -411,7 +411,7 @@ const EducationForm = ({ data, onChange, onValidationChange }) => {
                                     key={idx}
                                     type="button"
                                     onClick={() => handleInstitutionSelect(education.id, school)}
-                                    className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-lg transition-colors duration-150"
+                                    className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10 rounded-md transition-colors duration-150"
                                   >
                                     {school}
                                   </button>

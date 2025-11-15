@@ -192,7 +192,7 @@ const PurchaseCredits = () => {
             ].map((method) => (
               <label
                 key={method.id}
-                className={`flex items-center gap-3 rounded-lg border p-3 transition cursor-pointer ${
+                className={`flex items-center gap-3 rounded-md border p-3 transition cursor-pointer ${
                   selectedPayment === method.id
                     ? 'border-blue-500 bg-blue-50 dark:border-blue-400/80 dark:bg-blue-900/40'
                     : 'border-gray-200 hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-400'
@@ -223,7 +223,7 @@ const PurchaseCredits = () => {
             Secure payments handled via your preferred method. We’ll instantly add credits to your
             balance once the transaction completes.
           </div>
-          <div className="flex flex-col gap-1 rounded-lg bg-gray-50 p-4 text-sm text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+          <div className="flex flex-col gap-1 rounded-md bg-gray-50 p-4 text-sm text-gray-600 dark:bg-gray-700 dark:text-gray-200">
             <span className="font-medium text-gray-800 dark:text-gray-100">Order summary</span>
             <span>
               Package: {selectedPackage?.label} ({selectedPackage?.credits} credit
@@ -235,7 +235,7 @@ const PurchaseCredits = () => {
             type="button"
             onClick={handlePurchase}
             disabled={isProcessing || !selectedPackage}
-            className="w-full rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow transition hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 cursor-pointer"
+            className="w-full rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow transition hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 cursor-pointer"
           >
             {isProcessing ? 'Processing…' : 'Purchase Credits'}
           </button>

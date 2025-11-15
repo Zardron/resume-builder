@@ -232,7 +232,7 @@ const ColorPicker = ({
   }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <div className="bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Palette className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -250,7 +250,7 @@ const ColorPicker = ({
         
         <button
           onClick={() => setShowColorPicker(!showColorPicker)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer"
         >
           <div 
             className="w-6 h-6 rounded border border-gray-300 dark:border-gray-600"
@@ -264,7 +264,7 @@ const ColorPicker = ({
 
       {/* Color Picker */}
       {showColorPicker && (
-        <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+        <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600">
           <div className="space-y-4">
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -292,7 +292,7 @@ const ColorPicker = ({
                       onColorSelect && onColorSelect(color);
                       setShowColorPicker(false);
                     }}
-                    className={`w-10 h-10 rounded-lg border-2 transition-all hover:scale-110 ${
+                    className={`w-10 h-10 rounded-md border-2 transition-all hover:scale-110 ${
                       selectedColor === color 
                         ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-2' 
                         : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
@@ -304,7 +304,7 @@ const ColorPicker = ({
                 {/* Custom Color Button */}
                 <button
                   onClick={() => setShowCustomPicker(!showCustomPicker)}
-                  className="w-10 h-10 rounded-lg border-2 border-dashed border-gray-400 dark:border-gray-500 hover:border-gray-600 dark:hover:border-gray-400 transition-all hover:scale-110 flex items-center justify-center bg-gray-100 dark:bg-gray-700 cursor-pointer"
+                  className="w-10 h-10 rounded-md border-2 border-dashed border-gray-400 dark:border-gray-500 hover:border-gray-600 dark:hover:border-gray-400 transition-all hover:scale-110 flex items-center justify-center bg-gray-100 dark:bg-gray-700 cursor-pointer"
                   title="Custom Color"
                 >
                   <Palette className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -324,7 +324,7 @@ const ColorPicker = ({
                     <div 
                       ref={colorFieldRef}
                       onClick={handleColorFieldClick}
-                      className="w-full h-20 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden cursor-crosshair"
+                      className="w-full h-20 rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden cursor-crosshair"
                     >
                       <div 
                         className="w-full h-full"
@@ -379,7 +379,7 @@ const ColorPicker = ({
                     Preview
                   </label>
                   <div 
-                    className="w-full h-12 rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                    className="w-full h-12 rounded-md border-2 border-gray-300 dark:border-gray-600"
                     style={{ backgroundColor: hslToHex(hue, saturation, lightness) }}
                   ></div>
                 </div>

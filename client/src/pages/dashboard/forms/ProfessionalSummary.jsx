@@ -115,7 +115,7 @@ const ProfessionalSummary = ({
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-lg flex items-center justify-center">
+          <div className="sm:w-12 sm:h-12 w-1/6 h-14 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-lg">2</span>
           </div>
           <div className="w-5/6">
@@ -127,7 +127,7 @@ const ProfessionalSummary = ({
             </p>
           </div>
         </div>
-        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-md p-4">
           <p className="text-xs md:text-sm text-blue-800 dark:text-blue-200">
             <span className="font-semibold">💡 Tip:</span> Keep your summary concise (2-3 sentences) and focus on your most relevant skills and achievements. Use action verbs and quantify your accomplishments when possible.
           </p>
@@ -176,9 +176,9 @@ const ProfessionalSummary = ({
           </div>
 
           {/* AI Enhance Button */}
-          <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+          <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/30 rounded-md border border-blue-200 dark:border-blue-700">
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-lg text-xs font-medium">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-md text-xs font-medium">
                 <SparklesIcon className="w-3 h-3" />
                 AI Enhance
               </div>
@@ -201,7 +201,7 @@ const ProfessionalSummary = ({
               type="button"
               onClick={handleAIEnhance}
               disabled={isEnhancing || !data?.professional_summary?.trim()}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                 isEnhancing || !data?.professional_summary?.trim()
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400'
                   : 'bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white hover:opacity-90 hover:scale-105 shadow-lg'

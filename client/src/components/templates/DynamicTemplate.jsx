@@ -245,19 +245,19 @@ const DynamicTemplate = ({
                 </div>
                 <div className="flex flex-wrap gap-3 text-sm">
                   {data.personal_info?.email && (
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-gray-50">
                       <Mail className="size-4" style={{ color: accentColor }} />
                       <span className="text-gray-700">{data.personal_info.email}</span>
                     </div>
                   )}
                   {data.personal_info?.phone && (
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-gray-50">
                       <Phone className="size-4" style={{ color: accentColor }} />
                       <span className="text-gray-700">{data.personal_info.phone}</span>
                     </div>
                   )}
                   {data.personal_info?.address && (
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-gray-50">
                       <MapPin className="size-4" style={{ color: accentColor }} />
                       <span className="text-gray-700">{data.personal_info.address}</span>
                     </div>
@@ -265,7 +265,7 @@ const DynamicTemplate = ({
                   {getSocialLinks().map((socialLink, index) => {
                     const IconComponent = socialLink.icon;
                     return (
-                      <div key={index} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                      <div key={index} className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-gray-50">
                         <IconComponent className="size-4" style={{ color: accentColor }} />
                         <span className="text-gray-700 break-all">{socialLink.displayValue}</span>
                       </div>
@@ -392,7 +392,7 @@ const DynamicTemplate = ({
               </div>
               <div className="space-y-4">
                 {projectsToRender.map((proj, index) => (
-                  <div key={index} className="p-4 rounded-lg border-2" style={{ borderColor: accentColor }}>
+                  <div key={index} className="p-4 rounded-md border-2" style={{ borderColor: accentColor }}>
                     <h3
                       className={`${getSectionFontSize(
                         sectionFontSizes,
@@ -438,7 +438,7 @@ const DynamicTemplate = ({
                 </div>
                 <div className="space-y-4">
                   {data.education.map((edu, index) => (
-                    <div key={index} className="p-3 rounded-lg bg-gray-50">
+                    <div key={index} className="p-3 rounded-md bg-gray-50">
                       <h3
                         className={`${getSectionFontSize(
                           sectionFontSizes,

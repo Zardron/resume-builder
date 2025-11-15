@@ -185,7 +185,7 @@ const SpotlightTemplate = ({
                         {/* Contact */}
                         <section className="mb-4">
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                     <Mail className={`size-3 ${textColorClass}`} />
                                 </div>
                                 <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
@@ -228,7 +228,7 @@ const SpotlightTemplate = ({
                         {data.education && data.education.length > 0 && (
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                    <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                         <GraduationCap className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
@@ -237,7 +237,7 @@ const SpotlightTemplate = ({
                                 </div>
                                 <div className="space-y-3 text-xs">
                                     {data.education.map((edu, index) => (
-                                        <div key={index} className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
+                                        <div key={index} className="bg-white rounded-md p-3 shadow-sm border border-gray-200">
                                             <p className={`${getSectionFontSize(sectionFontSizes, 'education')} font-bold text-gray-800 mb-1`}>{edu.degree}</p>
                                             <p className={`${getCompanyFontSize(sectionFontSizes)} text-gray-600 mb-1`}>{edu.institution}</p>
                                             {edu.location && <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-500 mb-1`}>{edu.location}</p>}
@@ -259,7 +259,7 @@ const SpotlightTemplate = ({
                         {data.skills && data.skills.length > 0 && (
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                    <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                         <Award className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-800 uppercase tracking-wide`}>
@@ -284,7 +284,7 @@ const SpotlightTemplate = ({
                         {data.soft_skills && data.soft_skills.length > 0 && (
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                    <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                         <Heart className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-800 uppercase tracking-wide`}>
@@ -309,7 +309,7 @@ const SpotlightTemplate = ({
                         {data.languages && data.languages.length > 0 && (
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                    <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                         <Languages className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-800 uppercase tracking-wide`}>
@@ -318,7 +318,7 @@ const SpotlightTemplate = ({
                                 </div>
                                 <div className="space-y-2">
                                     {data.languages.map((lang, index) => (
-                                        <div key={index} className="bg-white rounded-lg p-2 shadow-sm border border-gray-200">
+                                        <div key={index} className="bg-white rounded-md p-2 shadow-sm border border-gray-200">
                                             <div className="flex justify-between items-center">
                                                 <span className={`${getSectionFontSize(sectionFontSizes, 'languages', 'small')} font-medium text-gray-800`}>{lang.language}</span>
                                                 <span className={`${getSectionFontSize(sectionFontSizes, 'languages', 'small')} text-gray-600 capitalize`}>{lang.proficiency}</span>
@@ -333,7 +333,7 @@ const SpotlightTemplate = ({
                         {data.certifications && data.certifications.length > 0 && (
                             <section className="mb-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+                                    <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: accentColor }}>
                                         <Award className={`size-3 ${textColorClass}`} />
                                     </div>
                                     <h2 className={`${getSectionHeaderFontSize(sectionFontSizes)} font-bold text-gray-800 uppercase tracking-wide`}>
@@ -342,7 +342,7 @@ const SpotlightTemplate = ({
                                 </div>
                                 <div className="space-y-2">
                                     {data.certifications.map((cert, index) => (
-                                        <div key={index} className="bg-white rounded-lg p-2 shadow-sm border border-gray-200">
+                                        <div key={index} className="bg-white rounded-md p-2 shadow-sm border border-gray-200">
                                             <p className={`${getSectionFontSize(sectionFontSizes, 'certifications', 'small')} font-bold text-gray-800 mb-1`}>{cert.name}</p>
                                             <p className={`${getSectionFontSize(sectionFontSizes, 'certifications', 'small')} text-gray-600 mb-1`}>{cert.issuer}</p>
                                             {cert.credential_id && (

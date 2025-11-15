@@ -48,7 +48,7 @@ const FileUploader = ({
           onChange={handleFileChange}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
         />
-        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-[var(--primary-color)] hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 relative">
+        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md p-8 text-center hover:border-[var(--primary-color)] hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 relative">
           {uploadedFile && (
             <button
               onClick={handleClearFile}

@@ -201,7 +201,7 @@ const MinimalImageTemplate = ({
               <section className="mb-4">
                 <div className="flex items-center gap-2 mb-3">
                   <div
-                    className="w-6 h-6 rounded-lg flex items-center justify-center"
+                    className="w-6 h-6 rounded-md flex items-center justify-center"
                     style={{ backgroundColor: accentColor }}
                   >
                     <Mail className={`size-3 ${textColorClass}`} />
@@ -278,7 +278,7 @@ const MinimalImageTemplate = ({
                 <section className="mb-4">
                   <div className="flex items-center gap-2 mb-3">
                     <div
-                      className="w-6 h-6 rounded-lg flex items-center justify-center"
+                      className="w-6 h-6 rounded-md flex items-center justify-center"
                       style={{ backgroundColor: accentColor }}
                     >
                       <GraduationCap className={`size-3 ${textColorClass}`} />
@@ -291,7 +291,7 @@ const MinimalImageTemplate = ({
                     {data.education.map((edu, index) => (
                       <div
                         key={index}
-                        className="bg-white rounded-lg p-3 shadow-sm border border-gray-200"
+                        className="bg-white rounded-md p-3 shadow-sm border border-gray-200"
                       >
                         <p
                           className={`${getSectionFontSize(
@@ -348,7 +348,7 @@ const MinimalImageTemplate = ({
                 <section className="mb-4">
                   <div className="flex items-center gap-2 mb-3">
                     <div
-                      className="w-6 h-6 rounded-lg flex items-center justify-center"
+                      className="w-6 h-6 rounded-md flex items-center justify-center"
                       style={{ backgroundColor: accentColor }}
                     >
                       <Award className={`size-3 ${textColorClass}`} />
@@ -384,7 +384,7 @@ const MinimalImageTemplate = ({
                 <section className="mb-4">
                   <div className="flex items-center gap-2 mb-3">
                     <div
-                      className="w-6 h-6 rounded-lg flex items-center justify-center"
+                      className="w-6 h-6 rounded-md flex items-center justify-center"
                       style={{ backgroundColor: accentColor }}
                     >
                       <Star className={`size-3 ${textColorClass}`} />
@@ -420,7 +420,7 @@ const MinimalImageTemplate = ({
                 <section className="mb-4">
                   <div className="flex items-center gap-2 mb-3">
                     <div
-                      className="w-6 h-6 rounded-lg flex items-center justify-center"
+                      className="w-6 h-6 rounded-md flex items-center justify-center"
                       style={{ backgroundColor: accentColor }}
                     >
                       <Languages className={`size-3 ${textColorClass}`} />
@@ -437,7 +437,7 @@ const MinimalImageTemplate = ({
                     {data.languages.map((lang, index) => (
                       <div
                         key={index}
-                        className="bg-white rounded-lg p-2 shadow-sm border border-gray-200"
+                        className="bg-white rounded-md p-2 shadow-sm border border-gray-200"
                       >
                         <div className="flex justify-between items-center">
                           <span
@@ -470,7 +470,7 @@ const MinimalImageTemplate = ({
                 <section className="mb-4">
                   <div className="flex items-center gap-2 mb-3">
                     <div
-                      className="w-6 h-6 rounded-lg flex items-center justify-center"
+                      className="w-6 h-6 rounded-md flex items-center justify-center"
                       style={{ backgroundColor: accentColor }}
                     >
                       <Award className={`size-3 ${textColorClass}`} />
@@ -487,7 +487,7 @@ const MinimalImageTemplate = ({
                     {data.certifications.map((cert, index) => (
                       <div
                         key={index}
-                        className="bg-white rounded-lg p-2 shadow-sm border border-gray-200"
+                        className="bg-white rounded-md p-2 shadow-sm border border-gray-200"
                       >
                         <p
                           className={`${getSectionFontSize(
