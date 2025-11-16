@@ -453,26 +453,28 @@ const TemplateShowcase = () => {
   const handleSeeMore = () => {
     const increment = getIncrement();
     
-    // Show loading state immediately for better UX
+    // Show loading state immediately
     setIsLoadingMore(true);
     
     // Track previous count before updating
     setPreviousVisibleCount(visibleCount);
     
-    // Use startTransition to mark this as a non-urgent update
-    // This allows React to keep the UI responsive while rendering
-    startTransition(() => {
-      setVisibleCount(prev => {
-        const newCount = Math.min(prev + increment, TEMPLATE_GROUPS.length);
-        return newCount;
-      });
-    });
-    
-    // Reset loading state after templates have had time to render
-    // Use a small delay to ensure smooth transition
+    // Wait 1.5 seconds before showing new templates
     setTimeout(() => {
-      setIsLoadingMore(false);
-    }, 150);
+      // Use startTransition to mark this as a non-urgent update
+      // This allows React to keep the UI responsive while rendering
+      startTransition(() => {
+        setVisibleCount(prev => {
+          const newCount = Math.min(prev + increment, TEMPLATE_GROUPS.length);
+          return newCount;
+        });
+      });
+      
+      // Reset loading state after templates have had time to render
+      setTimeout(() => {
+        setIsLoadingMore(false);
+      }, 150);
+    }, 1000);
   };
 
   const handlePreviewClick = (template) => {
@@ -576,10 +578,24 @@ const TemplateShowcase = () => {
                 : `${index * 50}ms`; // Normal delay for existing items
               const animationDuration = isNewlyLoaded ? '0.4s' : '0.6s';
               
+              // Check if this is the last template and if it's alone in its row
+              const isLastTemplate = index === visibleCount - 1;
+              // A template is alone in its row if the remainder is 1 (meaning last row has exactly 1 item)
+              const isAloneInRow = gridColumns > 1 && visibleCount % gridColumns === 1;
+              const shouldCenter = isLastTemplate && isAloneInRow;
+              
               return (
                 <article 
                   key={template.id} 
-                  className="group overflow-hidden rounded-md border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-blue-500/15 via-cyan-500/8 to-purple-500/15 dark:from-blue-500/8 dark:via-cyan-500/5 dark:to-purple-500/8 shadow-sm transition-all duration-300 flex flex-col"
+                  className={`group overflow-hidden rounded-md border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-blue-500/15 via-cyan-500/8 to-purple-500/15 dark:from-blue-500/8 dark:via-cyan-500/5 dark:to-purple-500/8 shadow-sm transition-all duration-300 flex flex-col ${
+                    shouldCenter 
+                      ? gridColumns === 3 
+                        ? 'lg:col-start-2' 
+                        : gridColumns === 2 
+                        ? 'md:col-start-1 md:col-span-2 md:max-w-md md:mx-auto' 
+                        : ''
+                      : ''
+                  }`}
                   style={{
                     animation: `fadeInUp ${animationDuration} ease-out forwards`,
                     animationDelay: animationDelay,
@@ -617,7 +633,7 @@ const TemplateShowcase = () => {
               <button
                 onClick={handleSeeMore}
                 disabled={isLoadingMore}
-                className="group relative px-8 py-4 bg-gradient-to-br from-blue-600/10 via-cyan-500/8 to-purple-600/10 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gradient-to-br hover:from-blue-600/30 hover:via-cyan-500/20 hover:to-purple-600/30 flex items-center gap-3 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="group relative px-8 py-4 bg-gradient-to-br from-blue-600/10 via-cyan-500/8 to-purple-600/10 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gradient-to-br hover:from-blue-600/30 hover:via-cyan-500/20 hover:to-purple-600/30 flex items-center gap-3 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   {isLoadingMore ? (

@@ -246,19 +246,19 @@ const ResumePreviewPanel = ({
 
         <hr className="border-gray-200 dark:border-gray-700 mx-4" />
 
-        <div className="py-6 dark:bg-gray-900">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-md overflow-hidden">
+        <div className="py-0 dark:bg-gray-900 p-4 mt-4">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-md w-full">
             <div
               ref={previewContainerRef}
-              className={`max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-x-auto ${
+              className={`max-h-[600px] sm:max-h-[700px] lg:max-h-[800px] xl:max-h-[900px] overflow-x-auto w-full ${
                 isPreviewLocked ? "overflow-hidden" : "overflow-y-auto"
               }`}
             >
-          <div className="flex justify-center items-center min-w-0 py-4">
+          <div className="flex justify-start items-start min-w-0 w-full h-full">
                 <div
-                  className="resume-preview-scale-wrapper relative"
+                  className="resume-preview-scale-wrapper relative w-full h-full"
                   style={{
-                    width: scaledWrapperWidth,
+                    width: "100%",
                     height: scaledWrapperHeight,
                     minWidth: 0,
                     maxWidth: "100%",
@@ -269,15 +269,15 @@ const ResumePreviewPanel = ({
                   className="resume-preview-page-container"
                   style={{
                     transform: `scale(${previewScale})`,
-                    transformOrigin: "top center",
-                    width: pageWidthValue,
+                    transformOrigin: "top left",
+                    width: previewScale > 0 ? `calc(100% / ${previewScale})` : pageWidthValue,
                     minWidth: 0,
-                    maxWidth: "100%",
+                    maxWidth: "none",
                   }}
                 >
                   {shouldRenderTemplateContent ? (
                     <div
-                      className="flex flex-col items-center"
+                      className="flex flex-col items-start"
                       style={{
                         gap: `${pageGapValue}px`,
                         width: "100%",
@@ -442,37 +442,37 @@ const ResumePreviewPanel = ({
               ) : null}
               </div>
             </div>
-        {canRenderTemplate ? (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none"
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              opacity: 0,
-              zIndex: -1,
-              width: pageWidthValue,
-            }}
-          >
-            <div
-              ref={previewRef}
-              data-preview-environment="true"
-              className="text-[1em] resume-preview-content"
-              style={{
-                width: pageWidthValue,
-                height: isFullHeightTemplate
-                  ? previewDimensions.height
-                  : "auto",
-              }}
-            >
-              {renderTemplate(false, isPreviewLocked)}
-            </div>
-          </div>
-        ) : null}
+            {canRenderTemplate ? (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none"
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  opacity: 0,
+                  zIndex: -1,
+                  width: pageWidthValue,
+                }}
+              >
+                <div
+                  ref={previewRef}
+                  data-preview-environment="true"
+                  className="text-[1em] resume-preview-content"
+                  style={{
+                    width: pageWidthValue,
+                    height: isFullHeightTemplate
+                      ? previewDimensions.height
+                      : "auto",
+                  }}
+                >
+                  {renderTemplate(false, isPreviewLocked)}
+                </div>
+              </div>
+            ) : null}
           </div>
           {previewFooterText ? (
-            <div className="mt-4 text-center">
+            <div className="px-4 py-4 text-center">
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {previewFooterText}
               </p>

@@ -460,10 +460,10 @@ const ResumeBuilder = () => {
     const updateScale = () => {
       const availableWidth = container.clientWidth;
       if (!availableWidth) return;
-      // Account for padding on mobile (32px = 16px on each side)
-      const padding = window.innerWidth < 640 ? 32 : 0;
-      const effectiveWidth = Math.max(availableWidth - padding, 0);
-      const calculatedScale = Math.min(effectiveWidth / previewWidth, 1);
+      // Use full width without padding constraints
+      const effectiveWidth = availableWidth;
+      // Scale to fill full width - wider containers will scale > 1x for better readability
+      const calculatedScale = effectiveWidth / previewWidth;
       setPreviewScale(calculatedScale > 0 ? calculatedScale : 1);
     };
 
