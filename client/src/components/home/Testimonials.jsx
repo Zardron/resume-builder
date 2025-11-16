@@ -83,7 +83,7 @@ const Testimonials = () => {
   return (
     <section
       id="testimonials"
-      className="mt-24"
+      className="relative mt-24 z-10"
       aria-labelledby="testimonials-heading"
     >
       <div className="text-center">
@@ -120,7 +120,7 @@ const Testimonials = () => {
         )}
       </div>
       <div className="testimonial-slider w-full overflow-hidden relative px-4">
-        <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white dark:from-slate-900 to-transparent"></div>
+        <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white/80 dark:from-slate-900/80 via-white/40 dark:via-slate-900/40 to-transparent backdrop-blur-sm"></div>
         <Marquee
           className="pt-10 pb-5"
           pauseOnHover={false}
@@ -133,7 +133,7 @@ const Testimonials = () => {
             </div>
           ))}
         </Marquee>
-        <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white dark:from-slate-900 to-transparent"></div>
+        <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white/80 dark:from-slate-900/80 via-white/40 dark:via-slate-900/40 to-transparent backdrop-blur-sm"></div>
       </div>
     
     </section>

@@ -536,3 +536,56 @@ body.modal-open {
   animation: fadeInUp 0.6s ease-out;
 }
 
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 3s ease infinite;
+}
+
+/* Enhanced gradient animation for better visibility */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Light sweep animation for template hover effect */
+@keyframes light-sweep {
+  0% {
+    transform: translateX(-100%) translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) translateY(100%);
+    opacity: 0;
+  }
+}
+
+.template-light-sweep {
+  animation: light-sweep 1s ease-in-out;
+}
+
+/* Trigger light sweep on parent group hover */
+.group:hover .template-light-sweep-trigger {
+  animation: light-sweep 0.6s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+/* Reset animation when not hovering to allow retriggering */
+.group:not(:hover) .template-light-sweep-trigger {
+  animation: none;
+}
+

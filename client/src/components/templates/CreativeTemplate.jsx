@@ -482,26 +482,38 @@ const CreativeTemplate = ({
                       >
                         {edu.institution}
                       </p>
-                      <p className={`${getDateFontSize(
-                          sectionFontSizes
-                        )} text-gray-600`}>
-                       {edu.graduation_date}
-                      </p>
-                      <span
-                        className={`${getDateFontSize(
-                          sectionFontSizes
-                        )} text-gray-600`}
-                      >
-                        {formatDate(edu.start_date)} -{" "}
-                        {edu.is_current
-                          ? "Present"
-                          : formatDate(edu.end_date)}
-                          {edu.gpa && (
-                            <span className="text-gray-600">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {edu.start_date ? (
+                          <span
+                            className={`${getDateFontSize(
+                              sectionFontSizes
+                            )} text-gray-600`}
+                          >
+                            {formatDate(edu.start_date)} -{" "}
+                            {edu.is_current
+                              ? "Present"
+                              : formatDate(edu.end_date)}
+                          </span>
+                        ) : (
+                          edu.graduation_date && (
+                            <span
+                              className={`${getDateFontSize(
+                                sectionFontSizes
+                              )} text-gray-600`}
+                            >
+                              {formatDate(edu.graduation_date)}
+                            </span>
+                          )
+                        )}
+                        {edu.gpa && (
+                          <>
+                            <span className="text-gray-400 text-xs">•</span>
+                            <span className={`${getDateFontSize(sectionFontSizes)} text-gray-600`}>
                               GPA: {edu.gpa}
                             </span>
-                          )}
-                      </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

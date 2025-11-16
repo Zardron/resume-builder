@@ -242,7 +242,13 @@ const SpotlightTemplate = ({
                                             <p className={`${getCompanyFontSize(sectionFontSizes)} text-gray-600 mb-1`}>{edu.institution}</p>
                                             {edu.location && <p className={`${getLocationFontSize(sectionFontSizes)} text-gray-500 mb-1`}>{edu.location}</p>}
                                             <p className={`${getDateFontSize(sectionFontSizes)} text-gray-500`}>
-                                                {formatDate(edu.start_date)} - {edu.is_current ? "Present" : formatDate(edu.end_date)}
+                                                {edu.start_date ? (
+                                                    <>
+                                                        {formatDate(edu.start_date)} - {edu.is_current ? "Present" : formatDate(edu.end_date)}
+                                                    </>
+                                                ) : (
+                                                    edu.graduation_date && formatDate(edu.graduation_date)
+                                                )}
                                             </p>
                                             {edu.description && (
                                                 <p className={`${getSectionFontSize(sectionFontSizes, 'job_descriptions')} text-gray-700 mt-2 leading-relaxed whitespace-pre-line`}>

@@ -93,7 +93,7 @@ const TRUSTED_COMPANIES = [
 ];
 
 const HeroSection = () => (
-  <div className="relative" id="overview">
+  <div className="relative pt-[112px]" id="overview">
     <section className="flex flex-col max-md:gap-20 md:flex-row pb-20 items-center justify-between mt-20 px-4 md:px-16 lg:px-24 xl:px-32" aria-labelledby="hero-heading">
       <div className="flex flex-col items-center md:items-start">
         <div className="flex flex-wrap items-center justify-center p-1.5 rounded-md border border-slate-300 dark:border-slate-600 text-gray-700 dark:text-gray-400 text-xs" aria-label="Active user count">

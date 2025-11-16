@@ -18,7 +18,6 @@ import {
   MessageCircle,
   Languages,
   Heart,
-  Terminal,
 } from "lucide-react";
 import {
   getSectionFontSize,
@@ -179,7 +178,7 @@ const TechnicalTemplate = ({
     <div
       id={isDownloadMode ? "resume-print-content" : undefined}
       data-paper-size={paperSize}
-      className={`relative max-w-4xl mx-auto bg-white text-gray-900 font-mono ${containerOverflowClass} ${printHeightClass}`}
+      className={`relative max-w-4xl mx-auto bg-white text-gray-900 font-sans ${containerOverflowClass} ${printHeightClass}`}
       style={pageStyle}
     >
       {isDownloadMode && showWatermark && (
@@ -190,79 +189,91 @@ const TechnicalTemplate = ({
         style={{ minHeight: "100%", ...contentPaddingStyle }}
       >
         <div className="flex-1">
-          {/* Header with Terminal-like styling */}
+          {/* Modern Professional Header */}
           {showHeader && (
-            <header className="mb-6 border-b-2 pb-4" style={{ borderBottomColor: accentColor }}>
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Terminal className="size-5" style={{ color: accentColor }} />
-                    <span className="text-xs text-gray-600 font-mono">$ cat resume.txt</span>
-                  </div>
-                  <h1
-                    className={`${getNameFontSize(
-                      sectionFontSizes
-                    )} font-bold mb-2 text-gray-900`}
-                  >
-                    {data.personal_info?.name || "Your Name"}
-                  </h1>
-                  {data.personal_info?.profession && (
-                    <p
-                      className={`${getSectionFontSize(
-                        sectionFontSizes,
-                        "title"
-                      )} font-medium mb-4`}
-                      style={{ color: accentColor }}
-                    >
-                      {'>'} {data.personal_info.profession}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-4 text-xs font-mono">
-                    {data.personal_info?.email && (
-                      <div className="flex items-center gap-2">
-                        <Mail className="size-3" style={{ color: accentColor }} />
-                        <span className="text-gray-700">{data.personal_info.email}</span>
+            <header className="mb-5 relative">
+              {/* Accent bar at top */}
+              <div 
+                className="absolute top-0 left-0 right-0 h-1 rounded-t"
+                style={{ backgroundColor: accentColor }}
+              ></div>
+              
+              <div className="pt-4 pb-4 border-b" style={{ borderBottomColor: accentColor + '30' }}>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div 
+                        className="w-0.5 h-8 rounded-full"
+                        style={{ backgroundColor: accentColor }}
+                      ></div>
+                      <div>
+                        <h1
+                          className={`${getNameFontSize(
+                            sectionFontSizes
+                          )} font-bold mb-0.5 text-gray-900 tracking-tight`}
+                        >
+                          {data.personal_info?.name || "Your Name"}
+                        </h1>
+                        {data.personal_info?.profession && (
+                          <p
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "title"
+                            )} font-semibold`}
+                            style={{ color: accentColor }}
+                          >
+                            {data.personal_info.profession}
+                          </p>
+                        )}
                       </div>
-                    )}
-                    {data.personal_info?.phone && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="size-3" style={{ color: accentColor }} />
-                        <span className="text-gray-700">{data.personal_info.phone}</span>
-                      </div>
-                    )}
-                    {data.personal_info?.address && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className="size-3" style={{ color: accentColor }} />
-                        <span className="text-gray-700">{data.personal_info.address}</span>
-                      </div>
-                    )}
-                    {getSocialLinks().map((socialLink, index) => {
-                      const IconComponent = socialLink.icon;
-                      return (
-                        <div key={index} className="flex items-center gap-2">
-                          <IconComponent className="size-3" style={{ color: accentColor }} />
-                          <span className="text-gray-700 break-all">{socialLink.displayValue}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="ml-6">
-                  {getProfileImageSrc(data.personal_info?.image) ? (
-                    <img
-                      src={getProfileImageSrc(data.personal_info?.image)}
-                      alt="Profile"
-                      className="w-24 h-24 rounded object-cover border-2"
-                      style={{ borderColor: accentColor }}
-                    />
-                  ) : (
-                    <div
-                      className="w-24 h-24 rounded border-2 bg-gray-100 flex items-center justify-center"
-                      style={{ borderColor: accentColor }}
-                    >
-                      <User className="size-12 text-gray-400" />
                     </div>
-                  )}
+                    <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs mt-2">
+                      {data.personal_info?.email && (
+                        <div className="flex items-center gap-2">
+                          <Mail className="size-4" style={{ color: accentColor }} />
+                          <span className="text-gray-700">{data.personal_info.email}</span>
+                        </div>
+                      )}
+                      {data.personal_info?.phone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="size-4" style={{ color: accentColor }} />
+                          <span className="text-gray-700">{data.personal_info.phone}</span>
+                        </div>
+                      )}
+                      {data.personal_info?.address && (
+                        <div className="flex items-center gap-2">
+                          <MapPin className="size-4" style={{ color: accentColor }} />
+                          <span className="text-gray-700">{data.personal_info.address}</span>
+                        </div>
+                      )}
+                      {getSocialLinks().map((socialLink, index) => {
+                        const IconComponent = socialLink.icon;
+                        return (
+                          <div key={index} className="flex items-center gap-2">
+                            <IconComponent className="size-4" style={{ color: accentColor }} />
+                            <span className="text-gray-700 break-all">{socialLink.displayValue}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0">
+                    {getProfileImageSrc(data.personal_info?.image) ? (
+                      <img
+                        src={getProfileImageSrc(data.personal_info?.image)}
+                        alt="Profile"
+                        className="w-20 h-20 rounded object-cover border-2"
+                        style={{ borderColor: accentColor }}
+                      />
+                    ) : (
+                      <div
+                        className="w-20 h-20 rounded border-2 bg-gray-100 flex items-center justify-center"
+                        style={{ borderColor: accentColor }}
+                      >
+                        <User className="size-10 text-gray-400" />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </header>
@@ -270,20 +281,27 @@ const TechnicalTemplate = ({
 
           {/* Professional Summary */}
           {showProfessionalSummary && data.professional_summary && (
-            <section className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-mono" style={{ color: accentColor }}>{'//'}</span>
+            <section className="mb-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div 
+                  className="w-6 h-0.5 rounded-full"
+                  style={{ backgroundColor: accentColor }}
+                ></div>
                 <h2
                   className={`${getSectionHeaderFontSize(
                     sectionFontSizes
-                  )} font-bold text-gray-900`}
+                  )} font-bold text-gray-900 uppercase tracking-wide`}
                 >
-                  SUMMARY
+                  Professional Summary
                 </h2>
+                <div 
+                  className="flex-1 h-px"
+                  style={{ backgroundColor: accentColor + '20' }}
+                ></div>
               </div>
-              <div className="bg-gray-50 rounded p-4 border-l-2" style={{ borderLeftColor: accentColor }}>
+              <div className="bg-gray-50 rounded p-3 border-l-2" style={{ borderLeftColor: accentColor }}>
                 <p
-                  className={`text-gray-700 leading-relaxed font-mono ${getSectionFontSize(
+                  className={`text-gray-700 leading-relaxed ${getSectionFontSize(
                     sectionFontSizes,
                     "summary"
                   )}`}
@@ -296,71 +314,93 @@ const TechnicalTemplate = ({
 
           {/* Experience */}
           {showExperience && data.experience && data.experience.length > 0 && (
-            <section className="mb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Briefcase className="size-5" style={{ color: accentColor }} />
+            <section className="mb-5">
+              <div className="flex items-center gap-2 mb-3">
+                <Briefcase className="size-4" style={{ color: accentColor }} />
+                <div 
+                  className="w-6 h-0.5 rounded-full"
+                  style={{ backgroundColor: accentColor }}
+                ></div>
                 <h2
                   className={`${getSectionHeaderFontSize(
                     sectionFontSizes
-                  )} font-bold text-gray-900`}
+                  )} font-bold text-gray-900 uppercase tracking-wide`}
                 >
-                  EXPERIENCE
+                  Professional Experience
                 </h2>
+                <div 
+                  className="flex-1 h-px"
+                  style={{ backgroundColor: accentColor + '20' }}
+                ></div>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {data.experience.map((exp, index) => (
                   <div
                     key={index}
-                    className="bg-gray-50 rounded p-4 border-l-2"
-                    style={{ borderLeftColor: accentColor }}
+                    className="relative pl-4"
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3
-                          className={`${getSectionFontSize(
-                            sectionFontSizes,
-                            "experience"
-                          )} font-bold text-gray-900 mb-1`}
-                        >
-                          {exp.position}
-                        </h3>
-                        <p
-                          className={`${getCompanyFontSize(
-                            sectionFontSizes
-                          )} font-semibold font-mono`}
-                          style={{ color: accentColor }}
-                        >
-                          {exp.company}
-                        </p>
-                        {exp.location && (
-                          <p
-                            className={`${getLocationFontSize(
-                              sectionFontSizes
-                            )} text-gray-600 font-mono`}
+                    {/* Timeline dot */}
+                    <div 
+                      className="absolute left-0 top-1.5 w-2 h-2 rounded-full"
+                      style={{ 
+                        backgroundColor: accentColor,
+                      }}
+                    ></div>
+                    
+                    <div className="bg-gray-50 rounded p-3 border-l-2" style={{ borderLeftColor: accentColor }}>
+                      <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
+                        <div className="flex-1 min-w-[180px]">
+                          <h3
+                            className={`${getSectionFontSize(
+                              sectionFontSizes,
+                              "experience"
+                            )} font-bold text-gray-900 mb-0.5`}
                           >
-                            {exp.location}
-                          </p>
-                        )}
+                            {exp.position}
+                          </h3>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <p
+                              className={`${getCompanyFontSize(
+                                sectionFontSizes
+                              )} font-semibold`}
+                              style={{ color: accentColor }}
+                            >
+                              {exp.company}
+                            </p>
+                            {exp.location && (
+                              <>
+                                <span className="text-gray-400 text-xs">•</span>
+                                <p
+                                  className={`${getLocationFontSize(
+                                    sectionFontSizes
+                                  )} text-gray-600`}
+                                >
+                                  {exp.location}
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <span
+                          className={`${getDateFontSize(
+                            sectionFontSizes
+                          )} text-gray-600 font-medium bg-gray-100 px-2 py-1 rounded text-xs whitespace-nowrap`}
+                        >
+                          {formatDate(exp.start_date)} -{" "}
+                          {exp.is_current ? "Present" : formatDate(exp.end_date)}
+                        </span>
                       </div>
-                      <span
-                        className={`${getDateFontSize(
-                          sectionFontSizes
-                        )} text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded`}
-                      >
-                        {formatDate(exp.start_date)} -{" "}
-                        {exp.is_current ? "Present" : formatDate(exp.end_date)}
-                      </span>
+                      {exp.description && (
+                        <div
+                          className={`text-gray-700 leading-relaxed ${getSectionFontSize(
+                            sectionFontSizes,
+                            "job_descriptions"
+                          )} whitespace-pre-line`}
+                        >
+                          {exp.description}
+                        </div>
+                      )}
                     </div>
-                    {exp.description && (
-                      <div
-                        className={`text-gray-700 leading-relaxed font-mono ${getSectionFontSize(
-                          sectionFontSizes,
-                          "job_descriptions"
-                        )} whitespace-pre-line`}
-                      >
-                        {exp.description}
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -369,56 +409,70 @@ const TechnicalTemplate = ({
 
           {/* Projects */}
           {showProjects && projectsToRender.length > 0 && (
-            <section className="mb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Code2 className="size-5" style={{ color: accentColor }} />
+            <section className="mb-5">
+              <div className="flex items-center gap-2 mb-3">
+                <Code2 className="size-4" style={{ color: accentColor }} />
+                <div 
+                  className="w-6 h-0.5 rounded-full"
+                  style={{ backgroundColor: accentColor }}
+                ></div>
                 <h2
                   className={`${getSectionHeaderFontSize(
                     sectionFontSizes
-                  )} font-bold text-gray-900`}
+                  )} font-bold text-gray-900 uppercase tracking-wide`}
                 >
-                  PROJECTS
+                  Key Projects
                 </h2>
+                <div 
+                  className="flex-1 h-px"
+                  style={{ backgroundColor: accentColor + '20' }}
+                ></div>
               </div>
-              <div className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-2">
                 {projectsToRender.map((proj, index) => (
                   <div
                     key={index}
-                    className="bg-gray-50 rounded p-4 border-l-2"
+                    className="bg-gray-50 rounded p-3 border-l-2"
                     style={{ borderLeftColor: accentColor }}
                   >
                     <h3
                       className={`${getSectionFontSize(
                         sectionFontSizes,
                         "projects"
-                      )} font-bold text-gray-900 mb-2`}
+                      )} font-bold text-gray-900 mb-1.5`}
                     >
                       {proj.title}
                     </h3>
                     {proj.technologies && (
                       <div className="mb-2">
-                        <span className="text-xs font-mono px-2 py-1 rounded bg-gray-100" style={{ color: accentColor }}>
+                        <span 
+                          className="text-xs font-medium px-2 py-0.5 rounded bg-gray-100 border" 
+                          style={{ color: accentColor, borderColor: accentColor + '30' }}
+                        >
                           {proj.technologies}
                         </span>
                       </div>
                     )}
                     {proj.description && (
                       <p
-                        className={`text-gray-700 leading-relaxed font-mono ${getSectionFontSize(
+                        className={`text-gray-700 leading-relaxed ${getSectionFontSize(
                           sectionFontSizes,
                           "job_descriptions"
-                        )}`}
+                        )} mb-1.5`}
                       >
                         {proj.description}
                       </p>
                     )}
                     {proj.link && (
-                      <p
-                        className="text-xs break-all mt-2 font-mono"
-                        style={{ color: accentColor }}
-                      >
-                        {'>'} {formatUrlForDisplay(proj.link)}
-                      </p>
+                      <div className="flex items-center gap-1 mt-2">
+                        <Globe className="size-3" style={{ color: accentColor }} />
+                        <p
+                          className="text-xs break-all font-medium"
+                          style={{ color: accentColor }}
+                        >
+                          {formatUrlForDisplay(proj.link)}
+                        </p>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -426,53 +480,88 @@ const TechnicalTemplate = ({
             </section>
           )}
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-5">
             {/* Education */}
             {showEducation && data.education && data.education.length > 0 && (
-              <section className="mb-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <GraduationCap className="size-5" style={{ color: accentColor }} />
+              <section className="mb-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <GraduationCap className="size-4" style={{ color: accentColor }} />
+                  <div 
+                    className="w-6 h-0.5 rounded-full"
+                    style={{ backgroundColor: accentColor }}
+                  ></div>
                   <h2
                     className={`${getSectionHeaderFontSize(
                       sectionFontSizes
-                    )} font-bold text-gray-900`}
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
                   >
-                    EDUCATION
+                    Education
                   </h2>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {data.education.map((edu, index) => (
                     <div
                       key={index}
-                      className="bg-gray-50 rounded p-4 border-l-2"
+                      className="bg-gray-50 rounded p-3 border-l-2"
                       style={{ borderLeftColor: accentColor }}
                     >
                       <h3
                         className={`${getSectionFontSize(
                           sectionFontSizes,
                           "education"
-                        )} font-bold text-gray-900`}
+                        )} font-bold text-gray-900 mb-0.5`}
                       >
-                        {edu.degree}
+                        {edu.degree}{edu.field && ` in ${edu.field}`}
                       </h3>
                       <p
                         className={`${getCompanyFontSize(
                           sectionFontSizes
-                        )} font-semibold font-mono`}
+                        )} font-semibold mb-1`}
                         style={{ color: accentColor }}
                       >
                         {edu.institution}
                       </p>
-                      <span
-                        className={`${getDateFontSize(
-                          sectionFontSizes
-                        )} text-gray-600 font-mono`}
-                      >
-                        {formatDate(edu.start_date)} -{" "}
-                        {edu.is_current
-                          ? "Present"
-                          : formatDate(edu.end_date)}
-                      </span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {edu.graduation_date && (
+                          <span
+                            className={`${getDateFontSize(
+                              sectionFontSizes
+                            )} text-gray-600 font-medium text-xs`}
+                          >
+                            {formatDate(edu.graduation_date)}
+                          </span>
+                        )}
+                        {edu.gpa && (
+                          <>
+                            <span className="text-gray-400 text-xs">•</span>
+                            <span
+                              className={`${getDateFontSize(
+                                sectionFontSizes
+                              )} text-gray-600 font-medium text-xs`}
+                            >
+                              GPA: {edu.gpa}
+                            </span>
+                          </>
+                        )}
+                        {(edu.start_date || edu.graduation_date) && (
+                          <span
+                            className={`${getDateFontSize(
+                              sectionFontSizes
+                            )} text-gray-600 font-medium text-xs`}
+                          >
+                            {edu.start_date ? (
+                              <>
+                                {formatDate(edu.start_date)} -{" "}
+                                {edu.is_current
+                                  ? "Present"
+                                  : formatDate(edu.end_date)}
+                              </>
+                            ) : (
+                              formatDate(edu.graduation_date)
+                            )}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -481,23 +570,27 @@ const TechnicalTemplate = ({
 
             {/* Skills */}
             {showSkills && data.skills && data.skills.length > 0 && (
-              <section className="mb-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Award className="size-5" style={{ color: accentColor }} />
+              <section className="mb-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Award className="size-4" style={{ color: accentColor }} />
+                  <div 
+                    className="w-6 h-0.5 rounded-full"
+                    style={{ backgroundColor: accentColor }}
+                  ></div>
                   <h2
                     className={`${getSectionHeaderFontSize(
                       sectionFontSizes
-                    )} font-bold text-gray-900`}
+                    )} font-bold text-gray-900 uppercase tracking-wide`}
                   >
-                    SKILLS
+                    Technical Skills
                   </h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {data.skills.map((skill, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 rounded font-mono text-sm bg-gray-100 border"
-                      style={{ borderColor: accentColor, color: accentColor }}
+                      className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 border"
+                      style={{ borderColor: accentColor + '50', color: accentColor }}
                     >
                       {skill}
                     </span>

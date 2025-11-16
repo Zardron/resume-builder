@@ -221,7 +221,7 @@ export const templateDummyData = [
         end_date: "",
         is_current: true,
         description:
-          "Lead data science initiatives for recommendation systems serving 5M+ users. Developed and deployed ML models that increased user engagement by 35%.",
+          "Lead data science initiatives for recommendation systems serving 5M+ users. Developed and deployed ML models that increased user engagement by 35%. Architected real-time prediction pipelines processing 100M+ events daily. Mentored team of 4 junior data scientists and established ML best practices.",
       },
       {
         position: "Data Scientist",
@@ -230,7 +230,16 @@ export const templateDummyData = [
         end_date: "2020-08",
         is_current: false,
         description:
-          "Developed predictive models for customer churn and fraud detection. Analyzed large datasets using SQL, Python, and R.",
+          "Developed predictive models for customer churn and fraud detection. Analyzed large datasets using SQL, Python, and R. Built automated reporting dashboards that reduced analysis time by 50%. Collaborated with cross-functional teams to implement data-driven decision making.",
+      },
+      {
+        position: "Research Assistant",
+        company: "MIT Computer Science & AI Laboratory",
+        start_date: "2015-09",
+        end_date: "2018-05",
+        is_current: false,
+        description:
+          "Conducted research on deep learning architectures for natural language processing. Published 8 peer-reviewed papers in top-tier conferences (NeurIPS, ICML).",
       },
     ],
     education: [
@@ -383,7 +392,7 @@ export const templateDummyData = [
         end_date: "",
         is_current: true,
         description:
-          "Analyze financial data and create models for investment decisions. Prepare quarterly and annual financial reports. Support M&A activities with financial due diligence.",
+          "Analyze financial data and create models for investment decisions. Prepare quarterly and annual financial reports. Support M&A activities with financial due diligence. Led valuation analysis for 5+ acquisition deals totaling $500M+. Developed automated reporting dashboards that reduced report generation time by 60%.",
       },
       {
         position: "Financial Analyst",
@@ -392,7 +401,16 @@ export const templateDummyData = [
         end_date: "2020-06",
         is_current: false,
         description:
-          "Built financial models for equity research and investment recommendations. Analyzed company financials and industry trends.",
+          "Built financial models for equity research and investment recommendations. Analyzed company financials and industry trends. Created DCF and comparable company analysis models for 20+ companies.",
+      },
+      {
+        position: "Associate Financial Analyst",
+        company: "Regional Bank",
+        start_date: "2017-07",
+        end_date: "2018-05",
+        is_current: false,
+        description:
+          "Assisted senior analysts in financial modeling and data analysis. Prepared monthly financial reports and variance analysis. Supported budgeting and forecasting processes.",
       },
     ],
     education: [
@@ -409,19 +427,20 @@ export const templateDummyData = [
         name: "Financial Forecasting Model",
         type: "Financial Analysis",
         description:
-          "Developed a comprehensive financial forecasting model that improved budget accuracy by 25%.",
+          "Developed a comprehensive financial forecasting model that improved budget accuracy by 25%. Model incorporates multiple scenarios and sensitivity analysis, used by finance team for annual planning and quarterly forecasts.",
+      },
+      {
+        name: "M&A Valuation Analysis",
+        type: "Valuation",
+        description:
+          "Led valuation analysis for strategic acquisition of $200M technology company. Built integrated DCF, precedent transactions, and comparable company models. Analysis supported successful acquisition and integration planning.",
       },
     ],
     skills: [
-      "Financial Modeling",
-      "Excel",
-      "SQL",
       "Bloomberg",
-      "VBA",
       "Python",
       "Tableau",
       "Power BI",
-      "Financial Analysis",
       "Valuation",
       "M&A",
     ],
@@ -696,7 +715,6 @@ export const templateDummyData = [
       "Jira",
       "Confluence",
       "Risk Management",
-      "Stakeholder Management",
       "Budget Management",
       "PMP Certified",
     ],
@@ -731,7 +749,7 @@ export const templateDummyData = [
       profile_image: null,
     },
     professional_summary:
-      "Creative content writer with 6+ years of experience creating engaging content for digital platforms. Expert in SEO writing and copywriting. Published 500+ articles with over 10M total views. Specializes in storytelling that connects brands with their target audiences and drives measurable engagement.",
+      "Creative content writer with 6+ years of experience creating engaging content for digital platforms. Expert in SEO writing and copywriting. Published 500+ articles with over 10M total views.",
     experience: [
       {
         position: "Senior Content Writer",
@@ -740,7 +758,7 @@ export const templateDummyData = [
         end_date: "",
         is_current: true,
         description:
-          "Create SEO-optimized content for clients across various industries. Write blog posts and web copy that drive traffic and conversions.",
+          "Create SEO-optimized content for clients across various industries. Write blog posts and web copy that drive traffic and conversions. Lead content strategy for 15+ client accounts, resulting in average 150% increase in organic traffic.",
       },
       {
         position: "Content Writer",
@@ -749,7 +767,7 @@ export const templateDummyData = [
         end_date: "2020-01",
         is_current: false,
         description:
-          "Wrote articles and blog posts for technology and lifestyle topics. Optimized content for SEO and social media sharing.",
+          "Wrote articles and blog posts for technology and lifestyle topics. Optimized content for SEO and social media sharing. Published 200+ articles that generated 5M+ total views. Collaborated with editors and designers to create engaging multimedia content.",
       },
     ],
     education: [
@@ -766,7 +784,13 @@ export const templateDummyData = [
         name: "Content Strategy Guide",
         type: "Content Creation",
         description:
-          "Created a content strategy guide that increased client website traffic by 200%.",
+          "Created a content strategy guide that increased client website traffic by 200%. Developed comprehensive content calendar, keyword research framework, and editorial guidelines adopted by 10+ clients.",
+      },
+      {
+        name: "Viral Blog Series",
+        type: "Content Writing",
+        description:
+          "Wrote a 12-part blog series on digital marketing trends that went viral, generating 2M+ views and 50K+ social shares. Series was featured in major industry publications and led to 3 speaking engagements.",
       },
     ],
     skills: [

@@ -45,6 +45,9 @@ const getTemplateData = (templateId) => {
     const data = templateDummyData[dataIndex];
     return {
       ...data,
+      // Ensure all required fields are present
+      experience: data.experience || [],
+      education: data.education || [],
       projects: data.projects || [],
       certifications: data.certifications || [],
       languages: data.languages || [],

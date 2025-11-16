@@ -479,10 +479,16 @@ const MinimalTemplate = ({
                             sectionFontSizes
                           )} text-gray-500 font-light`}
                         >
-                          {formatDate(edu.start_date)} -{" "}
-                          {edu.is_current
-                            ? "Present"
-                            : formatDate(edu.end_date)}
+                          {edu.start_date ? (
+                            <>
+                              {formatDate(edu.start_date)} -{" "}
+                              {edu.is_current
+                                ? "Present"
+                                : formatDate(edu.end_date)}
+                            </>
+                          ) : (
+                            edu.graduation_date && formatDate(edu.graduation_date)
+                          )}
                         </span>
                       </div>
                       {edu.description && (

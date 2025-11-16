@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
 const Banner = () => (
-  <div className="flex flex-wrap items-center justify-between w-full px-4 md:px-14 py-2 font-light text-md text-white bg-gradient-to-br from-blue-500 to-cyan-500">
+  <div className="fixed top-0 left-0 right-0 z-[60] flex flex-wrap items-center justify-between w-full px-4 md:px-14 py-2 font-light text-md text-white bg-gradient-to-br from-blue-500 to-cyan-500">
     <p>AI feature enabled – Build your resume in minutes.</p>
     <Link
       to="/sign-in"

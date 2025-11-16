@@ -28,7 +28,7 @@ const Footer = () => (
     <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center">
       <a href="/" className="flex items-center gap-2 mb-6">
         <img src={LOGO} alt="ResumeIQ" className="h-8" />
-        <span className="text-lg font-bold text-slate-800 dark:text-slate-100">ResumeIQ</span>
+        <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-500 animate-gradient bg-[length:200%_auto]" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ResumeIQ</span>
       </a>
 
       <p className="text-center max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
@@ -55,7 +55,7 @@ const Footer = () => (
 
     <div className="border-t border-slate-200 dark:border-slate-700">
       <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-slate-600 dark:text-slate-400">
-        <a href="/" className="hover:text-blue-500 dark:hover:text-blue-400 transition">
+        <a href="/" className="hover:opacity-80 transition font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-500 animate-gradient bg-[length:200%_auto]" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           ResumeIQ
         </a>{' '}
         ©2025 Zardron Angelo Pesquera. All rights reserved.

@@ -455,8 +455,14 @@ const BusinessTemplate = ({
                           sectionFontSizes
                         )} text-gray-600`}
                       >
-                        {formatDate(edu.start_date)} -{" "}
-                        {edu.is_current ? "Present" : formatDate(edu.end_date)}
+                        {edu.start_date ? (
+                          <>
+                            {formatDate(edu.start_date)} -{" "}
+                            {edu.is_current ? "Present" : formatDate(edu.end_date)}
+                          </>
+                        ) : (
+                          edu.graduation_date && formatDate(edu.graduation_date)
+                        )}
                       </span>
                     </div>
                   ))}

@@ -5,6 +5,7 @@ import InputField from '../components/InputField';
 import AuthSidebar from '../components/AuthSidebar';
 import ThemeSwitcher from '../util/ThemeSwitcher';
 import TermsModal from '../components/TermsModal';
+import BackgroundEffects from '../components/BackgroundEffects';
 
 const validateEmail = (email) => email.trim() && email.includes('@');
 
@@ -75,10 +76,11 @@ const Register = () => {
 
   return (
     <div className="relative flex items-center justify-center w-full h-screen p-24">
+      <BackgroundEffects />
       <button
         type="button"
         onClick={handleBack}
-        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-gray-900 dark:text-gray-100 dark:bg-slate-800/90 dark:hover:bg-slate-800 rounded-md shadow-md transition-all duration-200 font-medium hover:text-[var(--primary-color)] cursor-pointer"
+        className="absolute top-6 left-6 z-20 flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-gray-900 dark:text-gray-100 dark:bg-slate-800/90 dark:hover:bg-slate-800 rounded-md shadow-md transition-all duration-200 font-medium hover:text-[var(--primary-color)] cursor-pointer"
       >
         <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
         <span className="text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent">
@@ -86,12 +88,12 @@ const Register = () => {
         </span>
       </button>
 
-      <div className="absolute top-8 right-6">
+      <div className="absolute top-8 right-6 z-20">
         <ThemeSwitcher />
       </div>
 
       <div
-        className={`flex h-[600px] max-w-5xl mx-auto bg-white dark:bg-slate-900 rounded-md shadow-lg border border-gray-200 dark:border-slate-700 ${
+        className={`relative z-10 flex h-[600px] max-w-5xl mx-auto bg-white dark:bg-slate-900 rounded-md shadow-lg border border-gray-200 dark:border-slate-700 ${
           fromHome ? 'animate__animated animate__zoomIn animate__faster' : ''
         }`}
       >

@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Sparkles, Eye, CheckCircle2, Zap, Award, TrendingUp, Circle, ChevronDown, Loader2, Rocket } from 'lucide-react';
+import React, { useState, useEffect, useMemo, startTransition } from 'react';
+import { LayoutGrid, Sparkles, Eye, CheckCircle2, Zap, Award, TrendingUp, Rocket, ArrowRight, Star, FileText, Loader2 } from 'lucide-react';
 import SectionBadge from './SectionBadge';
 import ClassicTemplate from '../templates/ClassicTemplate';
 import ModernTemplate from '../templates/ModernTemplate';
@@ -169,6 +169,8 @@ const getTemplateData = (templateId) => {
     return {
       ...data,
       // Ensure all required fields are present
+      experience: data.experience || [],
+      education: data.education || [],
       projects: data.projects || [],
       certifications: data.certifications || [],
       languages: data.languages || [],
@@ -218,7 +220,8 @@ const A4_ASPECT_RATIO = A4_HEIGHT / A4_WIDTH; // ≈ 1.414
 const PREVIEW_SCALE = 0.35; // 35% scale for consistent sizing
 
 // Large Template Preview Component - Hero of the card
-const TemplatePreview = ({ templateId, onPreviewClick, templateName, accentColor }) => {
+// Memoized for performance since all templates load immediately
+const TemplatePreview = React.memo(({ templateId, onPreviewClick, templateName, accentColor }) => {
   const TemplateComponent = templateComponents[templateId];
 
   if (!TemplateComponent) {
@@ -235,77 +238,72 @@ const TemplatePreview = ({ templateId, onPreviewClick, templateName, accentColor
 
   return (
     <div 
-      className="relative w-full bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 rounded-t-md overflow-hidden group transition-all duration-500"
-      style={{
-        padding: '16px',
-        height: `${scaledHeight + 32}px`, // Fixed height based on A4 scale + padding
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className="relative w-full rounded-t-md overflow-hidden transition-all duration-500"
     >
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-cyan-50/50 dark:from-blue-950/20 dark:via-transparent dark:to-cyan-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]" />
-      
-      <div 
-        className="flex items-center justify-center w-full h-full"
-        style={{ 
-          pointerEvents: 'none',
-        }}
-      >
-        {/* Container that shows full A4 template - fixed size */}
+      {/* Clean padding wrapper with consistent spacing on all sides */}
+      <div className="relative p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 bg-gradient-to-br from-blue-600/10 via-cyan-500/8 to-purple-600/10 dark:from-blue-600/5 dark:via-cyan-500/4 dark:to-purple-600/5 rounded-t-md overflow-hidden">
         <div 
-          className="relative bg-white rounded-md shadow-2xl overflow-hidden transform transition-all duration-500 group-hover:shadow-[0_25px_80px_rgba(0,0,0,0.2)] group-hover:scale-[1.04]"
+          className="relative flex items-center justify-center w-full"
           style={{ 
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05)',
-            width: `${scaledWidth}px`,
-            height: `${scaledHeight}px`,
-            flexShrink: 0,
+            pointerEvents: 'none',
+            minHeight: `${scaledHeight}px`,
           }}
         >
+          {/* Container that shows full A4 template - fixed size */}
           <div 
-            className="absolute"
-            style={{
-              width: `${A4_WIDTH}px`,
-              height: `${A4_HEIGHT}px`,
-              transform: `scale(${PREVIEW_SCALE})`,
-              transformOrigin: 'top left',
-              overflow: 'hidden', // Ensure content doesn't overflow A4 bounds
+            className="relative bg-white rounded-md shadow-xl overflow-hidden transform transition-all duration-500"
+            style={{ 
+              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+              width: `${scaledWidth}px`,
+              height: `${scaledHeight}px`,
+              flexShrink: 0,
             }}
           >
-            <div
+            <div 
+              className="absolute"
               style={{
                 width: `${A4_WIDTH}px`,
                 height: `${A4_HEIGHT}px`,
-                overflow: 'hidden', // Constrain content to A4 size
-                position: 'relative',
+                transform: `scale(${PREVIEW_SCALE})`,
+                transformOrigin: 'top left',
+                overflow: 'hidden', // Ensure content doesn't overflow A4 bounds
               }}
             >
-              <TemplateComponent
-                data={templateData}
-                accentColor={finalAccentColor}
-                paperSize="A4"
-                pageMargins={{ top: 20, right: 20, bottom: 20, left: 20 }}
-                sectionFontSizes={{}}
-                availableCredits={0}
-                isDownloadMode={false}
-                showHeader={true}
-                showProfessionalSummary={true}
-                showExperience={true}
-                showProjects={true}
-                showEducation={true}
-                showSkills={true}
-              />
+              <div
+                style={{
+                  width: `${A4_WIDTH}px`,
+                  height: `${A4_HEIGHT}px`,
+                  overflow: 'hidden', // Constrain content to A4 size
+                  position: 'relative',
+                }}
+              >
+                <TemplateComponent
+                  data={templateData}
+                  accentColor={finalAccentColor}
+                  paperSize="A4"
+                  pageMargins={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                  sectionFontSizes={{}}
+                  availableCredits={0}
+                  isDownloadMode={false}
+                  showHeader={true}
+                  showProfessionalSummary={true}
+                  showExperience={true}
+                  showProjects={true}
+                  showEducation={true}
+                  showSkills={true}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if templateId or accentColor changes
+  return prevProps.templateId === nextProps.templateId && 
+         prevProps.accentColor === nextProps.accentColor;
+});
 
 // Template Controls Component - Shows below each template
 const TemplateControls = ({ templateId, templateName, onPreviewClick, selectedColor, onColorChange }) => {
@@ -384,10 +382,98 @@ const TemplateControls = ({ templateId, templateName, onPreviewClick, selectedCo
 const TemplateShowcase = () => {
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [visibleTemplatesCount, setVisibleTemplatesCount] = useState(3);
-  const [newlyAddedTemplates, setNewlyAddedTemplates] = useState(new Set());
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [templateAccentColors, setTemplateAccentColors] = useState({});
+  const [isMounted, setIsMounted] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [gridColumns, setGridColumns] = useState(1); // 1, 2, or 3
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [previousVisibleCount, setPreviousVisibleCount] = useState(0);
+
+  // Detect grid layout based on window size
+  useEffect(() => {
+    const updateGridColumns = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) { // lg breakpoint (3 columns)
+        setGridColumns(3);
+      } else if (width >= 768) { // md breakpoint (2 columns)
+        setGridColumns(2);
+      } else { // sm and below (1 column)
+        setGridColumns(1);
+      }
+    };
+
+    // Set initial grid columns
+    updateGridColumns();
+    setIsMounted(true);
+
+    // Update on window resize
+    window.addEventListener('resize', updateGridColumns);
+    return () => window.removeEventListener('resize', updateGridColumns);
+  }, []);
+
+  // Calculate initial visible count based on grid layout
+  useEffect(() => {
+    if (isMounted) {
+      let initialCount;
+      
+      if (gridColumns === 3) {
+        initialCount = 3;
+      } else if (gridColumns === 2) {
+        initialCount = 2;
+      } else {
+        initialCount = 1;
+      }
+
+      // Set initial visible count on mount or adjust when grid changes
+      setVisibleCount(prev => {
+        // If this is the first time (prev is 0), set to initial
+        if (prev === 0) {
+          setPreviousVisibleCount(0);
+          return initialCount;
+        }
+        // If grid changed and current count is less than new initial, adjust to new initial
+        // Otherwise, keep the current count (user may have clicked "See More")
+        const newCount = Math.max(prev, initialCount);
+        // Update previous count if we're adjusting due to grid change
+        if (prev < initialCount) {
+          setPreviousVisibleCount(prev);
+        }
+        return newCount;
+      });
+    }
+  }, [gridColumns, isMounted]);
+
+  // Get increment value based on current grid layout
+  const getIncrement = () => {
+    if (gridColumns === 3) return 3;
+    if (gridColumns === 2) return 2;
+    return 3; // 1 column
+  };
+
+  const handleSeeMore = () => {
+    const increment = getIncrement();
+    
+    // Show loading state immediately for better UX
+    setIsLoadingMore(true);
+    
+    // Track previous count before updating
+    setPreviousVisibleCount(visibleCount);
+    
+    // Use startTransition to mark this as a non-urgent update
+    // This allows React to keep the UI responsive while rendering
+    startTransition(() => {
+      setVisibleCount(prev => {
+        const newCount = Math.min(prev + increment, TEMPLATE_GROUPS.length);
+        return newCount;
+      });
+    });
+    
+    // Reset loading state after templates have had time to render
+    // Use a small delay to ensure smooth transition
+    setTimeout(() => {
+      setIsLoadingMore(false);
+    }, 150);
+  };
 
   const handlePreviewClick = (template) => {
     setSelectedTemplate(template);
@@ -399,30 +485,6 @@ const TemplateShowcase = () => {
     setSelectedTemplate(null);
   };
 
-  const handleSeeMore = () => {
-    setIsLoadingMore(true);
-    
-    // Show loader for a brief moment before revealing templates
-    setTimeout(() => {
-      const previousCount = visibleTemplatesCount;
-      const newCount = Math.min(visibleTemplatesCount + 3, TEMPLATE_GROUPS.length);
-      setVisibleTemplatesCount(newCount);
-      
-      // Track newly added templates for animation
-      const newTemplates = new Set();
-      for (let i = previousCount; i < newCount; i++) {
-        newTemplates.add(TEMPLATE_GROUPS[i].id);
-      }
-      setNewlyAddedTemplates(newTemplates);
-      
-      // Hide loader and clear animation flag after animation completes
-      setIsLoadingMore(false);
-      setTimeout(() => {
-        setNewlyAddedTemplates(new Set());
-      }, 800);
-    }, 500); // 500ms delay to show loader
-  };
-
   const handleColorChange = (templateId, color) => {
     setTemplateAccentColors(prev => ({
       ...prev,
@@ -430,150 +492,174 @@ const TemplateShowcase = () => {
     }));
   };
 
-  // Get template display name mapping
-  const getTemplateDisplayName = (templateId) => {
-    const template = TEMPLATE_GROUPS.find(t => t.id === templateId);
-    return template ? template.name : templateId.charAt(0).toUpperCase() + templateId.slice(1);
-  };
-
-  const visibleTemplates = TEMPLATE_GROUPS.slice(0, visibleTemplatesCount);
-  const hasMoreTemplates = visibleTemplatesCount < TEMPLATE_GROUPS.length;
+  // Pre-compute template data for performance
+  const templatesWithData = useMemo(() => {
+    return TEMPLATE_GROUPS.map(template => ({
+      ...template,
+      data: getTemplateData(template.id),
+    }));
+  }, []);
 
   return (
-  <section
-    id="templates"
-    className="relative mt-24 px-4 md:px-16 lg:px-24 xl:px-32"
-    aria-labelledby="template-showcase-heading"
-  >
-    {/* Enhanced background effects */}
-    <div className="absolute -top-20 left-1/2 h-96 w-[600px] -translate-x-1/2 rounded-full bg-blue-500/10 blur-[240px] dark:bg-blue-500/5" />
-    <div className="absolute top-40 right-10 h-64 w-64 rounded-full bg-cyan-500/5 blur-[180px] dark:bg-cyan-500/3" />
-    
-    <header className="relative text-center mb-16">
-      <SectionBadge icon={LayoutGrid} label="Templates" className="mx-auto mb-6" />
-        <h2 id="template-showcase-heading" className="mt-6 text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-          Professional Templates
-          <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600">
-            Built for Every Career Path
-          </span>
-      </h2>
-        <p className="mt-6 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-          Choose from our collection of <span className="font-semibold text-slate-900 dark:text-slate-100">professionally designed templates</span>. Each layout is <span className="font-semibold text-blue-600 dark:text-blue-400">ATS-optimized</span> and crafted to make your experience shine.
-      </p>
-      
-      {/* Trust indicators */}
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500 dark:text-slate-400">
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="size-4 text-green-500" />
-          <span>ATS-Friendly</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="size-4 text-green-500" />
-          <span>PDF Ready</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="size-4 text-green-500" />
-          <span>Fully Customizable</span>
-        </div>
-      </div>
-    </header>
-
-      {/* Grid Layout - 3 templates side by side */}
-      <div className="relative mt-16 px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {visibleTemplates.map((template, index) => {
-            const TemplateIcon = template.icon || LayoutGrid;
-            const isNewlyAdded = newlyAddedTemplates.has(template.id);
+    <section
+      id="templates"
+      className="relative mt-24"
+      aria-labelledby="template-showcase-heading"
+    >
+      {/* Clean container with responsive padding */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        <header className="relative text-center mb-16 md:mb-20 lg:mb-24">
+          <SectionBadge icon={LayoutGrid} label="Templates" className="mx-auto mb-6" />
+          
+          <h2 
+            id="template-showcase-heading" 
+            className="mt-6 text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-slate-900 dark:text-slate-100 tracking-tight"
+          >
+            <span className="block">Professional Templates</span>
+            <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto]">
+              Built for Every Career Path
+            </span>
+          </h2>
+          
+          <p className="mt-8 text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-400 max-w-4xl mx-auto leading-relaxed">
+            Choose from <span className="font-bold text-slate-900 dark:text-slate-100">15 professionally designed templates</span> that are{' '}
+            <span className="font-semibold text-blue-600 dark:text-blue-400">ATS-optimized</span>,{' '}
+            <span className="font-semibold text-cyan-600 dark:text-cyan-400">fully customizable</span>, and{' '}
+            <span className="font-semibold text-purple-600 dark:text-purple-400">crafted to make your experience shine</span>.
+          </p>
+          
+          {/* Enhanced trust indicators with stats */}
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 md:gap-8 lg:gap-10">
+            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/30">
+                <CheckCircle2 className="size-5 text-green-600 dark:text-green-400" />
+              </div>
+              <div className="text-left">
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">ATS-Friendly</div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">100% Compatible</div>
+              </div>
+            </div>
             
-            // Calculate delay based on position in grid (staggered animation)
-            // For newly added templates, use their position in the visible list
-            let animationDelay = 0;
-            if (isNewlyAdded) {
-              // Find the first newly added template index to calculate relative position
-              const firstNewIndex = visibleTemplates.findIndex(t => newlyAddedTemplates.has(t.id));
-              const relativeIndex = index - firstNewIndex;
-              animationDelay = relativeIndex * 100; // Stagger by 100ms for each new template
-            }
+            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30">
+                <FileText className="size-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="text-left">
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">PDF Ready</div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">Print Perfect</div>
+              </div>
+            </div>
             
-            return (
-              <article 
-                key={template.id} 
-                className={`group overflow-hidden rounded-md border border-slate-200/60 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col backdrop-blur-sm hover:border-blue-300/50 dark:hover:border-blue-600/50 ${
-                  isNewlyAdded 
-                    ? 'animate-fade-in-up opacity-0' 
-                    : 'opacity-100'
-                }`}
-                style={{
-                  animationDelay: isNewlyAdded ? `${animationDelay}ms` : '0ms',
-                  animationFillMode: isNewlyAdded ? 'forwards' : 'none',
-                }}
-              >
-                {/* Template Preview - Hero Section - Fixed height container */}
-                <div className="relative overflow-hidden flex-shrink-0">
-                  <TemplatePreview 
-                    templateId={template.id} 
-                    onPreviewClick={() => handlePreviewClick(template)}
-                    templateName={template.name}
-                    accentColor={templateAccentColors[template.id]}
-                  />
-                </div>
-                
-                {/* Template Controls - Below preview */}
-                <TemplateControls 
-                  templateId={template.id}
-                  templateName={template.name}
-                  onPreviewClick={() => handlePreviewClick(template)}
-                  selectedColor={templateAccentColors[template.id]}
-                  onColorChange={(color) => handleColorChange(template.id, color)}
-                />
-              </article>
-            );
-          })}
-        </div>
-
-        {/* See More Button */}
-        {hasMoreTemplates && (
-          <div className="flex justify-center mt-12">
-            <button
-              onClick={handleSeeMore}
-              disabled={isLoadingMore}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-md shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-700 hover:to-cyan-700 disabled:opacity-75 disabled:cursor-not-allowed disabled:hover:scale-100"
-            >
-              {isLoadingMore ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Loading Templates...</span>
-                </>
-              ) : (
-                <>
-                  <span>See More Templates</span>
-                  <ChevronDown className="w-5 h-5" />
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
+                <Sparkles className="size-5 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div className="text-left">
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Fully Customizable</div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">Colors & Layouts</div>
+              </div>
+            </div>
           </div>
-        )}
+        </header>
+
+        {/* Grid Layout - Show only visible templates */}
+        <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
+            {isMounted && templatesWithData.slice(0, visibleCount).map((template, index) => {
+              const TemplateIcon = template.icon || LayoutGrid;
+              
+              // Optimize animation for newly loaded templates
+              // Newly loaded templates (index >= previousVisibleCount) get faster animations
+              const isNewlyLoaded = index >= previousVisibleCount;
+              const animationDelay = isNewlyLoaded 
+                ? `${(index - previousVisibleCount) * 30}ms` // Faster for new items
+                : `${index * 50}ms`; // Normal delay for existing items
+              const animationDuration = isNewlyLoaded ? '0.4s' : '0.6s';
+              
+              return (
+                <article 
+                  key={template.id} 
+                  className="group overflow-hidden rounded-md border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-blue-500/15 via-cyan-500/8 to-purple-500/15 dark:from-blue-500/8 dark:via-cyan-500/5 dark:to-purple-500/8 shadow-sm transition-all duration-300 flex flex-col"
+                  style={{
+                    animation: `fadeInUp ${animationDuration} ease-out forwards`,
+                    animationDelay: animationDelay,
+                    opacity: 0,
+                  }}
+                >
+                  {/* Template Preview - Hero Section - Fixed height container */}
+                  <div 
+                    className="relative overflow-hidden flex-shrink-0 bg-white dark:bg-slate-900"
+                  >
+                    <TemplatePreview 
+                      templateId={template.id} 
+                      onPreviewClick={() => handlePreviewClick(template)}
+                      templateName={template.name}
+                      accentColor={templateAccentColors[template.id]}
+                    />
+                  </div>
+                  
+                  {/* Template Controls - Below preview */}
+                  <TemplateControls 
+                    templateId={template.id}
+                    templateName={template.name}
+                    onPreviewClick={() => handlePreviewClick(template)}
+                    selectedColor={templateAccentColors[template.id]}
+                    onColorChange={(color) => handleColorChange(template.id, color)}
+                  />
+                </article>
+              );
+            })}
+          </div>
+
+          {/* See More Button - Show when there are more templates */}
+          {isMounted && visibleCount < templatesWithData.length && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={handleSeeMore}
+                disabled={isLoadingMore}
+                className="group relative px-8 py-4 bg-gradient-to-br from-blue-600/10 via-cyan-500/8 to-purple-600/10 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gradient-to-br hover:from-blue-600/30 hover:via-cyan-500/20 hover:to-purple-600/30 flex items-center gap-3 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  {isLoadingMore ? (
+                    <>
+                      Loading...
+                      <Loader2 className="size-5 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      See More Templates
+                      <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </span>
+                {!isLoadingMore && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-cyan-500/15 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                )}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Template Preview Modal */}
       {selectedTemplate && (() => {
         const modalTemplateData = getTemplateData(selectedTemplate.id);
-        const modalAccentColor = modalTemplateData.accent_color || "#3B82F6";
+        const modalAccentColor = templateAccentColors[selectedTemplate.id] || modalTemplateData.accent_color || "#3B82F6";
         return (
-        <TemplatePreviewModal
-          isOpen={previewModalOpen}
-          onClose={handleCloseModal}
-          templateId={selectedTemplate.id}
-          templateName={selectedTemplate.name}
-          templateDescription={selectedTemplate.description}
+          <TemplatePreviewModal
+            isOpen={previewModalOpen}
+            onClose={handleCloseModal}
+            templateId={selectedTemplate.id}
+            templateName={selectedTemplate.name}
+            templateDescription={selectedTemplate.description}
             accentColor={modalAccentColor}
             sampleData={modalTemplateData}
-          initialPaperSize="A4"
-        />
+            initialPaperSize="A4"
+          />
         );
       })()}
-  </section>
-);
+    </section>
+  );
 };
 
 export default TemplateShowcase;

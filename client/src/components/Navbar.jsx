@@ -104,28 +104,32 @@ const Navbar = () => {
     navigate('/sign-in', { state: { fromHome: true } });
   };
 
+  // Determine top position based on route - Layout (dashboard) doesn't have Banner
+  const isDashboardRoute = location.pathname.startsWith('/dashboard');
+  const topPosition = isDashboardRoute ? 'top-0' : 'top-[48px]';
+
   return (
     <>
       {isMenuOpen && (
         <div
-          className="fixed inset-0 backdrop-blur-sm bg-white/10 dark:bg-black/10 z-40 md:hidden"
+          className="fixed inset-0 backdrop-blur-sm bg-white/10 dark:bg-black/10 z-[65] md:hidden"
           onClick={() => setIsMenuOpen(false)}
         />
       )}
 
       <header
         ref={headerRef}
-        className={`flex items-center justify-between px-4 md:px-16 shadow dark:shadow-white/5 w-full transition-all sticky top-0 z-50 bg-white dark:bg-gray-900 py-4 ${
+        className={`fixed ${topPosition} left-0 right-0 flex items-center justify-between px-4 md:px-16 shadow dark:shadow-white/5 w-full transition-all z-50 bg-white dark:bg-gray-900 py-4 ${
           isMenuOpen ? 'hidden md:flex' : 'flex'
         }`}
       >
-        <Link to={isLoggedIn ? '/dashboard' : '/'} className="flex items-center gap-2">
+        <Link to={isLoggedIn ? '/dashboard' : '/'} className="flex items-center gap-2 no-underline">
           <img
             src={LOGO}
             alt="ResumeIQ"
             className="h-10 object-contain"
           />
-          <span className="text-lg font-bold text-black dark:text-white">ResumeIQ</span>
+          <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto] block">ResumeIQ</span>
         </Link>
 
         {!isLoggedIn && (
@@ -233,7 +237,7 @@ const Navbar = () => {
 
       <nav
         ref={menuRef}
-        className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 z-[60] md:hidden ${
+        className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 z-[70] md:hidden ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -242,7 +246,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 mb-4">
               <div className="flex items-center gap-2">
                 <img src={LOGO} alt="ResumeIQ" className="w-8 h-8" />
-                <span className="text-lg font-bold text-black dark:text-white">ResumeIQ</span>
+                <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto] block">ResumeIQ</span>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
