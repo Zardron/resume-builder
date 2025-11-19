@@ -1,7 +1,10 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import InputField from "../../../components/InputField";
 import EmailInputField from "../../../components/EmailInputField";
-import { UploadIcon, X, SparklesIcon, Loader2, Plus, Trash2 } from "lucide-react";
+import AIFeatureButton from "../../../components/AIFeatureButton";
+import { UploadIcon, X, SparklesIcon, Loader2, Plus, Trash2, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useApp } from "../../../contexts/AppContext";
 
 const PersonalInfoForm = ({
   data,
@@ -10,6 +13,7 @@ const PersonalInfoForm = ({
   setRemoveBackground,
   onValidationChange,
 }) => {
+  const { isSubscribed } = useApp();
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
@@ -403,27 +407,64 @@ const PersonalInfoForm = ({
               </div>
 
               {/* AI Background Removal */}
-              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-500">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-md text-xs font-medium">
-                    <SparklesIcon className="w-3 h-3" />
-                    AI
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-500">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-md text-xs font-medium">
+                      <SparklesIcon className="w-3 h-3" />
+                      AI
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Remove background automatically
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Remove background automatically
-                  </span>
                 </div>
                 
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={removeBackground}
-                    onChange={() => setRemoveBackground((prev) => !prev)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-11 h-6 bg-gray-300 dark:bg-gray-600 rounded-full peer peer-checked:bg-gradient-to-r peer-checked:from-[var(--primary-color)] peer-checked:to-[var(--accent-color)] transition-all duration-300 ease-in-out" />
-                  <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ease-in-out peer-checked:translate-x-5" />
-                </label>
+                {/* Subscription Lock for Background Removal */}
+                <div className="relative">
+                  <div className="flex items-center gap-3 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-800/50">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-700">
+                      <Lock className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                          AI Background Removal
+                        </span>
+                        {!isSubscribed && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--primary-color)]/10 px-2 py-0.5 text-xs font-semibold text-[var(--primary-color)]">
+                            <Lock className="h-3 w-3" />
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+                        Automatically remove background from your profile photo using AI
+                      </p>
+                    </div>
+                    {!isSubscribed ? (
+                      <Link
+                        to="/dashboard/subscription"
+                        className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+                      >
+                        <span>Subscribe</span>
+                      </Link>
+                    ) : (
+                      <div className="inline-flex items-center gap-2 rounded-lg bg-green-100 dark:bg-green-900/30 px-4 py-2 text-sm font-semibold text-green-700 dark:text-green-400">
+                        <span>✓ Unlocked</span>
+                      </div>
+                    )}
+                  </div>
+                  {!isSubscribed && (
+                    <div className="mt-2 rounded-lg border border-blue-100 bg-blue-50/50 p-3 text-xs dark:border-blue-900/30 dark:bg-blue-900/10">
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <span className="font-semibold">💡 Unlock AI Features:</span> Subscribe to enable AI-powered background removal for your profile photos. 
+                        <Link to="/dashboard/subscription" className="ml-1 font-semibold text-[var(--primary-color)] underline underline-offset-2 hover:no-underline">
+                          Get 50% off your first month
+                        </Link>
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ) : (
@@ -458,7 +499,7 @@ const PersonalInfoForm = ({
             htmlFor="profile-upload"
             className="block w-full"
           >
-            <div className="w-full py-3 px-4 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white text-sm font-medium rounded-md text-center cursor-pointer hover:opacity-90 transition-opacity duration-200">
+            <div className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white text-sm font-medium rounded-md text-center cursor-pointer hover:opacity-90 transition-opacity duration-200">
               {data?.image ? "Change Photo" : "Upload Photo"}
             </div>
           </label>

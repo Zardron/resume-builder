@@ -2,11 +2,26 @@ import { StrictMode, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './ThemeContext';
+import { AppProvider } from './contexts/AppContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import App from './App';
 import './index.css';
 import FullScreenLoader from './components/FullScreenLoader';
 
 const LOADER_EXIT_DURATION = 600;
+
+// Register service worker for PWA
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
 
 const AppContainer = () => {
   const [showLoader, setShowLoader] = useState(() => {
@@ -81,10 +96,14 @@ const AppContainer = () => {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <ErrorBoundary>
     <ThemeProvider>
+        <AppProvider>
       <BrowserRouter>
         <AppContainer />
       </BrowserRouter>
+        </AppProvider>
     </ThemeProvider>
+    </ErrorBoundary>
   </StrictMode>
 );

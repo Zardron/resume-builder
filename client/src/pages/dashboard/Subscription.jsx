@@ -1,64 +1,49 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeftIcon, CreditCard, Gift, ShieldCheck } from 'lucide-react';
+import { ArrowLeftIcon, Sparkles, Check, ShieldCheck } from 'lucide-react';
 import CreditsIndicator from '../../components/CreditsIndicator';
-import {
-  BASE_CREDIT_PRICE,
-  formatCurrency,
-  getStoredCredits,
-  incrementCredits,
-} from '../../utils/creditUtils';
+import { getStoredCredits, formatCurrency } from '../../utils/creditUtils';
+import { useApp } from '../../contexts/AppContext';
 
-const CREDIT_PACKAGES = [
-  {
-    id: 'single',
-    label: 'Single Credit',
-    credits: 1,
-    description: 'Perfect for quick download or minor updates.',
-    price: BASE_CREDIT_PRICE,
-    icon: CreditCard,
-  },
-  {
-    id: 'bundle5',
-    label: '5 Credit Pack',
-    credits: 5,
-    description: 'Ideal for active job seekers with multiple versions.',
-    price: BASE_CREDIT_PRICE * 5 * 0.9,
-    icon: CreditCard,
-    badge: 'Save 10%',
-  },
-  {
-    id: 'bundle10',
-    label: '10 Credit Bundle',
-    credits: 10,
-    description: 'Great for frequent revisions with added savings.',
-    price: BASE_CREDIT_PRICE * 10 * 0.85,
-    icon: Gift,
-    badge: 'Save 15%',
-  },
-  {
-    id: 'bundle20',
-    label: '20 Credit Pro Bundle',
-    credits: 20,
-    description: 'Power users get the best rate per resume.',
-    price: BASE_CREDIT_PRICE * 20 * 0.75,
-    icon: Gift,
-    badge: 'Save 25%',
-  },
-];
+const SUBSCRIPTION_PLAN = {
+  id: 'premium',
+  name: 'Premium',
+  price: 599, // PHP
+  discountedPrice: 299, // PHP
+  description: 'Unlock all AI-powered features',
+  features: [
+    'AI Content Enhancement',
+    'Professional Summary Enhancement',
+    'Job Description Enhancement',
+    'Project Description Enhancement',
+    'AI Grammar & Spell Check',
+    'Action Verb Suggestions',
+    'AI Resume Parsing & Upload',
+    'AI Background Removal',
+    'ATS Optimization',
+    'Keyword Suggestions',
+    'Smart Bullet Point Rewriting',
+    'Readability Score',
+    'AI Resume Scoring',
+    'Industry-Specific Suggestions',
+    'Job Description Matching',
+    'Skill Gap Analysis',
+    'Career Path Suggestions',
+    'AI Cover Letter Generation',
+    'AI Interview Preparation',
+    'Salary Range Estimation',
+    'Unlimited AI enhancements',
+    'Priority email support',
+  ],
+};
 
-const PurchaseCredits = () => {
-  const [availableCredits, setAvailableCredits] = useState(getStoredCredits());
-  const [selectedPackageId, setSelectedPackageId] = useState(CREDIT_PACKAGES[0].id);
+const Subscription = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('card');
   const navigate = useNavigate();
-
-  const selectedPackage = useMemo(
-    () => CREDIT_PACKAGES.find((pack) => pack.id === selectedPackageId),
-    [selectedPackageId],
-  );
+  const [availableCredits] = useState(getStoredCredits());
+  const { setIsSubscribed, addNotification } = useApp();
 
   const handleBack = () => {
     if (window.history.state?.idx > 0) {
@@ -68,20 +53,22 @@ const PurchaseCredits = () => {
     }
   };
 
-  const handlePurchase = () => {
-    if (!selectedPackage) return;
-
+  const handleSubscribe = () => {
     setIsProcessing(true);
     setSuccessMessage('');
 
     setTimeout(() => {
-      const updatedBalance = incrementCredits(selectedPackage.credits);
-      setAvailableCredits(updatedBalance);
       setIsProcessing(false);
+      setIsSubscribed(true);
       setSuccessMessage(
-        `Success! Added ${selectedPackage.credits} credit${selectedPackage.credits > 1 ? 's' : ''}.`,
+        `Success! You've subscribed to Premium. All AI features are now unlocked!`,
       );
-    }, 600);
+      addNotification({
+        type: 'success',
+        title: 'Subscription Active',
+        message: 'Welcome to Premium! All AI features are now unlocked.',
+      });
+    }, 1000);
   };
 
   return (
@@ -103,12 +90,11 @@ const PurchaseCredits = () => {
             <div className="max-w-2xl space-y-2">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white/80">
                 <span className="h-2 w-2 rounded-full bg-emerald-300" />
-                Credits purchase
+                AI subscription
               </div>
-              <h1 className="text-3xl font-semibold tracking-tight">Purchase Credits</h1>
+              <h1 className="text-3xl font-semibold tracking-tight">Subscribe to Premium</h1>
               <p className="text-sm text-white/80">
-                Each credit costs {formatCurrency(BASE_CREDIT_PRICE)}. Bundle savings: 5 credits (10% off),
-                10 credits (15% off), 20 credits (25% off).
+                Unlock all AI-powered features to enhance your resume building experience. Get 50% off your first month!
               </p>
             </div>
             <div className="flex-shrink-0">
@@ -130,85 +116,84 @@ const PurchaseCredits = () => {
                 <Link to="/dashboard" className="underline underline-offset-2 hover:no-underline">
                   Return to dashboard
                 </Link>{' '}
-                to start building.
+                to start using AI features.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Credit Packages Section */}
-      <section className="mb-12">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Choose Your Package
-          </h2>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Select a credit bundle that fits your needs
-          </p>
+      {/* Discount Banner */}
+      <div className="mb-8 rounded-xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 p-6 dark:border-emerald-800 dark:from-emerald-900/20 dark:to-green-900/20">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 shadow-lg">
+            <Sparkles className="h-6 w-6 text-white" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+              Limited Time Offer: 50% Off First Month
+            </h3>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Subscribe now and get your first month at half price. Cancel anytime.
+            </p>
+          </div>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-        {CREDIT_PACKAGES.map((pack) => {
-          const Icon = pack.icon;
-          const isSelected = selectedPackageId === pack.id;
+      </div>
 
-          return (
-            <button
-              key={pack.id}
-              type="button"
-              onClick={() => setSelectedPackageId(pack.id)}
-              className={`group relative flex h-full flex-col overflow-hidden rounded-xl border bg-white p-6 text-left shadow-sm transition-all duration-300 dark:bg-gray-800 ${
-                isSelected
-                  ? 'border-[var(--primary-color)] shadow-lg shadow-blue-100 dark:border-[var(--primary-color)] dark:shadow-blue-900/40'
-                  : 'border-gray-200 hover:border-[var(--primary-color)] hover:shadow-md dark:border-gray-700 dark:hover:border-[var(--primary-color)]'
-              }`}
-            >
-              {pack.badge && (
-                <span className="absolute right-4 top-4 rounded-full bg-[var(--primary-color)] px-3 py-1 text-xs font-semibold text-white shadow-sm">
-                  {pack.badge}
-                </span>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/5 to-[var(--accent-color)]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="relative z-10 flex flex-1 flex-col gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] shadow-lg shadow-blue-500/25">
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {pack.label}
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                      {pack.description}
-                    </p>
-                  </div>
+      {/* Subscription Plan */}
+      <section className="mb-12">
+        <div className="mx-auto max-w-2xl">
+          <div className="relative flex h-full flex-col overflow-hidden rounded-xl border-2 border-[var(--primary-color)] bg-white p-8 shadow-lg dark:bg-gray-800">
+            <div className="absolute right-4 top-4 rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1 text-xs font-semibold text-white shadow-sm">
+              Best Value
+            </div>
+            <div className="relative z-10 flex flex-1 flex-col gap-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] shadow-lg shadow-blue-500/25">
+                  <Sparkles className="h-8 w-8 text-white" />
                 </div>
-                <div className="mt-auto flex items-end justify-between border-t border-gray-100 pt-4 dark:border-gray-700">
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {formatCurrency(pack.price)}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                      {pack.credits} credit{pack.credits > 1 ? 's' : ''} •{' '}
-                      {formatCurrency(pack.price / pack.credits)} each
-                    </p>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {SUBSCRIPTION_PLAN.name}
+                  </h3>
+                  <p className="mt-1 text-base font-semibold text-gray-700 dark:text-gray-300">
+                    {SUBSCRIPTION_PLAN.description}
+                  </p>
+                </div>
+              </div>
+              <div className="border-t-2 border-gray-200 pt-6 dark:border-gray-700">
+                <div className="mb-6">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-bold text-gray-900 dark:text-white">
+                      {formatCurrency(SUBSCRIPTION_PLAN.discountedPrice)}
+                    </span>
+                    <span className="text-lg font-semibold text-gray-400 dark:text-gray-500 line-through">
+                      {formatCurrency(SUBSCRIPTION_PLAN.price)}
+                    </span>
+                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                      /month
+                    </span>
                   </div>
-                  <div
-                    className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition ${
-                      isSelected
-                        ? 'border-[var(--primary-color)] bg-[var(--primary-color)]'
-                        : 'border-gray-300 dark:border-gray-600'
-                    }`}
-                  >
-                    {isSelected && (
-                      <div className="h-2 w-2 rounded-full bg-white" />
-                    )}
+                  <p className="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    First month only, then {formatCurrency(SUBSCRIPTION_PLAN.price)}/month
+                  </p>
+                </div>
+                <div>
+                  <h4 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                    Available AI Features:
+                  </h4>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {SUBSCRIPTION_PLAN.features.map((feature) => (
+                      <div key={feature} className="flex items-start gap-2.5">
+                        <Check className="mt-0.5 h-5 w-5 shrink-0 text-[var(--primary-color)] font-bold stroke-[3]" />
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white leading-relaxed">{feature}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-            </button>
-          );
-        })}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -258,8 +243,7 @@ const PurchaseCredits = () => {
           <div className="flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50/50 p-4 text-sm dark:border-blue-900/30 dark:bg-blue-900/10">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--primary-color)]" />
             <p className="text-gray-700 dark:text-gray-300">
-              Secure payments handled via your preferred method. We'll instantly add credits to your
-              balance once the transaction completes.
+              Secure payments handled via your preferred method. Your subscription will auto-renew monthly. Cancel anytime from your account settings.
             </p>
           </div>
           <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
@@ -268,27 +252,35 @@ const PurchaseCredits = () => {
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                <span>Package:</span>
+                <span>Plan:</span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  {selectedPackage?.label} ({selectedPackage?.credits} credit
-                  {selectedPackage?.credits > 1 ? 's' : ''})
+                  {SUBSCRIPTION_PLAN.name}
+                </span>
+              </div>
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <span>First month (50% off):</span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {formatCurrency(SUBSCRIPTION_PLAN.discountedPrice)}
                 </span>
               </div>
               <div className="flex justify-between border-t border-gray-200 pt-2 dark:border-gray-700">
-                <span className="font-semibold text-gray-900 dark:text-white">Total:</span>
+                <span className="font-semibold text-gray-900 dark:text-white">Total today:</span>
                 <span className="text-lg font-bold text-[var(--primary-color)]">
-                  {selectedPackage ? formatCurrency(selectedPackage.price) : '—'}
+                  {formatCurrency(SUBSCRIPTION_PLAN.discountedPrice)}
                 </span>
+              </div>
+              <div className="mt-2 rounded-md bg-emerald-50 p-2 text-xs text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300">
+                <span className="font-semibold">Then:</span> {formatCurrency(SUBSCRIPTION_PLAN.price)}/month (billed monthly)
               </div>
             </div>
           </div>
           <button
             type="button"
-            onClick={handlePurchase}
-            disabled={isProcessing || !selectedPackage}
+            onClick={handleSubscribe}
+            disabled={isProcessing}
             className="w-full rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:shadow-lg"
           >
-            {isProcessing ? 'Processing…' : 'Purchase Credits'}
+            {isProcessing ? 'Processing…' : 'Subscribe Now'}
           </button>
         </section>
       </div>
@@ -296,6 +288,4 @@ const PurchaseCredits = () => {
   );
 };
 
-export default PurchaseCredits;
-
-
+export default Subscription;

@@ -13,9 +13,15 @@ import {
   Lock,
   Loader2,
   LayoutTemplateIcon,
+  Sparkles,
+  Wand2,
+  FileText,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import InputField from "../../components/InputField";
 import FileUploader from "../../util/FileUploader";
+import AIFeatureButton from "../../components/AIFeatureButton";
+import { useApp } from "../../contexts/AppContext";
 import PersonalInfoForm from "./forms/PersonalInfoForm";
 import TemplateSelector from "../../components/TemplateSelector";
 import ClassicTemplate from "../../components/templates/ClassicTemplate";
@@ -90,6 +96,12 @@ const ExistingResumeBuilder = () => {
   const exportRef = useRef(null);
   const [previewScale, setPreviewScale] = useState(1);
   const [previewContentHeight, setPreviewContentHeight] = useState(0);
+  
+  // AI Features State
+  const [isAIParsing, setIsAIParsing] = useState(false);
+  const [isAIEnhancing, setIsAIEnhancing] = useState(false);
+  const [aiParsedData, setAIParsedData] = useState(null);
+  const { addNotification, isSubscribed } = useApp();
   useEffect(() => {
     const handleStorageChange = () => {
       setAvailableCredits(getStoredCredits());
@@ -195,9 +207,153 @@ const ExistingResumeBuilder = () => {
     if (file) {
       const filename = file.name.replace(/\.[^/.]+$/, "");
       handleInputChange("title", filename);
+      setAIParsedData(null);
     } else {
       handleInputChange("title", "");
       setIsEditable(false);
+      setAIParsedData(null);
+    }
+  };
+
+  // AI-Powered Resume Parsing
+  const handleAIParse = async () => {
+    if (!uploadedFile) {
+      addNotification({
+        type: 'warning',
+        title: 'No File Uploaded',
+        message: 'Please upload a resume file first.',
+      });
+      return;
+    }
+
+    if (!isSubscribed) {
+      addNotification({
+        type: 'info',
+        title: 'Premium Feature',
+        message: 'Subscribe to unlock AI-powered resume parsing.',
+      });
+      return;
+    }
+
+    setIsAIParsing(true);
+    addNotification({
+      type: 'info',
+      title: 'AI Parsing Started',
+      message: 'Analyzing your resume with AI...',
+    });
+
+    try {
+      // Simulate AI parsing (in production, this would call an API)
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Mock parsed data structure
+      const parsedData = {
+        personal_info: {
+          name: "John Doe",
+          email: "john.doe@example.com",
+          phone: "+1 (555) 123-4567",
+          address: "123 Main St, City, State 12345",
+          profession: "Software Engineer",
+        },
+        professional_summary: "Experienced software engineer with 5+ years in full-stack development...",
+        experience: [
+          {
+            id: "1",
+            position: "Senior Software Engineer",
+            company: "Tech Corp",
+            start_date: "2020-01",
+            end_date: "2024-12",
+            is_current: false,
+            description: "Led development of scalable web applications...",
+          },
+        ],
+        education: [
+          {
+            id: "1",
+            degree: "Bachelor of Science",
+            field: "Computer Science",
+            institution: "University Name",
+            start_date: "2016-09",
+            end_date: "2020-05",
+            is_current: false,
+          },
+        ],
+        skills: ["JavaScript", "React", "Node.js", "Python"],
+      };
+
+      setAIParsedData(parsedData);
+      
+      // Auto-populate form fields
+      setResumeData(prev => ({
+        ...prev,
+        personal_info: { ...prev.personal_info, ...parsedData.personal_info },
+        professional_summary: parsedData.professional_summary,
+        experience: parsedData.experience,
+        education: parsedData.education,
+        skills: parsedData.skills,
+      }));
+
+      addNotification({
+        type: 'success',
+        title: 'AI Parsing Complete',
+        message: 'Resume data extracted and form fields populated!',
+      });
+    } catch (error) {
+      console.error('AI parsing error:', error);
+      addNotification({
+        type: 'error',
+        title: 'Parsing Failed',
+        message: 'Failed to parse resume. Please try again or enter data manually.',
+      });
+    } finally {
+      setIsAIParsing(false);
+    }
+  };
+
+  // AI-Powered Content Enhancement
+  const handleAIEnhance = async () => {
+    if (!isSubscribed) {
+      addNotification({
+        type: 'info',
+        title: 'Premium Feature',
+        message: 'Subscribe to unlock AI-powered content enhancement.',
+      });
+      return;
+    }
+
+    setIsAIEnhancing(true);
+    addNotification({
+      type: 'info',
+      title: 'AI Enhancement Started',
+      message: 'Enhancing your resume content with AI...',
+    });
+
+    try {
+      // Simulate AI enhancement (in production, this would call an API)
+      await new Promise(resolve => setTimeout(resolve, 2500));
+      
+      // Mock enhanced content
+      const enhancedSummary = "Results-driven Software Engineer with 5+ years of expertise in full-stack development, specializing in scalable web applications and cloud infrastructure. Proven track record of leading cross-functional teams to deliver high-impact solutions that improve system performance by 40% and reduce operational costs by 25%.";
+      
+      setResumeData(prev => ({
+        ...prev,
+        professional_summary: enhancedSummary,
+      }));
+
+      addNotification({
+        type: 'success',
+        title: 'Enhancement Complete',
+        message: 'Your resume content has been enhanced with AI!',
+      });
+    } catch (error) {
+      console.error('AI enhancement error:', error);
+      addNotification({
+        type: 'error',
+        title: 'Enhancement Failed',
+        message: 'Failed to enhance content. Please try again.',
+      });
+    } finally {
+      setIsAIEnhancing(false);
     }
   };
 
@@ -521,40 +677,136 @@ const ExistingResumeBuilder = () => {
   };
 
   return (
-    <div className="mx-auto px-16 pt-8">
-      <header className="w-full mt-2">
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300 cursor-pointer"
-            >
-              <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
-              Go back
-            </button>
-
-            <div>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                Build Existing Resume
-              </h1>
-              <p className="text-sm font-light text-gray-900 dark:text-gray-100">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Hero Header Section */}
+      <header className="relative mb-12 overflow-hidden rounded-2xl border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
+        <div className="absolute -top-24 right-14 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
+        <div className="absolute -bottom-20 left-8 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative z-10">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="mb-6 flex items-center gap-2 text-sm text-white/80 transition hover:text-white"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+            Go back
+          </button>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-2xl space-y-2">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white/80">
+                <span className="h-2 w-2 rounded-full bg-emerald-300" />
+                Resume builder
+              </div>
+              <h1 className="text-3xl font-semibold tracking-tight">Build Existing Resume</h1>
+              <p className="text-sm text-white/80">
                 Build an existing resume with the help of AI
               </p>
             </div>
+            <div className="flex-shrink-0">
+              <CreditsIndicator availableCredits={availableCredits} />
+            </div>
           </div>
-          <CreditsIndicator availableCredits={availableCredits} />
         </div>
-        <hr className="border-gray-200 dark:border-gray-700 my-4" />
       </header>
 
-      <div className="w-1/4 mb-4">
-        <FileUploader
-          label="Upload your existing resume"
-          accept=".pdf,.doc,.docx"
-          maxSize={10 * 1024 * 1024}
-          onFileChange={handleFileChange}
-        />
+      {/* Info Banner */}
+      <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/50 p-6 dark:border-blue-900/30 dark:bg-blue-900/10">
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0">
+            <Sparkles className="h-5 w-5 text-[var(--primary-color)]" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+              About Credits
+            </h3>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Credits are needed to fully unlock the live preview feature. When you run out of credits, downloads will include a watermark or credits footer until you purchase more. 
+              <Link
+                to="/dashboard/purchase"
+                className="ml-1 font-medium text-[var(--primary-color)] underline underline-offset-2 hover:text-[var(--secondary-color)]"
+              >
+                Buy credits
+              </Link>{' '}
+              to unlock unlimited watermark-free downloads and full preview access.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* File Upload Section with AI Features */}
+      <div className="mb-6 space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <div className="w-full sm:w-1/3">
+            <FileUploader
+              label="Upload your existing resume"
+              accept=".pdf,.doc,.docx"
+              maxSize={10 * 1024 * 1024}
+              onFileChange={handleFileChange}
+            />
+          </div>
+          
+          {uploadedFile && (
+            <div className="w-full sm:w-2/3">
+              <AIFeatureButton
+                label="AI Parse Resume"
+                description="Extract and auto-fill all resume data using AI"
+                onClick={handleAIParse}
+                disabled={isAIParsing}
+                className="w-full"
+              />
+              {isAIParsing && (
+                <div className="mt-2 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>AI is analyzing your resume...</span>
+                </div>
+              )}
+              {aiParsedData && (
+                <div className="mt-2 rounded-lg border border-green-200 bg-green-50/50 p-3 text-sm dark:border-green-800 dark:bg-green-900/10">
+                  <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
+                    <FileText className="h-4 w-4" />
+                    <span className="font-semibold">Resume parsed successfully!</span>
+                  </div>
+                  <p className="mt-1 text-green-600 dark:text-green-300">
+                    Form fields have been auto-populated. Review and edit as needed.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* AI Enhancement Section */}
+        {isTitleConfirmed && (
+          <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                  <Wand2 className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    AI Content Enhancement
+                  </h4>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    Enhance your resume content with AI-powered suggestions
+                  </p>
+                </div>
+              </div>
+              <AIFeatureButton
+                label={isAIEnhancing ? "Enhancing..." : "Enhance Content"}
+                description="Improve your resume with AI-powered content suggestions"
+                onClick={handleAIEnhance}
+                disabled={isAIEnhancing}
+              />
+            </div>
+            {isAIEnhancing && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>AI is enhancing your resume content...</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="mb-4">

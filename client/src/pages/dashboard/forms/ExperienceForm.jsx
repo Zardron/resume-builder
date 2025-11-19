@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import InputField from "../../../components/InputField";
+import AIFeatureButton from "../../../components/AIFeatureButton";
+import { useApp } from "../../../contexts/AppContext";
+import { enhanceJobDescription, rewriteBulletPoints, getActionVerbSuggestions } from "../../../utils/aiService";
 import { 
   Plus, 
   Trash2, 
@@ -15,7 +18,10 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
   const [experiences, setExperiences] = useState(data || []);
   const [validationErrors, setValidationErrors] = useState({});
   const [expandedExperiences, setExpandedExperiences] = useState(new Set());
+  const [enhancingExperience, setEnhancingExperience] = useState(null);
+  const [actionVerbSuggestions, setActionVerbSuggestions] = useState({});
   const validationRef = useRef();
+  const { isSubscribed, addNotification } = useApp();
 
   // Initialize with one empty experience if none exist
   useEffect(() => {
@@ -348,16 +354,125 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
                   </div>
 
                   {/* Job Description */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
-                      <span className="text-sm font-medium">Job Description</span>
-                    </label>
-                    <textarea
-                      placeholder="Describe your role and responsibilities..."
-                      value={experience.description}
-                      onChange={(e) => updateExperience(experience.id, 'description', e.target.value)}
-                      className="w-full h-24 px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 placeholder:text-xs outline-none focus:border-[var(--primary-color)] dark:focus:border-[var(--primary-color)] transition-colors duration-200 resize-none"
-                    />
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
+                        <span className="text-sm font-medium">Job Description</span>
+                      </label>
+                      <textarea
+                        placeholder="Describe your role and responsibilities..."
+                        value={experience.description}
+                        onChange={(e) => updateExperience(experience.id, 'description', e.target.value)}
+                        className="w-full h-24 px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 placeholder:text-xs outline-none focus:border-[var(--primary-color)] dark:focus:border-[var(--primary-color)] transition-colors duration-200 resize-none"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <AIFeatureButton
+                        label="Enhance Description with AI"
+                        description="Rewrite bullet points with action verbs and quantifiable results"
+                        onClick={async () => {
+                          if (!isSubscribed) {
+                            addNotification({
+                              type: 'info',
+                              title: 'Subscription Required',
+                              message: 'Subscribe to unlock AI-powered job description enhancement.',
+                            });
+                            return;
+                          }
+                          
+                          if (!experience.description?.trim()) {
+                            addNotification({
+                              type: 'warning',
+                              title: 'No Description',
+                              message: 'Please enter a job description first.',
+                            });
+                            return;
+                          }
+                          
+                          setEnhancingExperience(experience.id);
+                          addNotification({
+                            type: 'info',
+                            title: 'Enhancing Description',
+                            message: 'AI is improving your job description...',
+                          });
+                          
+                          try {
+                            const enhanced = await enhanceJobDescription(experience.description);
+                            updateExperience(experience.id, 'description', enhanced);
+                            addNotification({
+                              type: 'success',
+                              title: 'Enhancement Complete',
+                              message: 'Your job description has been enhanced with action verbs and quantifiable results!',
+                            });
+                          } catch (error) {
+                            addNotification({
+                              type: 'error',
+                              title: 'Enhancement Failed',
+                              message: 'Failed to enhance description. Please try again.',
+                            });
+                          } finally {
+                            setEnhancingExperience(null);
+                          }
+                        }}
+                        disabled={!experience.description?.trim() || enhancingExperience === experience.id}
+                      />
+                      
+                      <AIFeatureButton
+                        label="Get Action Verb Suggestions"
+                        description="Get powerful action verb suggestions to strengthen your bullet points"
+                        onClick={async () => {
+                          if (!isSubscribed) {
+                            addNotification({
+                              type: 'info',
+                              title: 'Subscription Required',
+                              message: 'Subscribe to unlock AI-powered action verb suggestions.',
+                            });
+                            return;
+                          }
+                          
+                          if (!experience.description?.trim()) {
+                            addNotification({
+                              type: 'warning',
+                              title: 'No Description',
+                              message: 'Please enter a job description first.',
+                            });
+                            return;
+                          }
+                          
+                          try {
+                            const suggestions = await getActionVerbSuggestions(experience.description);
+                            setActionVerbSuggestions(prev => ({
+                              ...prev,
+                              [experience.id]: suggestions
+                            }));
+                            addNotification({
+                              type: 'success',
+                              title: 'Suggestions Ready',
+                              message: `Found ${suggestions.length} action verb suggestions. Check below.`,
+                            });
+                          } catch (error) {
+                            addNotification({
+                              type: 'error',
+                              title: 'Failed',
+                              message: 'Failed to get suggestions. Please try again.',
+                            });
+                          }
+                        }}
+                        disabled={!experience.description?.trim()}
+                      />
+                      
+                      {actionVerbSuggestions[experience.id] && (
+                        <div className="mt-2 rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/10">
+                          <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-2">Action Verb Suggestions:</p>
+                          {actionVerbSuggestions[experience.id].map((suggestion, idx) => (
+                            <div key={idx} className="text-xs text-blue-800 dark:text-blue-200 mb-1">
+                              <span className="font-medium">"{suggestion.original}"</span> → <span className="font-bold">{suggestion.suggestion}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

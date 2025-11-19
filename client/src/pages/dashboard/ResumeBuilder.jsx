@@ -13,7 +13,10 @@ import {
   Lock,
   Loader2,
   LayoutTemplateIcon,
+  Sparkles,
+  TrendingUp,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import InputField from "../../components/InputField";
 import PersonalInfoForm from "./forms/PersonalInfoForm";
 import TemplateSelector from "../../components/TemplateSelector";
@@ -59,6 +62,9 @@ import {
 } from "./BuilderConstants";
 import { toPng } from "html-to-image";
 import { createHalfBlurredPreviewImage } from "../../utils/previewImageUtils";
+import AIFeatureButton from "../../components/AIFeatureButton";
+import { getResumeScore } from "../../utils/aiService";
+import { useApp } from "../../contexts/AppContext";
 
 const getPreviewDimensions = (size) =>
   PAPER_DIMENSIONS[size] || PAPER_DIMENSIONS.A4;
@@ -70,6 +76,7 @@ const LOADING_DELAY = 1500;
 
 const ResumeBuilder = () => {
   const navigate = useNavigate();
+  const { isSubscribed, addNotification } = useApp();
 
   const handleBack = () => {
     if (window.history.state?.idx > 0) {
@@ -102,6 +109,8 @@ const ResumeBuilder = () => {
   const [lockedPreviewImage, setLockedPreviewImage] = useState(null);
   const captureInFlightRef = useRef(false);
   const lastLockedDataSignatureRef = useRef(null);
+  const [isScoringResume, setIsScoringResume] = useState(false);
+  const [resumeScoreResults, setResumeScoreResults] = useState(null);
 
   useEffect(() => {
     try {
@@ -191,6 +200,39 @@ const ResumeBuilder = () => {
   }, []);
 
   const isPreviewLocked = availableCredits <= 0;
+
+  const handleResumeScoring = async () => {
+    if (!isSubscribed) {
+      addNotification({
+        type: 'info',
+        title: 'Subscription Required',
+        message: 'Subscribe to unlock AI-powered resume scoring. This is an Enterprise tier feature.',
+      });
+      return;
+    }
+
+    setIsScoringResume(true);
+    setResumeScoreResults(null);
+
+    try {
+      const results = await getResumeScore(resumeData);
+      setResumeScoreResults(results);
+      addNotification({
+        type: 'success',
+        title: 'Resume Score Generated',
+        message: `Your resume scored ${results.score}/100 (${results.strength})`,
+      });
+    } catch (error) {
+      console.error('Failed to score resume:', error);
+      addNotification({
+        type: 'error',
+        title: 'Scoring Failed',
+        message: 'Failed to generate resume score. Please try again.',
+      });
+    } finally {
+      setIsScoringResume(false);
+    }
+  };
 
   const handleDownload = async () => {
     if (isDownloading) return;
@@ -584,48 +626,179 @@ const ResumeBuilder = () => {
   ]);
 
   return (
-    <div className="mx-auto px-4 lg:px-16 pt-4 lg:pt-8">
-      <header className="w-full mt-2">
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="flex items-center gap-2 text-sm bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent hover:from-[var(--accent-color)] hover:to-[var(--primary-color)] transition-all duration-300 cursor-pointer"
-            >
-              <ArrowLeftIcon className="size-4 text-[var(--primary-color)]" />
-              Go back
-            </button>
-            <div>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                Create Resume
-              </h1>
-              <p className="text-sm font-light text-gray-900 dark:text-gray-100">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Hero Header Section */}
+      <header className="relative mb-12 overflow-hidden rounded-2xl border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
+        <div className="absolute -top-24 right-14 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
+        <div className="absolute -bottom-20 left-8 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative z-10">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="mb-6 flex items-center gap-2 text-sm text-white/80 transition hover:text-white"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+            Go back
+          </button>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-2xl space-y-2">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white/80">
+                <span className="h-2 w-2 rounded-full bg-emerald-300" />
+                Resume builder
+              </div>
+              <h1 className="text-3xl font-semibold tracking-tight">Create Resume</h1>
+              <p className="text-sm text-white/80">
                 Craft a professional, standout resume in minutes — powered by AI
               </p>
             </div>
+            <div className="flex-shrink-0">
+              <CreditsIndicator availableCredits={availableCredits} />
+            </div>
           </div>
-
-          <CreditsIndicator availableCredits={availableCredits} />
         </div>
-        <div className="mt-2 space-y-2 mb-4">
-          <label className="block text-sm font-medium text-gray-800 dark:text-gray-200">
-            Resume Title
-          </label>
-          <InputField
-            type="text"
-            icon="title"
-            width="sm:w-full lg:w-1/4"
-            placeholder="Enter your resume title"
-            value={resumeData.title}
-            onChange={(value) => handleInputChange("title", value)}
-            isTyping={isTyping}
-            isTypingComplete={isTypingComplete}
-            isTitleConfirmed={isTitleConfirmed}
-          />
-        </div>
-        <hr className="border-gray-200 dark:border-gray-700 my-2" />
       </header>
+
+      {/* Resume Title Section */}
+      <div className="mb-6 space-y-2">
+        <label className="block text-sm font-medium text-gray-800 dark:text-gray-200">
+          Resume Title
+        </label>
+        <InputField
+          type="text"
+          icon="title"
+          width="sm:w-full lg:w-1/4"
+          placeholder="Enter your resume title"
+          value={resumeData.title}
+          onChange={(value) => handleInputChange("title", value)}
+          isTyping={isTyping}
+          isTypingComplete={isTypingComplete}
+          isTitleConfirmed={isTitleConfirmed}
+        />
+      </div>
+
+      {/* Info Banner */}
+      <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/50 p-6 dark:border-blue-900/30 dark:bg-blue-900/10">
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0">
+            <Sparkles className="h-5 w-5 text-[var(--primary-color)]" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+              About Credits
+            </h3>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Credits are needed to fully unlock the live preview feature. When you run out of credits, downloads will include a watermark or credits footer until you purchase more. 
+              <Link
+                to="/dashboard/purchase"
+                className="ml-1 font-medium text-[var(--primary-color)] underline underline-offset-2 hover:text-[var(--secondary-color)]"
+              >
+                Buy credits
+              </Link>{' '}
+              to unlock unlimited watermark-free downloads and full preview access.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Resume Scoring Section */}
+      {isTitleConfirmed && (
+        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-4 flex-1">
+              <div className="flex-shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                  <TrendingUp className="h-5 w-5 text-white" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  AI Resume Scoring
+                </h3>
+                <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                  Get comprehensive AI-powered resume strength score with detailed improvement suggestions.
+                </p>
+                {resumeScoreResults && (
+                  <div className="mt-4 space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Overall Score
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-2xl font-bold ${
+                          resumeScoreResults.score >= 80 
+                            ? 'text-green-600 dark:text-green-400' 
+                            : resumeScoreResults.score >= 60 
+                            ? 'text-blue-600 dark:text-blue-400' 
+                            : resumeScoreResults.score >= 40 
+                            ? 'text-yellow-600 dark:text-yellow-400' 
+                            : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {resumeScoreResults.score}
+                        </span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">/100</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                        Strength:
+                      </span>
+                      <span className={`text-xs font-semibold px-2 py-1 rounded ${
+                        resumeScoreResults.strength === 'Excellent'
+                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                          : resumeScoreResults.strength === 'Good'
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                          : resumeScoreResults.strength === 'Fair'
+                          ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                          : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                      }`}>
+                        {resumeScoreResults.strength}
+                      </span>
+                    </div>
+                    {resumeScoreResults.strengths && resumeScoreResults.strengths.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                          Strengths:
+                        </p>
+                        <ul className="space-y-1">
+                          {resumeScoreResults.strengths.map((strength, idx) => (
+                            <li key={idx} className="text-xs text-green-700 dark:text-green-400 flex items-center gap-1">
+                              <span className="text-green-500">✓</span>
+                              {strength}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {resumeScoreResults.improvements && resumeScoreResults.improvements.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                          Improvement Suggestions:
+                        </p>
+                        <ul className="space-y-1">
+                          {resumeScoreResults.improvements.map((improvement, idx) => (
+                            <li key={idx} className="text-xs text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                              <span className="text-blue-500">•</span>
+                              {improvement}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex-shrink-0">
+              <AIFeatureButton
+                label={isScoringResume ? "Analyzing..." : "Score Resume"}
+                description="Get comprehensive AI-powered resume strength score"
+                onClick={handleResumeScoring}
+                disabled={isScoringResume}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div ref={formSectionRef} className="w-full flex items-center mt-2">
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 dark:bg-gray-900">

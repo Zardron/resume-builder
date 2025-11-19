@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { SparklesIcon, Loader2, FileText, RefreshCw } from 'lucide-react';
+import AIFeatureButton from '../../../components/AIFeatureButton';
+import { useApp } from '../../../contexts/AppContext';
+import { enhanceProfessionalSummary, checkGrammarAndSpelling, getReadabilityScore } from '../../../utils/aiService';
 
 const ProfessionalSummary = ({
   data,
@@ -7,8 +11,13 @@ const ProfessionalSummary = ({
   onValidationChange,
 }) => {
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isCheckingGrammar, setIsCheckingGrammar] = useState(false);
+  const [isCheckingReadability, setIsCheckingReadability] = useState(false);
+  const [grammarResults, setGrammarResults] = useState(null);
+  const [readabilityResults, setReadabilityResults] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const validationRef = useRef();
+  const { isSubscribed, addNotification } = useApp();
   const textareaRef = useRef();
 
   // Validate professional summary field
@@ -73,38 +82,139 @@ const ProfessionalSummary = ({
   };
 
   const handleAIEnhance = async () => {
+    if (!isSubscribed) {
+      addNotification({
+        type: 'info',
+        title: 'Subscription Required',
+        message: 'Subscribe to unlock AI-powered professional summary enhancement.',
+      });
+      return;
+    }
+    
     if (!data?.professional_summary?.trim()) {
+      addNotification({
+        type: 'warning',
+        title: 'No Summary',
+        message: 'Please enter a professional summary first.',
+      });
       return;
     }
 
     setIsEnhancing(true);
+    addNotification({
+      type: 'info',
+      title: 'Enhancing Summary',
+      message: 'AI is improving your professional summary...',
+    });
     
     try {
-      // Simulate AI enhancement - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const currentSummary = data?.professional_summary;
-      const currentWordCount = currentSummary.split(/\s+/).filter(word => word.length > 0).length;
       const profession = data?.personal_info?.profession || 'professional';
-      
-      let enhancedSummary;
-      
-      if (currentWordCount > 75) {
-        // Summarize if too long
-        enhancedSummary = `Experienced ${profession} with proven expertise in delivering exceptional results. ${currentSummary.split('.').slice(0, 2).join('.')}. Committed to driving innovation and achieving organizational excellence through strategic leadership and continuous improvement.`;
-      } else if (currentWordCount < 30) {
-        // Enhance if too short
-        enhancedSummary = `Experienced ${profession} with a proven track record of delivering exceptional results. ${currentSummary} Skilled in strategic planning, team leadership, and driving organizational growth through innovative solutions. Committed to excellence and continuous improvement in all professional endeavors.`;
-      } else {
-        // Optimize if close to recommended length
-        enhancedSummary = `Experienced ${profession} with a proven track record of delivering exceptional results. ${currentSummary} Skilled in strategic planning, team leadership, and driving organizational growth through innovative solutions. Committed to excellence and continuous improvement in all professional endeavors.`;
-      }
-      
+      const enhancedSummary = await enhanceProfessionalSummary(data.professional_summary, profession);
       onChange({ ...data, professionalSummary: enhancedSummary });
+      addNotification({
+        type: 'success',
+        title: 'Enhancement Complete',
+        message: 'Your professional summary has been enhanced!',
+      });
     } catch (error) {
       console.error('AI enhancement failed:', error);
+      addNotification({
+        type: 'error',
+        title: 'Enhancement Failed',
+        message: 'Failed to enhance summary. Please try again.',
+      });
     } finally {
       setIsEnhancing(false);
+    }
+  };
+
+  const handleGrammarCheck = async () => {
+    if (!isSubscribed) {
+      addNotification({
+        type: 'info',
+        title: 'Subscription Required',
+        message: 'Subscribe to unlock AI-powered grammar and spell check.',
+      });
+      return;
+    }
+    
+    if (!data?.professional_summary?.trim()) {
+      addNotification({
+        type: 'warning',
+        title: 'No Summary',
+        message: 'Please enter a professional summary first.',
+      });
+      return;
+    }
+
+    setIsCheckingGrammar(true);
+    
+    try {
+      const results = await checkGrammarAndSpelling(data.professional_summary);
+      setGrammarResults(results);
+      
+      if (results.errors > 0) {
+        onChange({ ...data, professionalSummary: results.corrected });
+        addNotification({
+          type: 'success',
+          title: 'Grammar Check Complete',
+          message: `Found and corrected ${results.errors} error(s).`,
+        });
+      } else {
+        addNotification({
+          type: 'success',
+          title: 'Grammar Check Complete',
+          message: 'No errors found! Your text is grammatically correct.',
+        });
+      }
+    } catch (error) {
+      addNotification({
+        type: 'error',
+        title: 'Check Failed',
+        message: 'Failed to check grammar. Please try again.',
+      });
+    } finally {
+      setIsCheckingGrammar(false);
+    }
+  };
+
+  const handleReadabilityCheck = async () => {
+    if (!isSubscribed) {
+      addNotification({
+        type: 'info',
+        title: 'Subscription Required',
+        message: 'Subscribe to unlock AI-powered readability analysis.',
+      });
+      return;
+    }
+    
+    if (!data?.professional_summary?.trim()) {
+      addNotification({
+        type: 'warning',
+        title: 'No Summary',
+        message: 'Please enter a professional summary first.',
+      });
+      return;
+    }
+
+    setIsCheckingReadability(true);
+    
+    try {
+      const results = await getReadabilityScore(data.professional_summary);
+      setReadabilityResults(results);
+      addNotification({
+        type: 'success',
+        title: 'Readability Analysis Complete',
+        message: `Readability score: ${results.score}/100 (${results.level})`,
+      });
+    } catch (error) {
+      addNotification({
+        type: 'error',
+        title: 'Analysis Failed',
+        message: 'Failed to analyze readability. Please try again.',
+      });
+    } finally {
+      setIsCheckingReadability(false);
     }
   };
 
@@ -175,50 +285,95 @@ const ProfessionalSummary = ({
             )}
           </div>
 
-          {/* AI Enhance Button */}
-          <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/30 rounded-md border border-blue-200 dark:border-blue-700">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-md text-xs font-medium">
-                <SparklesIcon className="w-3 h-3" />
-                AI Enhance
-              </div>
-              <div>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Smart AI Enhancement
-                </span>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {wordCount > 75 
-                    ? "Summarize long text to recommended length" 
-                    : wordCount < 30 
-                    ? "Enhance short text with impact words" 
-                    : "Optimize grammar and ATS compatibility"
-                  }
-                </p>
+          {/* AI Enhance Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/30 rounded-md border border-blue-200 dark:border-blue-700">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white rounded-md text-xs font-medium">
+                  <SparklesIcon className="w-3 h-3" />
+                  AI Enhance
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Smart AI Enhancement
+                  </span>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {wordCount > 75 
+                      ? "Summarize long text to recommended length" 
+                      : wordCount < 30 
+                      ? "Enhance short text with impact words" 
+                      : "Optimize grammar and ATS compatibility"
+                    }
+                  </p>
+                </div>
               </div>
             </div>
             
-            <button
-              type="button"
-              onClick={handleAIEnhance}
-              disabled={isEnhancing || !data?.professional_summary?.trim()}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-                isEnhancing || !data?.professional_summary?.trim()
-                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400'
-                  : 'bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white hover:opacity-90 hover:scale-105 shadow-lg'
-              }`}
-            >
-              {isEnhancing ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Enhancing...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-4 h-4" />
-                  Enhance
-                </>
+            <div className="space-y-2">
+              <AIFeatureButton
+                label="Enhance with AI"
+                description={wordCount > 75 
+                  ? "Summarize long text to recommended length" 
+                  : wordCount < 30 
+                  ? "Enhance short text with impact words" 
+                  : "Optimize grammar and ATS compatibility"
+                }
+                onClick={handleAIEnhance}
+                disabled={isEnhancing || !data?.professional_summary?.trim()}
+              />
+              
+              <div className="grid grid-cols-1 gap-2">
+                <AIFeatureButton
+                  label={isCheckingGrammar ? "Checking..." : "Grammar Check"}
+                  description="Check grammar and spelling"
+                  onClick={handleGrammarCheck}
+                  disabled={isCheckingGrammar || !data?.professional_summary?.trim()}
+                />
+                
+                <AIFeatureButton
+                  label={isCheckingReadability ? "Analyzing..." : "Readability Score"}
+                  description="Get readability analysis"
+                  onClick={handleReadabilityCheck}
+                  disabled={isCheckingReadability || !data?.professional_summary?.trim()}
+                />
+              </div>
+              
+              {!isSubscribed && (
+                <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-3 text-xs dark:border-blue-900/30 dark:bg-blue-900/10">
+                  <p className="text-gray-700 dark:text-gray-300">
+                    <span className="font-semibold">💡 Unlock AI Features:</span> Subscribe to enable AI-powered content suggestions, smart rewriting, and ATS optimization. 
+                    <Link to="/dashboard/subscription" className="ml-1 font-semibold text-[var(--primary-color)] underline underline-offset-2 hover:no-underline">
+                      Get 50% off your first month
+                    </Link>
+                  </p>
+                </div>
               )}
-            </button>
+              
+              {grammarResults && grammarResults.errors > 0 && (
+                <div className="mt-2 rounded-lg border border-green-200 bg-green-50/50 p-3 dark:border-green-800 dark:bg-green-900/10">
+                  <p className="text-xs font-semibold text-green-900 dark:text-green-300 mb-1">
+                    Grammar corrections applied:
+                  </p>
+                  {grammarResults.suggestions.map((suggestion, idx) => (
+                    <p key={idx} className="text-xs text-green-800 dark:text-green-200">{suggestion}</p>
+                  ))}
+                </div>
+              )}
+              
+              {readabilityResults && (
+                <div className="mt-2 rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/10">
+                  <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-1">
+                    Readability Score: {readabilityResults.score}/100 ({readabilityResults.level})
+                  </p>
+                  <p className="text-xs text-blue-800 dark:text-blue-200 mb-1">
+                    Avg words per sentence: {readabilityResults.avgWordsPerSentence}
+                  </p>
+                  {readabilityResults.suggestions.map((suggestion, idx) => (
+                    <p key={idx} className="text-xs text-blue-800 dark:text-blue-200">• {suggestion}</p>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Character and Word Count Guidelines */}

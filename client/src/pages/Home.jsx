@@ -12,6 +12,7 @@ import Pricing from '../components/home/Pricing';
 import TestimonialForm from '../components/home/TestimonialForm';
 import { TestimonialsProvider } from '../components/home/testimonials/TestimonialsContext';
 import BackgroundEffects from '../components/BackgroundEffects';
+import SkipToContent from '../components/SkipToContent';
 
 const SCROLL_THRESHOLD = 250;
 
@@ -36,9 +37,11 @@ const Home = () => {
 
   return (
     <>
+      <SkipToContent />
       <BackgroundEffects />
       <Banner />
       <Navbar />
+      <main id="main-content" tabIndex={-1}>
       <HeroSection />
       <Features />
       <TemplateShowcase />
@@ -48,6 +51,7 @@ const Home = () => {
         <Testimonials />
         <TestimonialForm />
       </TestimonialsProvider>
+      </main>
       <Footer />
 
       {hasScrolled && (

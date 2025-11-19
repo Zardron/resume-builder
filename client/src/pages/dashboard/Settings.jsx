@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Eye, Maximize2 } from 'lucide-react';
+import { Eye, Maximize2, Sparkles, Lock, ArrowRight, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import TemplatePreviewModal from '../../components/TemplatePreviewModal';
 import PaperSizeDropdown from '../../components/builder/PaperSizeDropdown';
 import FontDropdown from '../../components/builder/FontDropdown';
 import { PAPER_SIZES } from './resumeBuilderConstants';
 import ColorPicker from '../../util/ColorPicker';
+import { useApp } from '../../contexts/AppContext';
+import { AI_FEATURES } from '../../utils/aiFeatures';
 
 const resumeFonts = ['Inter', 'Poppins', 'Source Sans Pro', 'Work Sans', 'Merriweather'];
 const resumeMargins = ['0.25"', '0.5"', '0.75"', '1"'];
@@ -129,6 +132,8 @@ const cardSurfaceClass =
   'rounded-md border border-gray-200 bg-white p-6 shadow-sm transition';
 
 const Settings = () => {
+  const { isSubscribed } = useApp();
+  
   const profile = {
     fullName: 'Alex Rivera',
     email: 'alex@createcv.io',
@@ -269,6 +274,7 @@ const Settings = () => {
   const sectionRefs = useRef({});
   const sectionMenuItems = [
     { id: 'resumeDefaults', label: 'Resume defaults' },
+    { id: 'aiFeatures', label: 'AI Features' },
     { id: 'builderAutomation', label: 'Builder automation' },
     { id: 'workspacePreferences', label: 'Workspace preferences' },
     { id: 'notifications', label: 'Notifications' },
@@ -527,6 +533,109 @@ const Settings = () => {
                     />
                   </label>
                 </div>
+                </div>
+              </section>
+
+              <section
+                ref={(node) => {
+                  sectionRefs.current.aiFeatures = node;
+                }}
+                className={`${cardSurfaceClass} scroll-mt-18`}
+              >
+                <header className="relative flex flex-col gap-1">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">AI Features</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Unlock powerful AI-powered features to enhance your resume building experience.
+                  </p>
+                </header>
+
+                <div className="mt-6 rounded-xl border-2 border-[var(--primary-color)]/20 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-6 text-white shadow-lg">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg">
+                        <Sparkles className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="mb-3 flex items-center gap-2">
+                        <h3 className="text-lg font-bold text-white">
+                          Subscribe to Enable AI Features
+                        </h3>
+                        <Lock className="h-5 w-5 text-white/90" />
+                      </div>
+                      <p className="mb-4 text-sm font-medium text-white/95 leading-relaxed">
+                        To enable AI-powered features like smart suggestions, content enhancements, and automated resume optimization, you need an active subscription. Subscribe now to unlock the full potential of our AI assistant.
+                      </p>
+                      <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+                        <span className="h-2 w-2 rounded-full bg-emerald-300" />
+                        Limited Time: 50% Off First Month
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Link
+                          to="/dashboard/subscription"
+                          className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-bold text-[var(--primary-color)] shadow-lg transition hover:scale-105 hover:shadow-xl"
+                        >
+                          <span>Subscribe Now</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-semibold text-white/90 line-through">
+                            ₱599/month
+                          </span>
+                          <span className="text-sm font-bold text-white">
+                            ₱299/month (First Month)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Available AI Features List */}
+                <div className="mt-6 space-y-4">
+                  <header className="flex flex-col gap-1">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                      Available AI Features
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                      Subscribe to Premium to unlock all these AI-powered features.
+                    </p>
+                  </header>
+                  
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {[
+                      ...AI_FEATURES.basic,
+                      ...AI_FEATURES.pro,
+                      ...AI_FEATURES.enterprise,
+                    ].map((feature) => {
+                      const isUnlocked = isSubscribed;
+                      
+                      return (
+                        <div
+                          key={feature.id}
+                          className={`flex items-start gap-3 rounded-md border p-3 ${
+                            isUnlocked
+                              ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-900/10'
+                              : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900'
+                          }`}
+                        >
+                          {isUnlocked ? (
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-600 dark:text-green-400" />
+                          ) : (
+                            <Lock className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
+                          )}
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {feature.name}
+                            </p>
+                            <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                              {feature.description}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </section>
 

@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import InputField from "../../../components/InputField";
+import AIFeatureButton from "../../../components/AIFeatureButton";
+import { useApp } from "../../../contexts/AppContext";
+import { enhanceProjectDescription } from "../../../utils/aiService";
 import { 
   Plus, 
   Trash2, 
@@ -13,8 +16,10 @@ const ProjectsForm = ({ data, onChange, onValidationChange }) => {
   const [projects, setProjects] = useState(data || []);
   const [validationErrors, setValidationErrors] = useState({});
   const [expandedProjects, setExpandedProjects] = useState(new Set());
+  const [enhancingProject, setEnhancingProject] = useState(null);
   const validationRef = useRef();
   const latestOnChangeRef = useRef(onChange);
+  const { isSubscribed, addNotification } = useApp();
 
   // Initialize with one empty project if none exist
   useEffect(() => {
@@ -338,15 +343,67 @@ const ProjectsForm = ({ data, onChange, onValidationChange }) => {
                   </div>
 
                   {/* Project Description */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
-                      <span className="text-sm font-medium">Project Description</span>
-                    </label>
-                    <textarea
-                      placeholder="Describe your project, key features, your role, and achievements..."
-                      value={project.description}
-                      onChange={(e) => updateProject(project.id, 'description', e.target.value)}
-                      className="w-full h-24 px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 placeholder:text-xs outline-none focus:border-[var(--primary-color)] dark:focus:border-[var(--primary-color)] transition-colors duration-200 resize-none"
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
+                        <span className="text-sm font-medium">Project Description</span>
+                      </label>
+                      <textarea
+                        placeholder="Describe your project, key features, your role, and achievements..."
+                        value={project.description}
+                        onChange={(e) => updateProject(project.id, 'description', e.target.value)}
+                        className="w-full h-24 px-4 py-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 placeholder:text-xs outline-none focus:border-[var(--primary-color)] dark:focus:border-[var(--primary-color)] transition-colors duration-200 resize-none"
+                      />
+                    </div>
+                    
+                    <AIFeatureButton
+                      label="Enhance Description with AI"
+                      description="Improve project descriptions with impactful language and achievements"
+                      onClick={async () => {
+                        if (!isSubscribed) {
+                          addNotification({
+                            type: 'info',
+                            title: 'Subscription Required',
+                            message: 'Subscribe to unlock AI-powered project description enhancement.',
+                          });
+                          return;
+                        }
+                        
+                        if (!project.description?.trim()) {
+                          addNotification({
+                            type: 'warning',
+                            title: 'No Description',
+                            message: 'Please enter a project description first.',
+                          });
+                          return;
+                        }
+                        
+                        setEnhancingProject(project.id);
+                        addNotification({
+                          type: 'info',
+                          title: 'Enhancing Description',
+                          message: 'AI is improving your project description...',
+                        });
+                        
+                        try {
+                          const enhanced = await enhanceProjectDescription(project.description);
+                          updateProject(project.id, 'description', enhanced);
+                          addNotification({
+                            type: 'success',
+                            title: 'Enhancement Complete',
+                            message: 'Your project description has been enhanced with impactful language!',
+                          });
+                        } catch (error) {
+                          addNotification({
+                            type: 'error',
+                            title: 'Enhancement Failed',
+                            message: 'Failed to enhance description. Please try again.',
+                          });
+                        } finally {
+                          setEnhancingProject(null);
+                        }
+                      }}
+                      disabled={!project.description?.trim() || enhancingProject === project.id}
                     />
                   </div>
                 </div>
