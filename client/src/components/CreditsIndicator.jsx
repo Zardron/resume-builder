@@ -8,13 +8,13 @@ const CreditsIndicator = ({ availableCredits = 0 }) => {
 
   return (
     <div 
-      className="relative overflow-hidden rounded-xl border border-white/30 bg-white/15 backdrop-blur-md px-6 py-5 shadow-xl"
+      className="relative overflow-hidden rounded-md border border-white/30 bg-white/15 backdrop-blur-md px-6 py-5 shadow-xl"
       role="region"
       aria-label="Credits balance"
     >
       <div className="relative z-10">
         <div className="mb-3 flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/25 backdrop-blur-sm" aria-hidden="true">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white/25 backdrop-blur-sm" aria-hidden="true">
             <Coins className="h-5 w-5 text-white" />
           </div>
           <span className="text-xs font-semibold uppercase tracking-wide text-white">
@@ -40,7 +40,7 @@ const CreditsIndicator = ({ availableCredits = 0 }) => {
         {!hasCredits && (
           <Link
             to="/dashboard/purchase"
-            className="inline-flex items-center gap-2 rounded-lg border border-white/40 bg-white/20 px-4 py-2 text-xs font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/30 hover:border-white/60"
+            className="inline-flex items-center gap-2 rounded-md border border-white/40 bg-white/20 px-4 py-2 text-xs font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/30 hover:border-white/60"
             aria-label="Purchase credits"
           >
             <div className="flex h-4 w-4 items-center justify-center rounded-full bg-white/30" aria-hidden="true">

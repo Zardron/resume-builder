@@ -1,9 +1,15 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight, Home } from 'lucide-react';
+import { useAppSelector } from '../store/hooks';
 
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(x => x);
+  const { user } = useAppSelector((state) => state.auth);
+  const userRole = user?.role || '';
+
+  // Filter out "admin" and "recruiter" from breadcrumbs
+  const filteredPathnames = pathnames.filter(path => path !== 'admin' && path !== 'recruiter');
 
   const getBreadcrumbName = (path) => {
     const names = {
@@ -13,16 +19,25 @@ const Breadcrumbs = () => {
       subscription: 'Subscription',
       profile: 'Profile',
       settings: 'Settings',
+      jobs: 'Jobs',
+      candidates: 'Candidates',
+      interviews: 'Interviews',
+      messages: 'Messages',
+      team: 'Team',
+      analytics: 'Analytics',
+      organization: 'Organization',
+      billing: 'Billing',
+      applicant: 'Applicant',
     };
     return names[path] || path.charAt(0).toUpperCase() + path.slice(1);
   };
 
-  if (pathnames.length === 0) return null;
+  if (filteredPathnames.length === 0) return null;
 
   return (
-    <div className="w-full mt-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="w-full border-b border-gray-200 dark:border-gray-700">
       <nav
-        className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 py-3 px-4 md:px-8 max-w-7xl mx-auto"
+        className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 py-3 px-6 overflow-x-auto"
         aria-label="Breadcrumb"
       >
         <Link
@@ -32,9 +47,11 @@ const Breadcrumbs = () => {
         >
           <Home className="h-4 w-4" />
         </Link>
-        {pathnames.map((path, index) => {
-          const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
-          const isLast = index === pathnames.length - 1;
+        {filteredPathnames.map((path, index) => {
+          // Reconstruct route path, but skip admin/recruiter in the path
+          const originalIndex = pathnames.indexOf(path);
+          const routeTo = `/${pathnames.slice(0, originalIndex + 1).join('/')}`;
+          const isLast = index === filteredPathnames.length - 1;
           const name = getBreadcrumbName(path);
 
           return (

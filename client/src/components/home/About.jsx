@@ -4,9 +4,9 @@ import SectionBadge from "./SectionBadge";
 
 const features = [
   {
-    title: "AI-Powered Resume Writing",
+    title: "For Recruiters & Hiring Teams",
     description:
-      "Generate polished, job-ready resumes in seconds with intelligent content suggestions.",
+      "Transform your hiring process with AI-powered candidate matching, streamlined pipeline management, collaborative team workflows, and comprehensive analytics that help you hire faster and smarter.",
     svg: (
       <svg
         width="24"
@@ -16,16 +16,41 @@ const features = [
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M9 21c0 .5.4 1 1 1h4c.6 0 1-.5 1-1v-1H9v1zm3-20C7.9 1 5 3.9 5 7c0 2.9 1.9 5.4 4.5 6.3V15c0 .6.4 1 1 1h3c.6 0 1-.4 1-1v-1.7c2.6-.9 4.5-3.4 4.5-6.3 0-3.1-2.9-6-6-6zm3.5 9c-.3 0-.5.2-.5.5v.5h-3v-.5c0-.3-.2-.5-.5-.5S11 10.2 11 10.5V11H8v-.5c0-.3-.2-.5-.5-.5s-.5.2-.5.5v1c0 1.1.9 2 2 2h5c1.1 0 2-.9 2-2v-1c0-.3-.2-.5-.5-.5z"
-          fill="#2563eb"
+          d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"
+          stroke="#2563eb"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     ),
   },
   {
-    title: "Smart, Modern Templates",
+    title: "For Job Seekers",
     description:
-      "Choose from beautifully designed templates tailored for every career and industry.",
+      "Build professional resumes with AI assistance, discover personalized job opportunities, track your applications in real-time, and communicate directly with recruiters—all in one platform.",
+    svg: (
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6M19 3h6v6M13 11h8m-4-4v8"
+          stroke="#10b981"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    title: "Unified Platform Benefits",
+    description:
+      "All-in-one solution combining resume building, job posting, candidate screening, interview scheduling, messaging, analytics, team collaboration, and billing—no need for multiple tools.",
     svg: (
       <svg
         width="24"
@@ -36,24 +61,8 @@ const features = [
       >
         <path
           d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"
-          fill="#10b981"
+          fill="#0ea5e9"
         />
-      </svg>
-    ),
-  },
-  {
-    title: "Seamless Export & Sharing",
-    description:
-      "Easily download or share your resume as a polished PDF or via a secure link.",
-    svg: (
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="#0ea5e9" />
       </svg>
     ),
   },
@@ -69,25 +78,23 @@ const About = () => {
       <div className="mt-10 text-center">
         <SectionBadge icon={Workflow} label="How it works" className="mx-auto" />
         <h1 id="about-heading" className="text-3xl font-semibold text-center mx-auto text-gray-900 dark:text-gray-100 mt-4">
-          How the builder works
+          How ResumeIQHub works
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
-          Unlock your career potential with AI-powered tools that build resumes
-          faster, smarter, and better.
+        <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-2xl mx-auto">
+          A comprehensive recruitment SaaS platform that seamlessly connects recruiters and job seekers. The platform combines professional resume building with advanced hiring management tools, creating a complete ecosystem for talent acquisition and career development.
         </p>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-12 px-4 md:px-0 py-10">
           <div className="w-full md:w-1/2">
             <img
               className="w-full rounded-md h-auto shadow-lg"
               src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80"
-              alt="ResumeIQ AI Features"
+              alt="ResumeIQHub AI Features"
             />
           </div>
           <div className="w-full md:w-1/2">
-            <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">Our Latest Features</h1>
+            <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">Complete Recruitment Platform</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8">
-              Build standout resumes effortlessly — AI-powered, customizable,
-              and built for professionals.
+              ResumeIQHub offers 18+ comprehensive modules including resume building, job posting, application management, interview scheduling, messaging, analytics, team collaboration, billing, and more. Everything you need from resume to hire in one unified platform.
             </p>
 
             <div className="flex flex-col gap-6 mt-6">

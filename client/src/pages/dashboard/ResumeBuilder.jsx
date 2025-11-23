@@ -628,7 +628,7 @@ const ResumeBuilder = () => {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Hero Header Section */}
-      <header className="relative mb-12 overflow-hidden rounded-2xl border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
+      <header className="relative mb-12 overflow-hidden rounded-md border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
         <div className="absolute -top-24 right-14 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-20 left-8 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
         <div className="relative z-10">
@@ -677,7 +677,7 @@ const ResumeBuilder = () => {
       </div>
 
       {/* Info Banner */}
-      <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/50 p-6 dark:border-blue-900/30 dark:bg-blue-900/10">
+      <div className="mb-6 rounded-md border border-blue-100 bg-blue-50/50 p-6 dark:border-blue-900/30 dark:bg-blue-900/10">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
             <Sparkles className="h-5 w-5 text-[var(--primary-color)]" />
@@ -702,11 +702,11 @@ const ResumeBuilder = () => {
 
       {/* AI Resume Scoring Section */}
       {isTitleConfirmed && (
-        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+        <div className="mb-6 rounded-md border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-4 flex-1">
               <div className="flex-shrink-0">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-pink-500">
                   <TrendingUp className="h-5 w-5 text-white" />
                 </div>
               </div>
@@ -718,7 +718,7 @@ const ResumeBuilder = () => {
                   Get comprehensive AI-powered resume strength score with detailed improvement suggestions.
                 </p>
                 {resumeScoreResults && (
-                  <div className="mt-4 space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+                  <div className="mt-4 space-y-3 rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Overall Score

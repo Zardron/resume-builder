@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Verify Your Email - ResumeIQHub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background-color: #f4f4f4;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+    .email-header {
+      background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .email-header h1 {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .email-body {
+      padding: 40px 30px;
+    }
+    .email-content {
+      color: #333333;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+    .email-content h2 {
+      color: #1a1a1a;
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .email-content p {
+      margin-bottom: 16px;
+    }
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .button {
+      display: inline-block;
+      padding: 14px 32px;
+      background-color: #2563eb;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #1d4ed8;
+    }
+    .info-box {
+      background-color: #f9fafb;
+      border-left: 4px solid #2563eb;
+      padding: 16px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .info-box p {
+      margin: 0;
+      color: #4B5563;
+    }
+    .code-display {
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: #2563eb;
+      letter-spacing: 2px;
+      text-align: center;
+      padding: 12px;
+      background-color: #ffffff;
+      border: 2px dashed #2563eb;
+      border-radius: 4px;
+      margin: 12px 0;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer p {
+      color: #6B7280;
+      font-size: 14px;
+      margin: 8px 0;
+    }
+    .footer a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    .footer-links {
+      margin: 20px 0;
+    }
+    .footer-links a {
+      margin: 0 12px;
+      color: #6B7280;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .expiry-notice {
+      color: #6B7280;
+      font-size: 14px;
+      font-style: italic;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+    @media only screen and (max-width: 600px) {
+      .email-container {
+        width: 100% !important;
+      }
+      .email-header,
+      .email-body,
+      .footer {
+        padding: 20px !important;
+      }
+      .email-header h1 {
+        font-size: 24px !important;
+      }
+      .button {
+        display: block;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>ResumeIQHub</h1>
+    </div>
+    <div class="email-body">
+      <div class="email-content">
+        <h2>Verify Your Email Address</h2>
+        <p>Hi {{name}},</p>
+        <p>Thank you for signing up! Please verify your email address to complete your registration and start building professional resumes.</p>
+        
+        <div class="button-container">
+          <a href="{{verificationUrl}}" class="button">Verify Email Address</a>
+        </div>
+        
+        <div class="info-box">
+          <p><strong>Verification Code:</strong></p>
+          <div class="code-display">{{verificationCode}}</div>
+          <p style="margin-top: 12px; font-size: 14px;">You can also use this code to verify your email if the button doesn't work. Simply enter it on the verification page.</p>
+        </div>
+        
+        <p>Once verified, you'll have full access to all ResumeIQHub features including:</p>
+        <ul style="margin-left: 20px; margin-bottom: 20px;">
+          <li>Professional resume templates</li>
+          <li>AI-powered resume optimization</li>
+          <li>PDF export functionality</li>
+          <li>Resume analytics and insights</li>
+        </ul>
+        
+        <div class="expiry-notice">
+          <p><strong>⏰ Important:</strong> This verification link will expire in 24 hours.</p>
+          <p style="margin-top: 8px;">If you didn't create an account with ResumeIQHub, please ignore this email. No action is required.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>© 2024 ResumeIQHub. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="{{frontendUrl}}">Home</a>
+        <a href="{{frontendUrl}}/privacy">Privacy Policy</a>
+        <a href="{{frontendUrl}}/terms">Terms of Service</a>
+        <a href="{{frontendUrl}}/contact">Contact Us</a>
+      </div>
+      <p style="margin-top: 20px; font-size: 12px; color: #9CA3AF;">
+        You're receiving this email because you signed up for a ResumeIQHub account.
+        If you didn't expect this email, you can safely ignore it.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+

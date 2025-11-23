@@ -463,7 +463,7 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
                       />
                       
                       {actionVerbSuggestions[experience.id] && (
-                        <div className="mt-2 rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/10">
+                        <div className="mt-2 rounded-md border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/10">
                           <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-2">Action Verb Suggestions:</p>
                           {actionVerbSuggestions[experience.id].map((suggestion, idx) => (
                             <div key={idx} className="text-xs text-blue-800 dark:text-blue-200 mb-1">

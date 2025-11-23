@@ -432,7 +432,7 @@ const ElegantTemplate = ({
                 {projectsToRender.map((proj, index) => (
                   <div
                     key={index}
-                    className="border rounded-lg p-3 bg-gray-50"
+                    className="border rounded-md p-3 bg-gray-50"
                     style={{ borderColor: accentColor + '30' }}
                   >
                     <h3

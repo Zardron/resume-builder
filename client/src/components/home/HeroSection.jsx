@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Video } from 'lucide-react';
-import HERO_IMAGE from '../../assets/hero-img.png';
+// Hero image placeholder - replace with actual image file when available
+const HERO_IMAGE = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop';
 
 const USER_AVATARS = [
   'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=50',
@@ -112,10 +113,10 @@ const HeroSection = () => (
         </div>
 
         <h1 id="hero-heading" className="text-center md:text-left text-5xl leading-[68px] md:text-6xl md:leading-[84px] font-medium max-w-xl text-slate-900 dark:text-white">
-          Smarter resumes, powered by AI.
+          Where Talent Meets Opportunity
         </h1>
         <p className="text-center md:text-left text-sm text-slate-600 dark:text-slate-300 max-w-lg mt-2">
-          Unlock your career potential with AI-powered tools that build resumes faster, smarter, and better.
+          The complete recruitment SaaS platform that seamlessly connects recruiters and job seekers. Build professional resumes with AI assistance, post jobs, screen candidates, schedule interviews, and make hiring decisions—all in one unified platform.
         </p>
 
         <div className="flex items-center gap-4 mt-8 text-sm">
@@ -133,7 +134,7 @@ const HeroSection = () => (
 
       <img
         src={HERO_IMAGE}
-        alt="ResumeIQ Hero"
+        alt="ResumeIQHub Hero"
         className="max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-300"
       />
     </section>
@@ -144,13 +145,13 @@ const HeroSection = () => (
         <div className="pointer-events-none absolute -bottom-36 left-10 size-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(15,118,110,0.25),rgba(15,118,110,0))] blur-2xl dark:opacity-80" />
 
         <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
-          Trusted by growth teams worldwide
+          Trusted by companies and job seekers worldwide
         </p>
         <h2 className="mt-3 text-xl font-medium text-slate-800 dark:text-slate-100 md:text-2xl">
-          10k+ job seekers shipped standout resumes with support from these teams
+          Thousands of companies hire smarter, and job seekers find opportunities faster
         </h2>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-          Each partner pilots our AI-assisted workflows to coach candidates faster than traditional review cycles.
+          ResumeIQHub unifies resume building, job posting, candidate screening, interview scheduling, messaging, and analytics into a single streamlined platform—so you can focus on what matters: connecting talent with opportunity.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3 md:grid-cols-5">

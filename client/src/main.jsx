@@ -1,8 +1,10 @@
 import { StrictMode, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { ThemeProvider } from './ThemeContext';
-import { AppProvider } from './contexts/AppContext';
+import { store } from './store/store';
+import AuthInitializer from './components/AuthInitializer';
 import ErrorBoundary from './components/ErrorBoundary';
 import App from './App';
 import './index.css';
@@ -97,13 +99,15 @@ const AppContainer = () => {
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
-    <ThemeProvider>
-        <AppProvider>
-      <BrowserRouter>
-        <AppContainer />
-      </BrowserRouter>
-        </AppProvider>
-    </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <AuthInitializer>
+            <BrowserRouter>
+              <AppContainer />
+            </BrowserRouter>
+          </AuthInitializer>
+        </ThemeProvider>
+      </Provider>
     </ErrorBoundary>
   </StrictMode>
 );

@@ -92,7 +92,7 @@ const Testimonials = () => {
           What Our Users Say
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-md mx-auto">
-          Join thousands of professionals who've transformed their careers with our AI-powered ResumeIQ.
+          Join thousands of professionals who've transformed their careers with our AI-powered ResumeIQHub.
         </p>
         <div className="mt-2 flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 drop-shadow-sm" aria-hidden="true" />
@@ -119,10 +119,9 @@ const Testimonials = () => {
           </div>
         )}
       </div>
-      <div className="testimonial-slider w-full overflow-hidden relative px-4">
-        <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white/80 dark:from-slate-900/80 via-white/40 dark:via-slate-900/40 to-transparent backdrop-blur-sm"></div>
+      <div className="testimonial-slider w-full overflow-hidden relative px-4 py-10">
         <Marquee
-          className="pt-10 pb-5"
+          className="py-5"
           pauseOnHover={false}
           speed={28}
           gradient={false}
@@ -133,7 +132,6 @@ const Testimonials = () => {
             </div>
           ))}
         </Marquee>
-        <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white/80 dark:from-slate-900/80 via-white/40 dark:via-slate-900/40 to-transparent backdrop-blur-sm"></div>
       </div>
     
     </section>

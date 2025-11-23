@@ -2,48 +2,36 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeftIcon, Sparkles, Check, ShieldCheck } from 'lucide-react';
 import CreditsIndicator from '../../components/CreditsIndicator';
-import { getStoredCredits, formatCurrency } from '../../utils/creditUtils';
-import { useApp } from '../../contexts/AppContext';
+import { formatCurrency } from '../../utils/creditUtils';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { subscribe } from '../../store/slices/subscriptionsSlice';
+import { addNotification } from '../../store/slices/notificationsSlice';
+import { AI_SUBSCRIPTION_PLANS } from '../../config/pricing';
+import { AI_FEATURES } from '../../utils/aiFeatures';
 
+// Use Enterprise AI plan (all features)
 const SUBSCRIPTION_PLAN = {
-  id: 'premium',
-  name: 'Premium',
-  price: 599, // PHP
-  discountedPrice: 299, // PHP
+  id: 'enterprise',
+  name: AI_SUBSCRIPTION_PLANS.enterprise.name,
+  price: AI_SUBSCRIPTION_PLANS.enterprise.monthlyPrice,
+  discountedPrice: AI_SUBSCRIPTION_PLANS.enterprise.firstMonthPrice,
   description: 'Unlock all AI-powered features',
   features: [
-    'AI Content Enhancement',
-    'Professional Summary Enhancement',
-    'Job Description Enhancement',
-    'Project Description Enhancement',
-    'AI Grammar & Spell Check',
-    'Action Verb Suggestions',
-    'AI Resume Parsing & Upload',
-    'AI Background Removal',
-    'ATS Optimization',
-    'Keyword Suggestions',
-    'Smart Bullet Point Rewriting',
-    'Readability Score',
-    'AI Resume Scoring',
-    'Industry-Specific Suggestions',
-    'Job Description Matching',
-    'Skill Gap Analysis',
-    'Career Path Suggestions',
-    'AI Cover Letter Generation',
-    'AI Interview Preparation',
-    'Salary Range Estimation',
+    ...AI_FEATURES.basic.map(f => f.name),
+    ...AI_FEATURES.pro.map(f => f.name),
+    ...AI_FEATURES.enterprise.map(f => f.name),
     'Unlimited AI enhancements',
     'Priority email support',
   ],
 };
 
 const Subscription = () => {
+  const dispatch = useAppDispatch();
+  const { balance: credits } = useAppSelector((state) => state.credits);
   const [isProcessing, setIsProcessing] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('card');
   const navigate = useNavigate();
-  const [availableCredits] = useState(getStoredCredits());
-  const { setIsSubscribed, addNotification } = useApp();
 
   const handleBack = () => {
     if (window.history.state?.idx > 0) {
@@ -53,28 +41,41 @@ const Subscription = () => {
     }
   };
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     setIsProcessing(true);
     setSuccessMessage('');
 
-    setTimeout(() => {
+    try {
+      const result = await dispatch(subscribe({
+        paymentMethod: selectedPayment,
+        subscriptionDuration: 1,
+      })).unwrap();
+      
+      if (result.subscription) {
+        setSuccessMessage(
+          `Success! You've subscribed to Premium. All AI features are now unlocked!`,
+        );
+        dispatch(addNotification({
+          type: 'success',
+          title: 'Subscription Active',
+          message: 'Welcome to Premium! All AI features are now unlocked.',
+        }));
+      }
+    } catch (error) {
+      dispatch(addNotification({
+        type: 'error',
+        title: 'Subscription Failed',
+        message: error || 'Failed to process subscription. Please try again.',
+      }));
+    } finally {
       setIsProcessing(false);
-      setIsSubscribed(true);
-      setSuccessMessage(
-        `Success! You've subscribed to Premium. All AI features are now unlocked!`,
-      );
-      addNotification({
-        type: 'success',
-        title: 'Subscription Active',
-        message: 'Welcome to Premium! All AI features are now unlocked.',
-      });
-    }, 1000);
+    }
   };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Hero Header Section */}
-      <header className="relative mb-12 overflow-hidden rounded-2xl border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
+      <header className="relative mb-12 overflow-hidden rounded-md border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
         <div className="absolute -top-24 right-14 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-20 left-8 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
         <div className="relative z-10">
@@ -98,14 +99,14 @@ const Subscription = () => {
               </p>
             </div>
             <div className="flex-shrink-0">
-              <CreditsIndicator availableCredits={availableCredits} />
+              <CreditsIndicator availableCredits={credits} />
             </div>
           </div>
         </div>
       </header>
 
       {successMessage && (
-        <div className="mb-8 rounded-xl border border-green-200 bg-green-50 px-6 py-4 text-sm text-green-700 shadow-sm dark:border-green-800 dark:bg-green-900/40 dark:text-green-200">
+        <div className="mb-8 rounded-md border border-green-200 bg-green-50 px-6 py-4 text-sm text-green-700 shadow-sm dark:border-green-800 dark:bg-green-900/40 dark:text-green-200">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
               <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-300" />
@@ -124,9 +125,9 @@ const Subscription = () => {
       )}
 
       {/* Discount Banner */}
-      <div className="mb-8 rounded-xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 p-6 dark:border-emerald-800 dark:from-emerald-900/20 dark:to-green-900/20">
+      <div className="mb-8 rounded-md border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 p-6 dark:border-emerald-800 dark:from-emerald-900/20 dark:to-green-900/20">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 shadow-lg">
+          <div className="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-br from-emerald-500 to-green-500 shadow-lg">
             <Sparkles className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1">
@@ -143,13 +144,13 @@ const Subscription = () => {
       {/* Subscription Plan */}
       <section className="mb-12">
         <div className="mx-auto max-w-2xl">
-          <div className="relative flex h-full flex-col overflow-hidden rounded-xl border-2 border-[var(--primary-color)] bg-white p-8 shadow-lg dark:bg-gray-800">
+          <div className="relative flex h-full flex-col overflow-hidden rounded-md border-2 border-[var(--primary-color)] bg-white p-8 shadow-lg dark:bg-gray-800">
             <div className="absolute right-4 top-4 rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1 text-xs font-semibold text-white shadow-sm">
               Best Value
             </div>
             <div className="relative z-10 flex flex-1 flex-col gap-6">
               <div className="flex items-start gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] shadow-lg shadow-blue-500/25">
+                <div className="flex h-16 w-16 items-center justify-center rounded-md bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] shadow-lg shadow-blue-500/25">
                   <Sparkles className="h-8 w-8 text-white" />
                 </div>
                 <div className="flex-1">
@@ -199,7 +200,7 @@ const Subscription = () => {
 
       {/* Payment & Order Summary Section */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <section className="rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             Payment Method
           </h2>
@@ -212,7 +213,7 @@ const Subscription = () => {
             ].map((method) => (
               <label
                 key={method.id}
-                className={`group flex items-center gap-3 rounded-lg border p-4 transition cursor-pointer ${
+                className={`group flex items-center gap-3 rounded-md border p-4 transition cursor-pointer ${
                   selectedPayment === method.id
                     ? 'border-[var(--primary-color)] bg-blue-50 dark:border-[var(--primary-color)] dark:bg-blue-900/40'
                     : 'border-gray-200 hover:border-[var(--primary-color)] hover:bg-blue-50/50 dark:border-gray-700 dark:hover:border-[var(--primary-color)] dark:hover:bg-blue-900/20'
@@ -239,14 +240,14 @@ const Subscription = () => {
           </div>
         </section>
 
-        <section className="grid gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50/50 p-4 text-sm dark:border-blue-900/30 dark:bg-blue-900/10">
+        <section className="grid gap-4 rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <div className="flex items-start gap-3 rounded-md border border-blue-100 bg-blue-50/50 p-4 text-sm dark:border-blue-900/30 dark:bg-blue-900/10">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--primary-color)]" />
             <p className="text-gray-700 dark:text-gray-300">
               Secure payments handled via your preferred method. Your subscription will auto-renew monthly. Cancel anytime from your account settings.
             </p>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
             <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white">
               Order summary
             </h3>
@@ -278,7 +279,7 @@ const Subscription = () => {
             type="button"
             onClick={handleSubscribe}
             disabled={isProcessing}
-            className="w-full rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:shadow-lg"
+            className="w-full rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:shadow-lg"
           >
             {isProcessing ? 'Processing…' : 'Subscribe Now'}
           </button>

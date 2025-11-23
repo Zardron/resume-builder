@@ -524,7 +524,7 @@ const TemplateShowcase = () => {
           </h2>
           
           <p className="mt-8 text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-400 max-w-4xl mx-auto leading-relaxed">
-            Choose from <span className="font-bold text-slate-900 dark:text-slate-100">15 professionally designed templates</span> that are{' '}
+            Choose from <span className="font-bold text-slate-900 dark:text-slate-100">16+ professionally designed templates</span> that are{' '}
             <span className="font-semibold text-blue-600 dark:text-blue-400">ATS-optimized</span>,{' '}
             <span className="font-semibold text-cyan-600 dark:text-cyan-400">fully customizable</span>, and{' '}
             <span className="font-semibold text-purple-600 dark:text-purple-400">crafted to make your experience shine</span>.
@@ -532,7 +532,7 @@ const TemplateShowcase = () => {
           
           {/* Enhanced trust indicators with stats */}
           <div className="mt-12 flex flex-wrap items-center justify-center gap-6 md:gap-8 lg:gap-10">
-            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3 px-5 py-3 rounded-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/30">
                 <CheckCircle2 className="size-5 text-green-600 dark:text-green-400" />
               </div>
@@ -542,7 +542,7 @@ const TemplateShowcase = () => {
               </div>
             </div>
             
-            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3 px-5 py-3 rounded-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30">
                 <FileText className="size-5 text-blue-600 dark:text-blue-400" />
               </div>
@@ -552,7 +552,7 @@ const TemplateShowcase = () => {
               </div>
             </div>
             
-            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3 px-5 py-3 rounded-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
               <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
                 <Sparkles className="size-5 text-purple-600 dark:text-purple-400" />
               </div>
@@ -633,7 +633,7 @@ const TemplateShowcase = () => {
               <button
                 onClick={handleSeeMore}
                 disabled={isLoadingMore}
-                className="group relative px-8 py-4 bg-gradient-to-br from-blue-600/10 via-cyan-500/8 to-purple-600/10 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gradient-to-br hover:from-blue-600/30 hover:via-cyan-500/20 hover:to-purple-600/30 flex items-center gap-3 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
+                className="group relative px-8 py-4 bg-gradient-to-br from-blue-600/10 via-cyan-500/8 to-purple-600/10 text-white font-semibold rounded-md shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gradient-to-br hover:from-blue-600/30 hover:via-cyan-500/20 hover:to-purple-600/30 flex items-center gap-3 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   {isLoadingMore ? (

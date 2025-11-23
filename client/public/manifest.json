@@ -1,7 +1,7 @@
 {
-  "name": "ResumeIQ - AI-Powered Resume Builder",
-  "short_name": "ResumeIQ",
-  "description": "Build standout resumes effortlessly with AI-powered tools. Create polished, professional resumes in minutes.",
+  "name": "ResumeIQHub - Where Talent Meets Opportunity",
+  "short_name": "ResumeIQHub",
+  "description": "From Resume to Hire, Seamlessly. Complete Recruitment SaaS Platform connecting recruiters and job seekers with AI-powered matching and professional tools.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

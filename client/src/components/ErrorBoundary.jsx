@@ -31,7 +31,7 @@ class ErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 px-4">
-          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 text-center">
+          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-md shadow-xl p-8 text-center">
             <div className="flex justify-center mb-4">
               <div className="rounded-full bg-red-100 dark:bg-red-900/30 p-4">
                 <AlertCircle className="h-12 w-12 text-red-600 dark:text-red-400" />
@@ -57,14 +57,14 @@ class ErrorBoundary extends Component {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={this.handleReset}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--secondary-color)] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--primary-color)] text-white rounded-md font-medium hover:bg-[var(--secondary-color)] transition-colors"
               >
                 <RefreshCw className="h-4 w-4" />
                 Try Again
               </button>
               <Link
                 to="/"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-md font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
                 <Home className="h-4 w-4" />
                 Go Home

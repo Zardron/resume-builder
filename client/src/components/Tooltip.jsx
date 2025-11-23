@@ -84,7 +84,7 @@ const Tooltip = ({
           role="tooltip"
           aria-live="polite"
         >
-          <div className="relative bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm rounded-lg px-3 py-2 shadow-xl max-w-xs whitespace-nowrap">
+          <div className="relative bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm rounded-md px-3 py-2 shadow-xl max-w-xs whitespace-nowrap">
             {content}
             <div className={`absolute w-0 h-0 border-4 border-transparent ${arrowClasses[position]}`} aria-hidden="true" />
           </div>

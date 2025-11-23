@@ -30,10 +30,10 @@ const summaryStats = [
 
 const Profile = () => {
   useEffect(() => {
-    document.title = 'My Profile • ResumeIQ';
+    document.title = 'My Profile • ResumeIQHub';
 
     return () => {
-      document.title = 'ResumeIQ';
+      document.title = 'ResumeIQHub';
     };
   }, []);
 

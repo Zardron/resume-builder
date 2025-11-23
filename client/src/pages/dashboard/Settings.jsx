@@ -8,6 +8,7 @@ import { PAPER_SIZES } from './resumeBuilderConstants';
 import ColorPicker from '../../util/ColorPicker';
 import { useApp } from '../../contexts/AppContext';
 import { AI_FEATURES } from '../../utils/aiFeatures';
+import { AI_SUBSCRIPTION_PLANS } from '../../config/pricing';
 
 const resumeFonts = ['Inter', 'Poppins', 'Source Sans Pro', 'Work Sans', 'Merriweather'];
 const resumeMargins = ['0.25"', '0.5"', '0.75"', '1"'];
@@ -138,7 +139,7 @@ const Settings = () => {
     fullName: 'Alex Rivera',
     email: 'alex@createcv.io',
     role: 'Product Designer',
-    company: 'ResumeIQ Labs',
+    company: 'ResumeIQHub Labs',
     timezone: 'UTC−05:00 Eastern Time (US & Canada)',
     bio: 'Crafting design-first job materials that help candidates shine.',
   };
@@ -282,10 +283,10 @@ const Settings = () => {
   ];
 
   useEffect(() => {
-    document.title = 'Dashboard Settings • ResumeIQ';
+    document.title = 'Dashboard Settings • ResumeIQHub';
 
     return () => {
-      document.title = 'ResumeIQ';
+      document.title = 'ResumeIQHub';
     };
   }, []);
 
@@ -378,7 +379,7 @@ const Settings = () => {
     experience: [
       {
         position: 'Lead Product Designer',
-        company: 'ResumeIQ Labs',
+        company: 'ResumeIQHub Labs',
         start_date: '2023-02',
         end_date: '',
         is_current: true,
@@ -406,9 +407,9 @@ const Settings = () => {
     ],
     project: [
       {
-        name: 'Guided ResumeIQ',
+        name: 'Guided ResumeIQHub',
         description:
-          'Launched a modular ResumeIQ with inline AI guidance, improving first-session publish rate by 24%.',
+          'Launched a modular ResumeIQHub with inline AI guidance, improving first-session publish rate by 24%.',
       },
       {
         name: 'Insight Dashboard',
@@ -549,10 +550,10 @@ const Settings = () => {
                   </p>
                 </header>
 
-                <div className="mt-6 rounded-xl border-2 border-[var(--primary-color)]/20 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-6 text-white shadow-lg">
+                <div className="mt-6 rounded-md border-2 border-[var(--primary-color)]/20 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-6 text-white shadow-lg">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-md bg-white/20 backdrop-blur-sm shadow-lg">
                         <Sparkles className="h-6 w-6 text-white" />
                       </div>
                     </div>
@@ -573,17 +574,17 @@ const Settings = () => {
                       <div className="flex flex-wrap items-center gap-3">
                         <Link
                           to="/dashboard/subscription"
-                          className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-bold text-[var(--primary-color)] shadow-lg transition hover:scale-105 hover:shadow-xl"
+                          className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-bold text-[var(--primary-color)] shadow-lg transition hover:scale-105 hover:shadow-xl"
                         >
                           <span>Subscribe Now</span>
                           <ArrowRight className="h-4 w-4" />
                         </Link>
                         <div className="flex flex-col">
                           <span className="text-xs font-semibold text-white/90 line-through">
-                            ₱599/month
+                            ₱{AI_SUBSCRIPTION_PLANS.enterprise.monthlyPrice}/month
                           </span>
                           <span className="text-sm font-bold text-white">
-                            ₱299/month (First Month)
+                            ₱{AI_SUBSCRIPTION_PLANS.enterprise.firstMonthPrice}/month (First Month)
                           </span>
                         </div>
                       </div>

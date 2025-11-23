@@ -1,6 +1,6 @@
-# ResumeIQ
+# ResumeIQHub
 
-Modern, template-driven ResumeIQ built with React and Tailwind CSS. Craft, preview, and export polished resumes without leaving the browser.
+Modern, template-driven ResumeIQHub built with React and Tailwind CSS. Craft, preview, and export polished resumes without leaving the browser.
 
 **Author:** Zardron Angelo Pesquera
 
@@ -8,7 +8,7 @@ Modern, template-driven ResumeIQ built with React and Tailwind CSS. Craft, previ
 
 ## Overview
 
-This repository contains the front-end client for an AI-inspired ResumeIQ. The application focuses on a smooth authoring experience: users can switch between templates, customize typography and colors, adjust page margins, and generate PDF exports—all with instant visual feedback. Authentication views are currently UI-only; no backend services ship with this codebase.
+This repository contains the front-end client for an AI-inspired ResumeIQHub. The application focuses on a smooth authoring experience: users can switch between templates, customize typography and colors, adjust page margins, and generate PDF exports—all with instant visual feedback. Authentication views are currently UI-only; no backend services ship with this codebase.
 
 ## Key Features
 

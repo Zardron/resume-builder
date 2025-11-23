@@ -1,8 +1,10 @@
-import { useApp } from '../contexts/AppContext';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { removeNotification } from '../store/slices/notificationsSlice';
 import Toast from './Toast';
 
 const ToastContainer = () => {
-  const { notifications, removeNotification } = useApp();
+  const dispatch = useAppDispatch();
+  const notifications = useAppSelector((state) => state.notifications.notifications);
 
   if (notifications.length === 0) return null;
 
@@ -14,7 +16,10 @@ const ToastContainer = () => {
     >
       {notifications.map(notification => (
         <div key={notification.id} className="pointer-events-auto">
-          <Toast notification={notification} onRemove={removeNotification} />
+          <Toast 
+            notification={notification} 
+            onRemove={(id) => dispatch(removeNotification(id))} 
+          />
         </div>
       ))}
     </div>

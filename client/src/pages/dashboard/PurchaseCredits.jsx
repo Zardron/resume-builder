@@ -2,12 +2,11 @@ import { useMemo, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeftIcon, CreditCard, Gift, ShieldCheck } from 'lucide-react';
 import CreditsIndicator from '../../components/CreditsIndicator';
-import {
-  BASE_CREDIT_PRICE,
-  formatCurrency,
-  getStoredCredits,
-  incrementCredits,
-} from '../../utils/creditUtils';
+import { BASE_CREDIT_PRICE, formatCurrency } from '../../utils/creditUtils';
+import { paymentAPI } from '../../services/api.js';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchCreditsBalance } from '../../store/slices/creditsSlice';
+import { addNotification } from '../../store/slices/notificationsSlice';
 
 const CREDIT_PACKAGES = [
   {
@@ -48,7 +47,8 @@ const CREDIT_PACKAGES = [
 ];
 
 const PurchaseCredits = () => {
-  const [availableCredits, setAvailableCredits] = useState(getStoredCredits());
+  const dispatch = useAppDispatch();
+  const { balance: credits } = useAppSelector((state) => state.credits);
   const [selectedPackageId, setSelectedPackageId] = useState(CREDIT_PACKAGES[0].id);
   const [isProcessing, setIsProcessing] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -68,26 +68,41 @@ const PurchaseCredits = () => {
     }
   };
 
-  const handlePurchase = () => {
+  const handlePurchase = async () => {
     if (!selectedPackage) return;
 
     setIsProcessing(true);
     setSuccessMessage('');
 
-    setTimeout(() => {
-      const updatedBalance = incrementCredits(selectedPackage.credits);
-      setAvailableCredits(updatedBalance);
+    try {
+      const response = await paymentAPI.purchaseCredits(selectedPackageId, selectedPayment);
+      
+      if (response.newBalance !== undefined) {
+        await dispatch(fetchCreditsBalance());
+        setSuccessMessage(
+          `Success! Added ${selectedPackage.credits} credit${selectedPackage.credits > 1 ? 's' : ''}.`,
+        );
+        dispatch(addNotification({
+          type: 'success',
+          title: 'Credits Purchased',
+          message: `Successfully purchased ${selectedPackage.credits} credit${selectedPackage.credits > 1 ? 's' : ''}.`,
+        }));
+      }
+    } catch (error) {
+      dispatch(addNotification({
+        type: 'error',
+        title: 'Purchase Failed',
+        message: error.message || 'Failed to purchase credits. Please try again.',
+      }));
+    } finally {
       setIsProcessing(false);
-      setSuccessMessage(
-        `Success! Added ${selectedPackage.credits} credit${selectedPackage.credits > 1 ? 's' : ''}.`,
-      );
-    }, 600);
+    }
   };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Hero Header Section */}
-      <header className="relative mb-12 overflow-hidden rounded-2xl border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
+      <header className="relative mb-12 overflow-hidden rounded-md border border-gray-200/80 bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] to-[var(--accent-color)] p-8 text-white shadow-xl dark:border-gray-700/50">
         <div className="absolute -top-24 right-14 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-20 left-8 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
         <div className="relative z-10">
@@ -112,14 +127,14 @@ const PurchaseCredits = () => {
               </p>
             </div>
             <div className="flex-shrink-0">
-              <CreditsIndicator availableCredits={availableCredits} />
+              <CreditsIndicator availableCredits={credits} />
             </div>
           </div>
         </div>
       </header>
 
       {successMessage && (
-        <div className="mb-8 rounded-xl border border-green-200 bg-green-50 px-6 py-4 text-sm text-green-700 shadow-sm dark:border-green-800 dark:bg-green-900/40 dark:text-green-200">
+        <div className="mb-8 rounded-md border border-green-200 bg-green-50 px-6 py-4 text-sm text-green-700 shadow-sm dark:border-green-800 dark:bg-green-900/40 dark:text-green-200">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
               <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-300" />
@@ -157,7 +172,7 @@ const PurchaseCredits = () => {
               key={pack.id}
               type="button"
               onClick={() => setSelectedPackageId(pack.id)}
-              className={`group relative flex h-full flex-col overflow-hidden rounded-xl border bg-white p-6 text-left shadow-sm transition-all duration-300 dark:bg-gray-800 ${
+              className={`group relative flex h-full flex-col overflow-hidden rounded-md border bg-white p-6 text-left shadow-sm transition-all duration-300 dark:bg-gray-800 ${
                 isSelected
                   ? 'border-[var(--primary-color)] shadow-lg shadow-blue-100 dark:border-[var(--primary-color)] dark:shadow-blue-900/40'
                   : 'border-gray-200 hover:border-[var(--primary-color)] hover:shadow-md dark:border-gray-700 dark:hover:border-[var(--primary-color)]'
@@ -171,7 +186,7 @@ const PurchaseCredits = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/5 to-[var(--accent-color)]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative z-10 flex flex-1 flex-col gap-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] shadow-lg shadow-blue-500/25">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] shadow-lg shadow-blue-500/25">
                     <Icon className="h-6 w-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -214,7 +229,7 @@ const PurchaseCredits = () => {
 
       {/* Payment & Order Summary Section */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <section className="rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             Payment Method
           </h2>
@@ -227,7 +242,7 @@ const PurchaseCredits = () => {
             ].map((method) => (
               <label
                 key={method.id}
-                className={`group flex items-center gap-3 rounded-lg border p-4 transition cursor-pointer ${
+                className={`group flex items-center gap-3 rounded-md border p-4 transition cursor-pointer ${
                   selectedPayment === method.id
                     ? 'border-[var(--primary-color)] bg-blue-50 dark:border-[var(--primary-color)] dark:bg-blue-900/40'
                     : 'border-gray-200 hover:border-[var(--primary-color)] hover:bg-blue-50/50 dark:border-gray-700 dark:hover:border-[var(--primary-color)] dark:hover:bg-blue-900/20'
@@ -254,15 +269,15 @@ const PurchaseCredits = () => {
           </div>
         </section>
 
-        <section className="grid gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50/50 p-4 text-sm dark:border-blue-900/30 dark:bg-blue-900/10">
+        <section className="grid gap-4 rounded-md border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <div className="flex items-start gap-3 rounded-md border border-blue-100 bg-blue-50/50 p-4 text-sm dark:border-blue-900/30 dark:bg-blue-900/10">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--primary-color)]" />
             <p className="text-gray-700 dark:text-gray-300">
               Secure payments handled via your preferred method. We'll instantly add credits to your
               balance once the transaction completes.
             </p>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
             <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white">
               Order summary
             </h3>
@@ -286,7 +301,7 @@ const PurchaseCredits = () => {
             type="button"
             onClick={handlePurchase}
             disabled={isProcessing || !selectedPackage}
-            className="w-full rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:shadow-lg"
+            className="w-full rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:shadow-lg"
           >
             {isProcessing ? 'Processing…' : 'Purchase Credits'}
           </button>

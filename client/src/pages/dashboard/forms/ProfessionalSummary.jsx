@@ -339,7 +339,7 @@ const ProfessionalSummary = ({
               </div>
               
               {!isSubscribed && (
-                <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-3 text-xs dark:border-blue-900/30 dark:bg-blue-900/10">
+                <div className="rounded-md border border-blue-100 bg-blue-50/50 p-3 text-xs dark:border-blue-900/30 dark:bg-blue-900/10">
                   <p className="text-gray-700 dark:text-gray-300">
                     <span className="font-semibold">💡 Unlock AI Features:</span> Subscribe to enable AI-powered content suggestions, smart rewriting, and ATS optimization. 
                     <Link to="/dashboard/subscription" className="ml-1 font-semibold text-[var(--primary-color)] underline underline-offset-2 hover:no-underline">
@@ -350,7 +350,7 @@ const ProfessionalSummary = ({
               )}
               
               {grammarResults && grammarResults.errors > 0 && (
-                <div className="mt-2 rounded-lg border border-green-200 bg-green-50/50 p-3 dark:border-green-800 dark:bg-green-900/10">
+                <div className="mt-2 rounded-md border border-green-200 bg-green-50/50 p-3 dark:border-green-800 dark:bg-green-900/10">
                   <p className="text-xs font-semibold text-green-900 dark:text-green-300 mb-1">
                     Grammar corrections applied:
                   </p>
@@ -361,7 +361,7 @@ const ProfessionalSummary = ({
               )}
               
               {readabilityResults && (
-                <div className="mt-2 rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/10">
+                <div className="mt-2 rounded-md border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/10">
                   <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-1">
                     Readability Score: {readabilityResults.score}/100 ({readabilityResults.level})
                   </p>

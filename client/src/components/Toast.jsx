@@ -38,7 +38,7 @@ const Toast = ({ notification, onRemove }) => {
 
   return (
     <div
-      className={`flex items-start gap-3 rounded-lg border p-4 shadow-lg backdrop-blur-sm transition-all duration-300 animate-in slide-in-from-right ${colors[type]}`}
+      className={`flex items-start gap-3 rounded-md border p-4 shadow-lg backdrop-blur-sm transition-all duration-300 animate-in slide-in-from-right ${colors[type]}`}
       role="alert"
       aria-live="polite"
     >

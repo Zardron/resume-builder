@@ -45,6 +45,7 @@
 
 html {
   @apply bg-gray-50 text-gray-900;
+  scroll-behavior: smooth;
 }
 
 html.dark {

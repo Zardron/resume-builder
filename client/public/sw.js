@@ -1,5 +1,5 @@
 // Service Worker for PWA functionality
-const CACHE_NAME = 'resumeiq-v1';
+const CACHE_NAME = 'resumeiqhub-v1';
 const urlsToCache = [
   '/',
   '/dashboard',
@@ -19,6 +19,15 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // Don't cache API requests - always fetch from network
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  
+  // For other requests, use cache-first strategy
   event.respondWith(
     caches.match(event.request)
       .then((response) => {

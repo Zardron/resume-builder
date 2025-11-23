@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "AI-powered ResumeIQ - Build professional resumes in minutes",
+  "description": "AI-powered ResumeIQHub - Build professional resumes in minutes",
   "author": "Zardron Angelo Pesquera",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.10.1",
     "@tailwindcss/vite": "^4.1.15",
     "animate.css": "^4.1.1",
     "culori": "^4.0.2",
@@ -22,6 +23,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-fast-marquee": "^1.6.5",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.4",
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1"

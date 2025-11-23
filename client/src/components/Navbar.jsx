@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { logoutUser } from '../store/slices/authSlice';
+import { useSidebar } from '../contexts/SidebarContext';
 import LOGO from '../assets/logo.png';
 import ThemeSwitcher from '../util/ThemeSwitcher';
 
@@ -12,14 +15,21 @@ const NAV_LINKS = [
 ];
 
 const Navbar = () => {
-  const [isLoggedIn] = useState(true);
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const menuRef = useRef(null);
   const profileMenuRef = useRef(null);
   const headerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  
+  const isLoggedIn = isAuthenticated;
+  const userName = user?.fullName || user?.name || 'User';
+  const userEmail = user?.email || '';
+  const userInitial = userName.charAt(0).toUpperCase();
 
   const scrollToSection = useCallback(
     (sectionId) => {
@@ -30,13 +40,15 @@ const Navbar = () => {
       }
 
       const headerHeight = headerRef.current?.offsetHeight ?? 80;
-      const additionalOffset = 16;
+      const isHome = location.pathname === '/';
+      const bannerHeight = isHome ? 48 : 0; // Banner is 48px on home page
+      const additionalOffset = 24; // Increased for better visibility
       const elementPosition = target.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - headerHeight - additionalOffset;
+      const offsetPosition = elementPosition - headerHeight - bannerHeight - additionalOffset;
 
       window.scrollTo({ top: Math.max(offsetPosition, 0), behavior: 'smooth' });
     },
-    [headerRef]
+    [headerRef, location.pathname]
   );
 
   useEffect(() => {
@@ -46,6 +58,120 @@ const Navbar = () => {
       navigate(location.pathname, { replace: true });
     }
   }, [location, navigate, scrollToSection]);
+
+  // Intersection Observer to detect active section
+  useEffect(() => {
+    if (location.pathname !== '/' || isLoggedIn) {
+      setActiveSection(''); // Clear active section when not on home page
+      return;
+    }
+
+    const sections = NAV_LINKS.map(link => {
+      const sectionId = link.href.split('#')[1];
+      const element = document.getElementById(sectionId);
+      return element ? { id: sectionId, element } : null;
+    }).filter(Boolean);
+
+    if (sections.length === 0) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-100px 0px -50% 0px', // Trigger when section is near top of viewport
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    };
+
+    const sectionVisibility = new Map();
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        const sectionId = entry.target.id;
+        const ratio = entry.intersectionRatio;
+        sectionVisibility.set(sectionId, ratio);
+      });
+
+      // Find the section with the highest visibility ratio
+      let maxRatio = 0;
+      let mostVisibleSection = '';
+
+      sectionVisibility.forEach((ratio, sectionId) => {
+        if (ratio > maxRatio) {
+          maxRatio = ratio;
+          mostVisibleSection = sectionId;
+        }
+      });
+
+      // If no section is significantly visible, check scroll position
+      if (maxRatio < 0.1) {
+        const scrollPosition = window.scrollY + 150;
+        let closestSection = '';
+        let closestDistance = Infinity;
+
+        sections.forEach(({ id, element }) => {
+          const rect = element.getBoundingClientRect();
+          const distance = Math.abs(rect.top - 150);
+          
+          if (rect.top <= 200 && distance < closestDistance) {
+            closestDistance = distance;
+            closestSection = id;
+          }
+        });
+
+        if (closestSection) {
+          setActiveSection(closestSection);
+        }
+      } else if (mostVisibleSection) {
+        setActiveSection(mostVisibleSection);
+      }
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach(({ element }) => {
+      observer.observe(element);
+    });
+
+    // Set initial active section based on scroll position
+    const checkInitialSection = () => {
+      const scrollPosition = window.scrollY;
+      const headerHeight = headerRef.current?.offsetHeight ?? 80;
+      const bannerHeight = 48;
+      const offset = headerHeight + bannerHeight + 50;
+      
+      // Check if we're at the top
+      if (scrollPosition < 100) {
+        setActiveSection('');
+        return;
+      }
+
+      // Find the section that's currently in view
+      let activeId = '';
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const { id, element } = sections[i];
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= offset && rect.bottom > offset) {
+          activeId = id;
+          break;
+        }
+      }
+
+      if (activeId) {
+        setActiveSection(activeId);
+      }
+    };
+
+    // Check on mount and scroll
+    checkInitialSection();
+    const handleScroll = () => {
+      requestAnimationFrame(checkInitialSection);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+      sectionVisibility.clear();
+    };
+  }, [location.pathname, isLoggedIn]);
 
   const handleNavClick = (event, href) => {
     if (!href.startsWith('/#')) {
@@ -99,14 +225,48 @@ const Navbar = () => {
     navigate(path);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsProfileMenuOpen(false);
-    navigate('/sign-in', { state: { fromHome: true } });
+    try {
+      await dispatch(logoutUser()).unwrap();
+      navigate('/sign-in', { state: { fromHome: true } });
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still navigate even if logout fails
+      navigate('/sign-in', { state: { fromHome: true } });
+    }
   };
 
   // Determine top position based on route - Layout (dashboard) doesn't have Banner
   const isDashboardRoute = location.pathname.startsWith('/dashboard');
-  const topPosition = isDashboardRoute ? 'top-0' : 'top-[48px]';
+  const isRecruiterRoute = location.pathname.startsWith('/dashboard/recruiter');
+  const isAdminRoute = location.pathname.startsWith('/dashboard/admin');
+  const isApplicantRoute = location.pathname.startsWith('/dashboard/applicant');
+  const isHomePage = location.pathname === '/'; // Only home page has Banner
+  
+  // Show sidebar for dashboard routes (but not for recruiter/admin routes which have their own AdminLayout)
+  // Actually, both recruiter and applicant routes have sidebars, so we need to account for that
+  const hasSidebar = isDashboardRoute; // All dashboard routes have sidebars
+  
+  // Get sidebar state from context (only if sidebar exists)
+  let sidebarContext = null;
+  try {
+    sidebarContext = hasSidebar ? useSidebar() : null;
+  } catch (e) {
+    // Context not available, sidebar will handle its own state
+  }
+  
+  const isCollapsed = sidebarContext?.isCollapsed || false;
+  
+  // Only home page has Banner (48px height), other pages should have navbar at top-0
+  const topPosition = isDashboardRoute || !isHomePage ? 'top-0' : 'top-[48px]';
+  const navbarClasses = hasSidebar 
+    ? `fixed ${topPosition} right-0 flex items-center justify-between px-4 md:pr-6 md:pl-2 transition-all duration-300 z-50 bg-white dark:bg-gray-900 h-16 border-b border-gray-200 dark:border-gray-700 box-border ${
+        isMenuOpen ? 'hidden md:flex' : 'flex'
+      }`
+    : `fixed ${topPosition} left-0 right-0 flex items-center justify-between px-4 md:px-16 transition-all z-50 bg-white dark:bg-gray-900 h-16 ${
+        isMenuOpen ? 'hidden md:flex' : 'flex'
+      }`;
 
   return (
     <>
@@ -119,38 +279,56 @@ const Navbar = () => {
 
       <header
         ref={headerRef}
-        className={`fixed ${topPosition} left-0 right-0 flex items-center justify-between px-4 md:px-16 shadow dark:shadow-white/5 w-full transition-all z-50 bg-white dark:bg-gray-900 py-4 ${
-          isMenuOpen ? 'hidden md:flex' : 'flex'
-        }`}
+        className={navbarClasses}
+        style={hasSidebar ? { 
+          left: isCollapsed ? '4.5rem' : '17rem',
+          transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+          willChange: 'left'
+        } : {}}
       >
-        <Link to={isLoggedIn ? '/dashboard' : '/'} className="flex items-center gap-2 no-underline">
-          <img
-            src={LOGO}
-            alt="ResumeIQ"
-            className="h-10 object-contain"
-          />
-          <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto] block">ResumeIQ</span>
-        </Link>
+        <div className="flex items-center flex-1">
+          {!hasSidebar && (
+            <Link to={isLoggedIn ? '/dashboard' : '/'} className="flex items-center gap-2 no-underline">
+              <img
+                src={LOGO}
+                alt="ResumeIQHub"
+                className="h-10 object-contain"
+              />
+              <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto] block">ResumeIQHub</span>
+            </Link>
+          )}
+        </div>
 
         {!isLoggedIn && (
-          <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                to={link.href}
-                onClick={(event) => handleNavClick(event, link.href)}
-                className="hover:text-blue-500 dark:hover:text-blue-400 transition"
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden md:flex items-center gap-8 text-gray-900 dark:text-gray-100 text-sm absolute left-1/2 transform -translate-x-1/2">
+            {NAV_LINKS.map((link) => {
+              const sectionId = link.href.split('#')[1];
+              const isActive = activeSection === sectionId;
+              return (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  onClick={(event) => handleNavClick(event, link.href)}
+                  className={`transition relative ${
+                    isActive
+                      ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                      : 'hover:text-blue-500 dark:hover:text-blue-400'
+                  }`}
+                >
+                  {link.label}
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         )}
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-1 justify-end">
           {isLoggedIn && (
             <span className="text-sm text-gray-900 dark:text-gray-100">
-              Welcome, <span className="font-bold">Zardron</span>
+              Welcome, <span className="font-bold">{userName}</span>
             </span>
           )}
           {isLoggedIn && (
@@ -161,7 +339,7 @@ const Navbar = () => {
                 aria-haspopup="menu"
                 aria-expanded={isProfileMenuOpen}
               >
-                Z
+                {userInitial}
               </button>
               {isProfileMenuOpen && (
                 <div className="absolute right-0 mt-3 w-56 origin-top-right rounded-md border border-gray-200/70 bg-white p-2 text-sm shadow-xl ring-1 ring-black/5 dark:border-gray-700/60 dark:bg-gray-800 dark:text-gray-100">
@@ -169,8 +347,8 @@ const Navbar = () => {
                     <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                       Signed in as
                     </p>
-                    <p className="mt-1 font-semibold text-gray-900 dark:text-white">Zardron</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">zardron@example.com</p>
+                    <p className="mt-1 font-semibold text-gray-900 dark:text-white">{userName}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{userEmail || 'No email'}</p>
                   </div>
                   <div className="my-2 border-t border-gray-100 dark:border-gray-700" />
                   <div className="flex items-center justify-between rounded-md px-3 py-2 text-gray-700 dark:text-gray-200">
@@ -184,19 +362,23 @@ const Navbar = () => {
                   >
                     <span>Dashboard</span>
                   </button>
-                  <button
-                    onClick={() => handleProfileNavigate('/dashboard/purchase')}
-                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
-                  >
-                    <span>Buy Credits</span>
-                  </button>
+                  {user?.role !== 'super_admin' && (
+                    <button
+                      onClick={() => handleProfileNavigate('/dashboard/purchase')}
+                      className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
+                    >
+                      <span>Buy Credits</span>
+                    </button>
+                  )}
                   <div className="my-2 border-t border-gray-100 dark:border-gray-700" />
-                  <button
-                    onClick={() => handleProfileNavigate('/dashboard/profile')}
-                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
-                  >
-                    <span>Profile</span>
-                  </button>
+                  {user?.role !== 'super_admin' && (
+                    <button
+                      onClick={() => handleProfileNavigate('/dashboard/profile')}
+                      className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
+                    >
+                      <span>Profile</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => handleProfileNavigate('/dashboard/settings')}
                     className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
@@ -245,8 +427,8 @@ const Navbar = () => {
           <div>
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 mb-4">
               <div className="flex items-center gap-2">
-                <img src={LOGO} alt="ResumeIQ" className="w-8 h-8" />
-                <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto] block">ResumeIQ</span>
+                <img src={LOGO} alt="ResumeIQHub" className="w-8 h-8" />
+                <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto] block">ResumeIQHub</span>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
@@ -260,23 +442,31 @@ const Navbar = () => {
             </div>
             {isLoggedIn && (
               <span className="text-sm px-4 text-gray-900 dark:text-gray-100">
-                Welcome, <span className="font-bold">Zardron</span>
+                Welcome, <span className="font-bold">{userName}</span>
               </span>
             )}
           </div>
 
           {!isLoggedIn && (
             <div className="flex-1 flex flex-col p-4 space-y-4">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  onClick={(event) => handleNavClick(event, link.href)}
-                  className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-500 dark:hover:text-blue-400 transition py-2 border-b border-gray-100 dark:border-slate-800"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {NAV_LINKS.map((link) => {
+                const sectionId = link.href.split('#')[1];
+                const isActive = activeSection === sectionId;
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={(event) => handleNavClick(event, link.href)}
+                    className={`text-lg font-medium transition py-2 border-b border-gray-100 dark:border-slate-800 ${
+                      isActive
+                        ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                        : 'text-gray-900 dark:text-gray-100 hover:text-blue-500 dark:hover:text-blue-400'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
           )}
 

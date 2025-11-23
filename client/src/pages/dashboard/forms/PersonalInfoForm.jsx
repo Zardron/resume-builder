@@ -422,8 +422,8 @@ const PersonalInfoForm = ({
                 
                 {/* Subscription Lock for Background Removal */}
                 <div className="relative">
-                  <div className="flex items-center gap-3 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-800/50">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-700">
+                  <div className="flex items-center gap-3 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-800/50">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700">
                       <Lock className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                     </div>
                     <div className="flex-1">
@@ -444,18 +444,18 @@ const PersonalInfoForm = ({
                     {!isSubscribed ? (
                       <Link
                         to="/dashboard/subscription"
-                        className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+                        className="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
                       >
                         <span>Subscribe</span>
                       </Link>
                     ) : (
-                      <div className="inline-flex items-center gap-2 rounded-lg bg-green-100 dark:bg-green-900/30 px-4 py-2 text-sm font-semibold text-green-700 dark:text-green-400">
+                      <div className="inline-flex items-center gap-2 rounded-md bg-green-100 dark:bg-green-900/30 px-4 py-2 text-sm font-semibold text-green-700 dark:text-green-400">
                         <span>✓ Unlocked</span>
                       </div>
                     )}
                   </div>
                   {!isSubscribed && (
-                    <div className="mt-2 rounded-lg border border-blue-100 bg-blue-50/50 p-3 text-xs dark:border-blue-900/30 dark:bg-blue-900/10">
+                    <div className="mt-2 rounded-md border border-blue-100 bg-blue-50/50 p-3 text-xs dark:border-blue-900/30 dark:bg-blue-900/10">
                       <p className="text-gray-700 dark:text-gray-300">
                         <span className="font-semibold">💡 Unlock AI Features:</span> Subscribe to enable AI-powered background removal for your profile photos. 
                         <Link to="/dashboard/subscription" className="ml-1 font-semibold text-[var(--primary-color)] underline underline-offset-2 hover:no-underline">

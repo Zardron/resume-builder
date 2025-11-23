@@ -18,7 +18,7 @@ const TestimonialForm = () => {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-slate-100 mt-20 py-20 text-slate-700 dark:bg-gray-900 dark:text-slate-300">
+      <section className="relative isolate overflow-hidden mt-20 py-20 text-slate-700 dark:text-slate-300">
         <div className="pointer-events-none absolute -top-28 right-16 h-64 w-64 rounded-full bg-sky-200/50 blur-3xl dark:bg-sky-500/20" />
         <div className="pointer-events-none absolute bottom-0 left-0 hidden h-72 w-96 bg-gradient-to-tr from-sky-100/70 via-transparent to-transparent blur-3xl dark:block dark:from-slate-700/40" />
 
