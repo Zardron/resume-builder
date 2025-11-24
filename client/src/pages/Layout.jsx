@@ -1,10 +1,10 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import Breadcrumbs from '../components/Breadcrumbs';
-import SkipToContent from '../components/SkipToContent';
-import BackgroundEffects from '../components/BackgroundEffects';
-import DashboardSidebar from '../components/DashboardSidebar';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+import Breadcrumbs from '../components/layout/Breadcrumbs';
+import SkipToContent from '../components/common/SkipToContent';
+import BackgroundEffects from '../components/common/BackgroundEffects';
+import DashboardSidebar from '../components/layout/DashboardSidebar';
 import { useSidebar } from '../contexts/SidebarContext';
 
 const Layout = () => {

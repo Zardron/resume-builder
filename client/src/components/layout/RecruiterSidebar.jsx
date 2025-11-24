@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { NavLink, useLocation, Link, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Briefcase, Users, Calendar, 
   MessageSquare, Settings, Building2,
   CreditCard, UserPlus, ChevronRight, PanelLeftClose, PanelLeftOpen,
-  User, Sparkles, Moon, Sun, LogOut, BarChart3, FileText
+  User, Sparkles, Moon, Sun, LogOut, BarChart3
 } from 'lucide-react';
-import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { logoutUser } from '../store/slices/authSlice';
-import { useSidebar } from '../contexts/SidebarContext';
-import LOGO from '../assets/logo.png';
-import ThemeSwitcher from '../utils/ThemeSwitcher';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { logoutUser } from '../../store/slices/authSlice';
+import { useSidebar } from '../../contexts/SidebarContext';
+import LOGO from '../../assets/logo.png';
+import ThemeSwitcher from '../../utils/ThemeSwitcher';
 
-const AdminSidebar = () => {
+const RecruiterSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -20,18 +20,19 @@ const AdminSidebar = () => {
   const { isCollapsed, toggleSidebar } = useSidebar();
   const [expandedItems, setExpandedItems] = useState([]);
   
-  const userName = user?.fullName || user?.name || 'User';
-  const userEmail = user?.email || '';
-  const userInitial = userName.charAt(0).toUpperCase();
+  const userRole = user?.role || 'user';
+  const userType = user?.userType || 'recruiter';
+  const basePath = '/dashboard/recruiter';
   
-  const userRole = user?.role || 'recruiter';
-  const isSuperAdmin = userRole === 'super_admin';
-  const basePath = isSuperAdmin ? '/dashboard/admin' : '/dashboard/recruiter';
+  // Determine effective role for menu filtering
+  // For recruiters, role can be 'admin' (org admin), 'manager', or 'user' (with userType 'recruiter' or 'both')
+  const effectiveRole = userRole === 'user' && (userType === 'recruiter' || userType === 'both') 
+    ? 'recruiter' 
+    : userRole;
   
   const isActive = (path) => {
-    // Handle dashboard root paths
-    if (path === basePath || path === '/dashboard/recruiter' || path === '/dashboard/admin') {
-      return location.pathname === basePath || location.pathname === '/dashboard/recruiter' || location.pathname === '/dashboard/admin';
+    if (path === basePath) {
+      return location.pathname === basePath;
     }
     return location.pathname.startsWith(path);
   };
@@ -54,115 +55,84 @@ const AdminSidebar = () => {
     }
   };
 
-  // Helper function to get path with correct base
-  const getPath = (relativePath) => {
-    if (relativePath.startsWith('/dashboard/')) {
-      // Replace the base path dynamically
-      if (relativePath.startsWith('/dashboard/recruiter')) {
-        return relativePath.replace('/dashboard/recruiter', basePath);
-      }
-      return relativePath;
-    }
-    return `${basePath}${relativePath}`;
-  };
-
+  // Recruiter-specific menu items
   const menuItems = [
     {
       label: 'Dashboard',
       path: basePath,
       icon: LayoutDashboard,
-      exact: true
+      exact: true,
+      allowedRoles: ['admin', 'manager', 'recruiter']
     },
     {
       label: 'Job Postings',
-      path: getPath('/jobs'),
+      path: `${basePath}/jobs`,
       icon: Briefcase,
       submenu: [
-        { label: 'All Jobs', path: getPath('/jobs') },
-        { label: 'Create Job', path: getPath('/jobs/new') },
-        { label: 'Drafts', path: getPath('/jobs?status=draft') }
+        { label: 'All Jobs', path: `${basePath}/jobs` },
+        { label: 'Create Job', path: `${basePath}/jobs/new` },
+        { label: 'Drafts', path: `${basePath}/jobs?status=draft` }
       ],
       allowedRoles: ['admin', 'manager', 'recruiter']
     },
     {
       label: 'Candidates',
-      path: getPath('/candidates'),
+      path: `${basePath}/candidates`,
       icon: Users,
       submenu: [
-        { label: 'Pipeline', path: getPath('/candidates') },
-        { label: 'All Candidates', path: getPath('/candidates?view=all') },
-        { label: 'Favorites', path: getPath('/candidates?view=favorites') }
+        { label: 'Pipeline', path: `${basePath}/candidates` },
+        { label: 'All Candidates', path: `${basePath}/candidates?view=all` },
+        { label: 'Favorites', path: `${basePath}/candidates?view=favorites` }
       ],
       allowedRoles: ['admin', 'manager', 'recruiter']
     },
     {
       label: 'Interviews',
-      path: getPath('/interviews'),
+      path: `${basePath}/interviews`,
       icon: Calendar,
       submenu: [
-        { label: 'Calendar', path: getPath('/interviews') },
-        { label: 'Schedule', path: getPath('/interviews/new') },
-        { label: 'Upcoming', path: getPath('/interviews?status=upcoming') }
+        { label: 'Calendar', path: `${basePath}/interviews` },
+        { label: 'Schedule', path: `${basePath}/interviews/new` },
+        { label: 'Upcoming', path: `${basePath}/interviews?status=upcoming` }
       ],
       allowedRoles: ['admin', 'manager', 'recruiter']
     },
     {
       label: 'Messages',
-      path: getPath('/messages'),
+      path: `${basePath}/messages`,
       icon: MessageSquare,
       badge: 0,
       allowedRoles: ['admin', 'manager', 'recruiter']
     },
     {
-      label: 'Team',
-      path: getPath('/team'),
-      icon: UserPlus,
-      allowedRoles: ['admin', 'manager', 'super_admin']
-    },
-    {
-      label: 'Platform Analytics',
-      path: getPath('/analytics'),
+      label: 'Analytics',
+      path: `${basePath}/analytics`,
       icon: BarChart3,
-      allowedRoles: ['super_admin']
+      allowedRoles: ['admin', 'manager', 'recruiter']
     },
     {
-      label: 'Create Accounts',
-      path: getPath('/create-accounts'),
+      label: 'Team',
+      path: `${basePath}/team`,
       icon: UserPlus,
-      allowedRoles: ['super_admin']
-    },
-    {
-      label: 'Recruiters',
-      path: getPath('/recruiters'),
-      icon: Users,
-      allowedRoles: ['super_admin']
-    },
-    {
-      label: 'Recruiter Applications',
-      path: getPath('/recruiter-applications'),
-      icon: FileText,
-      allowedRoles: ['super_admin']
+      allowedRoles: ['admin', 'manager'] // Only org admins and managers
     },
     {
       label: 'Organization',
-      path: getPath('/organization'),
+      path: `${basePath}/organization`,
       icon: Building2,
-      allowedRoles: ['admin', 'super_admin']
+      allowedRoles: ['admin'] // Only org admins
     },
     {
       label: 'Billing',
-      path: getPath('/billing'),
+      path: `${basePath}/billing`,
       icon: CreditCard,
-      allowedRoles: ['admin']
+      allowedRoles: ['admin'] // Only org admins
     }
   ];
   
   const filteredMenuItems = menuItems.filter(item => {
     if (item.allowedRoles) {
-      return item.allowedRoles.includes(userRole);
-    }
-    if (item.roles) {
-      return item.roles.includes(userRole);
+      return item.allowedRoles.includes(effectiveRole);
     }
     return true;
   });
@@ -331,83 +301,79 @@ const AdminSidebar = () => {
         <div className="mt-auto border-t border-gray-200 dark:border-gray-700">
           <div className={`p-2 space-y-1 ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
             {/* Buy Credits */}
-            {!isSuperAdmin && (
-              <NavLink
-                to="/dashboard/purchase"
-                className={({ isActive }) =>
-                  `flex items-center ${isCollapsed ? 'justify-center' : ''} rounded-md ${isCollapsed ? 'py-2 px-2 w-10 h-10' : 'py-2.5 px-3 w-full'} text-sm font-medium transition-all duration-200 relative group ${
-                    isActive
-                      ? isCollapsed 
-                        ? 'bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400'
-                        : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
-                  }`
-                }
-                title={isCollapsed ? 'Buy Credits' : ''}
+            <NavLink
+              to="/dashboard/purchase"
+              className={({ isActive }) =>
+                `flex items-center ${isCollapsed ? 'justify-center' : ''} rounded-md ${isCollapsed ? 'py-2 px-2 w-10 h-10' : 'py-2.5 px-3 w-full'} text-sm font-medium transition-all duration-200 relative group ${
+                  isActive
+                    ? isCollapsed 
+                      ? 'bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400'
+                      : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                }`
+              }
+              title={isCollapsed ? 'Buy Credits' : ''}
+            >
+              <Sparkles className="h-5 w-5 flex-shrink-0" />
+              <span 
+                className="ml-3 flex-1 whitespace-nowrap"
+                style={{
+                  display: isCollapsed ? 'none' : 'block',
+                  opacity: isCollapsed ? 0 : 1,
+                  width: isCollapsed ? 0 : 'auto',
+                  overflow: 'hidden',
+                  transition: 'opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
               >
-                <Sparkles className="h-5 w-5 flex-shrink-0" />
-                <span 
-                  className="ml-3 flex-1 whitespace-nowrap"
-                  style={{
-                    display: isCollapsed ? 'none' : 'block',
-                    opacity: isCollapsed ? 0 : 1,
-                    width: isCollapsed ? 0 : 'auto',
-                    overflow: 'hidden',
-                    transition: 'opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                >
+                Buy Credits
+              </span>
+              {isActive('/dashboard/purchase') && !isCollapsed && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
+              )}
+              {isCollapsed && (
+                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
                   Buy Credits
-                </span>
-                {isActive('/dashboard/purchase') && !isCollapsed && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
-                )}
-                {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
-                    Buy Credits
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
-                  </div>
-                )}
-              </NavLink>
-            )}
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
+                </div>
+              )}
+            </NavLink>
             
             {/* Profile */}
-            {!isSuperAdmin && (
-              <NavLink
-                to="/dashboard/profile"
-                className={({ isActive }) =>
-                  `flex items-center ${isCollapsed ? 'justify-center' : ''} rounded-md ${isCollapsed ? 'py-2 px-2 w-10 h-10' : 'py-2.5 px-3 w-full'} text-sm font-medium transition-all duration-200 relative group ${
-                    isActive
-                      ? isCollapsed 
-                        ? 'bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400'
-                        : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
-                  }`
-                }
-                title={isCollapsed ? 'Profile' : ''}
+            <NavLink
+              to="/dashboard/profile"
+              className={({ isActive }) =>
+                `flex items-center ${isCollapsed ? 'justify-center' : ''} rounded-md ${isCollapsed ? 'py-2 px-2 w-10 h-10' : 'py-2.5 px-3 w-full'} text-sm font-medium transition-all duration-200 relative group ${
+                  isActive
+                    ? isCollapsed 
+                      ? 'bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400'
+                      : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                }`
+              }
+              title={isCollapsed ? 'Profile' : ''}
+            >
+              <User className="h-5 w-5 flex-shrink-0" />
+              <span 
+                className="ml-3 flex-1 whitespace-nowrap"
+                style={{
+                  opacity: isCollapsed ? 0 : 1,
+                  width: isCollapsed ? 0 : 'auto',
+                  overflow: 'hidden',
+                  transition: 'opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
               >
-                <User className="h-5 w-5 flex-shrink-0" />
-                <span 
-                  className="ml-3 flex-1 whitespace-nowrap"
-                  style={{
-                    opacity: isCollapsed ? 0 : 1,
-                    width: isCollapsed ? 0 : 'auto',
-                    overflow: 'hidden',
-                    transition: 'opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                >
+                Profile
+              </span>
+              {isActive('/dashboard/profile') && !isCollapsed && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
+              )}
+              {isCollapsed && (
+                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
                   Profile
-                </span>
-                {isActive('/dashboard/profile') && !isCollapsed && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
-                )}
-                {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
-                    Profile
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
-                  </div>
-                )}
-              </NavLink>
-            )}
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
+                </div>
+              )}
+            </NavLink>
             
             {/* Settings */}
             <NavLink
@@ -540,5 +506,5 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default RecruiterSidebar;
 

@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { logoutUser } from '../store/slices/authSlice';
-import { useSidebar } from '../contexts/SidebarContext';
-import LOGO from '../assets/logo.png';
-import ThemeSwitcher from '../utils/ThemeSwitcher';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { logoutUser } from '../../store/slices/authSlice';
+import { useSidebar } from '../../contexts/SidebarContext';
+import LOGO from '../../assets/logo.png';
+import ThemeSwitcher from '../../utils/ThemeSwitcher';
 
 const NAV_LINKS = [
   { label: 'Features', href: '/#features' },

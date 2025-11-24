@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftIcon, Eye, EyeOff } from 'lucide-react';
-import InputField from '../components/forms/InputField';
-import AuthSidebar from '../components/layout/AuthSidebar';
-import ThemeSwitcher from '../utils/ThemeSwitcher';
-import BackgroundEffects from '../components/common/BackgroundEffects';
-import { useAppDispatch } from '../store/hooks';
-import { loginUser } from '../store/slices/authSlice';
-import { addNotification } from '../store/slices/notificationsSlice';
-import { fetchResumes } from '../store/slices/resumesSlice';
-import { fetchCreditsBalance } from '../store/slices/creditsSlice';
-import { fetchSubscriptionStatus } from '../store/slices/subscriptionsSlice';
+import InputField from '../../components/forms/InputField';
+import AuthSidebar from '../../components/layout/AuthSidebar';
+import ThemeSwitcher from '../../utils/ThemeSwitcher';
+import BackgroundEffects from '../../components/common/BackgroundEffects';
+import { useAppDispatch } from '../../store/hooks';
+import { loginUser } from '../../store/slices/authSlice';
+import { addNotification } from '../../store/slices/notificationsSlice';
+import { fetchResumes } from '../../store/slices/resumesSlice';
+import { fetchCreditsBalance } from '../../store/slices/creditsSlice';
+import { fetchSubscriptionStatus } from '../../store/slices/subscriptionsSlice';
 
 const validateEmail = (email) => email.trim() && email.includes('@');
 

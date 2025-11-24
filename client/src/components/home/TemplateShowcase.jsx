@@ -16,8 +16,8 @@ import FormalTemplate from '../templates/FormalTemplate';
 import DynamicTemplate from '../templates/DynamicTemplate';
 import AcademicTemplate from '../templates/AcademicTemplate';
 import StartupTemplate from '../templates/StartupTemplate';
-import TemplatePreviewModal from '../TemplatePreviewModal';
-import { templateDummyData } from '../../util/templateDummyData';
+import TemplatePreviewModal from '../ui/TemplatePreviewModal';
+import { templateDummyData } from '../../utils/templateDummyData';
 
 const TEMPLATE_GROUPS = [
   {

@@ -17,10 +17,10 @@ import {
   Clock,
   DollarSign
 } from 'lucide-react';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
-import BackgroundEffects from '../components/BackgroundEffects';
-import { ORGANIZATION_PLANS } from '../config/pricing';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import BackgroundEffects from '../../components/common/BackgroundEffects';
+import { ORGANIZATION_PLANS } from '../../config/pricing';
 
 const benefits = [
   {

@@ -1,4 +1,4 @@
-import InputField from "../../InputField";
+import InputField from "../../../components/forms/InputField";
 import RatingSelector from "./RatingSelector";
 import StatusMessage from "./StatusMessage";
 

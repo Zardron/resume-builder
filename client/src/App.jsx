@@ -1,48 +1,52 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import GlobalBackground from './components/GlobalBackground';
-import ToastContainer from './components/ToastContainer';
-import Breadcrumbs from './components/Breadcrumbs';
-import LoadingSkeleton from './components/LoadingSkeleton';
-import ProtectedRoute from './components/ProtectedRoute';
-import GuestRoute from './components/GuestRoute';
+import GlobalBackground from './components/common/GlobalBackground';
+import ToastContainer from './components/ui/ToastContainer';
+import Breadcrumbs from './components/layout/Breadcrumbs';
+import LoadingSkeleton from './components/ui/LoadingSkeleton';
+import ProtectedRoute from './components/routes/ProtectedRoute';
+import GuestRoute from './components/routes/GuestRoute';
 import { SidebarProvider } from './contexts/SidebarContext';
 import 'animate.css';
 
 // Lazy load pages for better performance
-const Home = lazy(() => import('./pages/Home'));
+const Home = lazy(() => import('./pages/public/Home'));
 const Layout = lazy(() => import('./pages/Layout'));
-const AdminLayout = lazy(() => import('./pages/dashboard/AdminLayout'));
-const Dashboard = lazy(() => import('./pages/dashboard'));
-const Builder = lazy(() => import('./pages/dashboard/Builder'));
-const PurchaseCredits = lazy(() => import('./pages/dashboard/PurchaseCredits'));
-const Subscription = lazy(() => import('./pages/dashboard/Subscription'));
-const Profile = lazy(() => import('./pages/dashboard/Profile'));
-const Settings = lazy(() => import('./pages/dashboard/Settings'));
-const Login = lazy(() => import('./pages/Login'));
-const Register = lazy(() => import('./pages/Register'));
-const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
-const RecruiterBenefits = lazy(() => import('./pages/RecruiterBenefits'));
-const ApplyAsRecruiter = lazy(() => import('./pages/ApplyAsRecruiter'));
-const NotFound = lazy(() => import('./pages/NotFound'));
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
+const Dashboard = lazy(() => import('./pages/applicant/Dashboard'));
+const Builder = lazy(() => import('./pages/applicant/Builder'));
+const PurchaseCredits = lazy(() => import('./pages/applicant/PurchaseCredits'));
+const Subscription = lazy(() => import('./pages/applicant/Subscription'));
+const Profile = lazy(() => import('./pages/applicant/Profile'));
+const Settings = lazy(() => import('./pages/applicant/Settings'));
+const Login = lazy(() => import('./pages/auth/Login'));
+const Register = lazy(() => import('./pages/auth/Register'));
+const VerifyEmail = lazy(() => import('./pages/auth/VerifyEmail'));
+const RecruiterBenefits = lazy(() => import('./pages/public/RecruiterBenefits'));
+const ApplyAsRecruiter = lazy(() => import('./pages/auth/ApplyAsRecruiter'));
+const NotFound = lazy(() => import('./pages/public/NotFound'));
 
-// Recruiter/Admin pages
-const RecruiterDashboard = lazy(() => import('./pages/dashboard/RecruiterDashboard'));
-const JobsList = lazy(() => import('./pages/dashboard/JobsList'));
-const CandidatesPipeline = lazy(() => import('./pages/dashboard/CandidatesPipeline'));
-const InterviewsCalendar = lazy(() => import('./pages/dashboard/InterviewsCalendar'));
-const MessagesInbox = lazy(() => import('./pages/dashboard/MessagesInbox'));
-const AnalyticsDashboard = lazy(() => import('./pages/dashboard/AnalyticsDashboard'));
-const PlatformAnalytics = lazy(() => import('./pages/dashboard/PlatformAnalytics'));
-const TeamManagement = lazy(() => import('./pages/dashboard/TeamManagement'));
-const OrganizationSettings = lazy(() => import('./pages/dashboard/OrganizationSettings'));
-const CreateAccounts = lazy(() => import('./pages/dashboard/CreateAccounts'));
-const Recruiters = lazy(() => import('./pages/dashboard/Recruiters'));
-const RecruiterApplications = lazy(() => import('./pages/dashboard/RecruiterApplications'));
-const RecruiterLayout = lazy(() => import('./pages/dashboard/RecruiterLayout'));
+// Recruiter pages
+const RecruiterDashboard = lazy(() => import('./pages/recruiter/RecruiterDashboard'));
+const JobsList = lazy(() => import('./pages/recruiter/JobsList'));
+const CandidatesPipeline = lazy(() => import('./pages/recruiter/CandidatesPipeline'));
+const InterviewsCalendar = lazy(() => import('./pages/recruiter/InterviewsCalendar'));
+const MessagesInbox = lazy(() => import('./pages/recruiter/MessagesInbox'));
+const AnalyticsDashboard = lazy(() => import('./pages/recruiter/AnalyticsDashboard'));
+const RecruiterApplications = lazy(() => import('./pages/recruiter/RecruiterApplications'));
+const RecruiterLayout = lazy(() => import('./pages/recruiter/RecruiterLayout'));
+
+// Organization pages
+const TeamManagement = lazy(() => import('./pages/organization/TeamManagement'));
+const OrganizationSettings = lazy(() => import('./pages/organization/OrganizationSettings'));
+
+// Super Admin pages
+const PlatformAnalytics = lazy(() => import('./pages/admin/PlatformAnalytics'));
+const CreateAccounts = lazy(() => import('./pages/admin/CreateAccounts'));
+const Recruiters = lazy(() => import('./pages/admin/Recruiters'));
 
 // Applicant pages
-const ApplicantDashboard = lazy(() => import('./pages/dashboard/ApplicantDashboard'));
+const ApplicantDashboard = lazy(() => import('./pages/applicant/ApplicantDashboard'));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">

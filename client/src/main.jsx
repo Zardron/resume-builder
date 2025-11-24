@@ -2,13 +2,13 @@ import { StrictMode, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from './ThemeContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { store } from './store/store';
-import AuthInitializer from './components/AuthInitializer';
-import ErrorBoundary from './components/ErrorBoundary';
+import AuthInitializer from './components/common/AuthInitializer';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import App from './App';
 import './index.css';
-import FullScreenLoader from './components/FullScreenLoader';
+import FullScreenLoader from './components/ui/FullScreenLoader';
 
 const LOADER_EXIT_DURATION = 600;
 

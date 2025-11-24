@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, BuildingIcon, Check, CheckCircle2 } from 'lucide-react';
-import InputField from '../components/InputField';
-import ThemeSwitcher from '../utils/ThemeSwitcher';
-import BackgroundEffects from '../components/BackgroundEffects';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { useAppDispatch } from '../store/hooks';
-import { addNotification } from '../store/slices/notificationsSlice';
-import { RECRUITER_PLANS } from '../config/pricing';
-import { recruiterApplicationsAPI } from '../services/api';
+import InputField from '../../components/forms/InputField';
+import ThemeSwitcher from '../../utils/ThemeSwitcher';
+import BackgroundEffects from '../../components/common/BackgroundEffects';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import { useAppDispatch } from '../../store/hooks';
+import { addNotification } from '../../store/slices/notificationsSlice';
+import { RECRUITER_PLANS } from '../../config/pricing';
+import { recruiterApplicationsAPI } from '../../services/api';
 
 const validateEmail = (email) => email.trim() && email.includes('@');
 

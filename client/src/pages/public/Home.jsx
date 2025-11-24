@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import { ChevronsUp } from 'lucide-react';
-import Banner from '../components/home/Banner';
-import Navbar from '../components/layout/Navbar';
-import HeroSection from '../components/home/HeroSection';
-import Features from '../components/home/Features';
-import About from '../components/home/About';
-import Testimonials from '../components/home/Testimonials';
-import Footer from '../components/layout/Footer';
-import TemplateShowcase from '../components/home/TemplateShowcase';
-import Pricing from '../components/home/Pricing';
-import TestimonialForm from '../components/home/TestimonialForm';
-import { TestimonialsProvider } from '../components/home/testimonials/TestimonialsContext';
-import BackgroundEffects from '../components/common/BackgroundEffects';
-import SkipToContent from '../components/common/SkipToContent';
+import Banner from '../../components/home/Banner';
+import Navbar from '../../components/layout/Navbar';
+import HeroSection from '../../components/home/HeroSection';
+import Features from '../../components/home/Features';
+import About from '../../components/home/About';
+import Testimonials from '../../components/home/Testimonials';
+import Footer from '../../components/layout/Footer';
+import TemplateShowcase from '../../components/home/TemplateShowcase';
+import Pricing from '../../components/home/Pricing';
+import TestimonialForm from '../../components/home/TestimonialForm';
+import { TestimonialsProvider } from '../../components/home/testimonials/TestimonialsContext';
+import BackgroundEffects from '../../components/common/BackgroundEffects';
+import SkipToContent from '../../components/common/SkipToContent';
 
 const SCROLL_THRESHOLD = 250;
 

@@ -6,11 +6,11 @@ import {
   CreditCard, UserPlus, ChevronRight, PanelLeftClose, PanelLeftOpen,
   User, Sparkles, Moon, Sun, LogOut, BarChart3, FileText
 } from 'lucide-react';
-import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { logoutUser } from '../store/slices/authSlice';
-import { useSidebar } from '../contexts/SidebarContext';
-import LOGO from '../assets/logo.png';
-import ThemeSwitcher from '../utils/ThemeSwitcher';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { logoutUser } from '../../store/slices/authSlice';
+import { useSidebar } from '../../contexts/SidebarContext';
+import LOGO from '../../assets/logo.png';
+import ThemeSwitcher from '../../utils/ThemeSwitcher';
 
 const AdminSidebar = () => {
   const location = useLocation();
