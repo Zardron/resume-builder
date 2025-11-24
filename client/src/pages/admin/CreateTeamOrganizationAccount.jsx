@@ -7,7 +7,7 @@ import SelectField from '../../components/forms/SelectField';
 import { useAppSelector } from '../../store/hooks';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 
-const CreateAccounts = () => {
+const CreateTeamOrganizationAccount = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(false);
@@ -218,7 +218,7 @@ const CreateAccounts = () => {
         <div className="flex items-center gap-3 mb-2">
           <Building2 className="h-8 w-8 text-blue-600 dark:text-blue-400" />
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Create Recruiter/Team Accounts
+            Create Team/Organization Account
           </h1>
         </div>
         <p className="text-gray-600 dark:text-gray-400">
@@ -511,5 +511,5 @@ const CreateAccounts = () => {
   );
 };
 
-export default CreateAccounts;
+export default CreateTeamOrganizationAccount;
 

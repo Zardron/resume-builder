@@ -11,6 +11,7 @@ import { addNotification } from '../store/slices/notificationsSlice';
 import { fetchResumes } from '../store/slices/resumesSlice';
 import { fetchCreditsBalance } from '../store/slices/creditsSlice';
 import { fetchSubscriptionStatus } from '../store/slices/subscriptionsSlice';
+import { authAPI } from '../services/api';
 
 const validateEmail = (email) => email.trim() && email.includes('@');
 
@@ -41,6 +42,28 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isJobSeekerLoginAllowed, setIsJobSeekerLoginAllowed] = useState(true);
+  const [isCheckingConfig, setIsCheckingConfig] = useState(true);
+
+  // Check if job seeker login is allowed
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const response = await authAPI.getPublicConfig();
+        if (response && response.data) {
+          setIsJobSeekerLoginAllowed(response.data.allowJobSeekerLoginSignup);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+        // Default to allowing login if check fails
+        setIsJobSeekerLoginAllowed(true);
+      } finally {
+        setIsCheckingConfig(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   const handleInputChange = (name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -54,6 +77,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Note: We don't block login attempts here because we don't know the user type yet.
+    // The backend will properly validate based on user type (applicant vs recruiter/organization).
+    // We just show a warning if job seeker login is disabled.
     
     const newErrors = {
       email: !validateEmail(formData.email),
@@ -119,6 +146,21 @@ const Login = () => {
       }
     }
   };
+
+  // Show loading state while checking config
+  if (isCheckingConfig) {
+    return (
+      <div className="relative flex w-full h-screen overflow-hidden">
+        <BackgroundEffects />
+        <div className="w-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex w-full h-screen overflow-hidden">
@@ -231,6 +273,14 @@ const Login = () => {
                   Forgot password?
                 </a>
               </div>
+
+              {!isJobSeekerLoginAllowed && (
+                <div className="mt-4 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
+                  <p className="text-sm text-yellow-600 dark:text-yellow-400">
+                    Job seeker login is currently disabled. If you are a recruiter or organization member, you can still log in.
+                  </p>
+                </div>
+              )}
 
               {errorMessage && (
                 <div className="mt-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">

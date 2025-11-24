@@ -2,6 +2,7 @@ import Organization from '../models/Organization.js';
 import TeamMember from '../models/TeamMember.js';
 import User from '../models/User.js';
 import JobPosting from '../models/JobPosting.js';
+import SystemConfig from '../models/SystemConfig.js';
 import crypto from 'crypto';
 import { sendEmail } from '../services/emailService.js';
 
@@ -338,6 +339,69 @@ export const getAllRecruiters = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to get recruiters',
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Get system configuration (Super Admin only)
+ */
+export const getSystemConfig = async (req, res) => {
+  try {
+    const config = await SystemConfig.getConfig();
+    res.json({
+      success: true,
+      data: config,
+    });
+  } catch (error) {
+    console.error('Get system config error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get system configuration',
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Update system configuration (Super Admin only)
+ */
+export const updateSystemConfig = async (req, res) => {
+  try {
+    const { general, security, notifications, integrations } = req.body;
+    
+    let config = await SystemConfig.findOne();
+    if (!config) {
+      config = new SystemConfig({});
+    }
+
+    // Update configuration sections
+    if (general) {
+      config.general = { ...config.general, ...general };
+    }
+    if (security) {
+      config.security = { ...config.security, ...security };
+    }
+    if (notifications) {
+      config.notifications = { ...config.notifications, ...notifications };
+    }
+    if (integrations) {
+      config.integrations = { ...config.integrations, ...integrations };
+    }
+
+    await config.save();
+
+    res.json({
+      success: true,
+      message: 'System configuration updated successfully',
+      data: config,
+    });
+  } catch (error) {
+    console.error('Update system config error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update system configuration',
       error: error.message,
     });
   }

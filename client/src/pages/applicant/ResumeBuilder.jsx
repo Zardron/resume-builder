@@ -59,7 +59,7 @@ import {
   PAPER_SIZES,
   PAPER_DIMENSIONS,
   MARGIN_PRESETS,
-} from "../constants/resumeBuilderConstants";
+} from "../../config/resumeBuilderConstants";
 import { toPng } from "html-to-image";
 import { createHalfBlurredPreviewImage } from "../../utils/previewImageUtils";
 import AIFeatureButton from "../../components/common/AIFeatureButton";

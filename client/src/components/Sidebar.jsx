@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation, Link, useNavigate } from 'react-router-dom';
 import { 
-  LayoutDashboard, Briefcase, Users, Calendar, 
-  MessageSquare, Settings, Building2,
-  CreditCard, UserPlus, ChevronRight, PanelLeftClose, PanelLeftOpen,
-  User, Sparkles, Moon, Sun, LogOut, BarChart3, FileText
+  ChevronRight, PanelLeftClose, PanelLeftOpen,
+  Moon, Sun, LogOut, Sparkles
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { logoutUser } from '../store/slices/authSlice';
 import { useSidebar } from '../contexts/SidebarContext';
+import { getNavItemsForRole, getBasePath } from '../config/SideNavData';
 import LOGO from '../assets/logo.png';
 import ThemeSwitcher from '../utils/ThemeSwitcher';
 
-const AdminSidebar = () => {
+const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -26,12 +25,18 @@ const AdminSidebar = () => {
   
   const userRole = user?.role || 'recruiter';
   const isSuperAdmin = userRole === 'super_admin';
-  const basePath = isSuperAdmin ? '/dashboard/admin' : '/dashboard/recruiter';
+  const basePath = getBasePath(userRole);
+  
+  // Get navigation items based on user role from SideNavData
+  const menuItems = getNavItemsForRole(userRole);
   
   const isActive = (path) => {
     // Handle dashboard root paths
-    if (path === basePath || path === '/dashboard/recruiter' || path === '/dashboard/admin') {
-      return location.pathname === basePath || location.pathname === '/dashboard/recruiter' || location.pathname === '/dashboard/admin';
+    if (path === basePath || path === '/dashboard/recruiter' || path === '/dashboard/admin' || path === '/dashboard') {
+      return location.pathname === basePath || 
+             location.pathname === '/dashboard/recruiter' || 
+             location.pathname === '/dashboard/admin' ||
+             location.pathname === '/dashboard';
     }
     return location.pathname.startsWith(path);
   };
@@ -53,119 +58,6 @@ const AdminSidebar = () => {
       navigate('/sign-in', { state: { fromHome: true } });
     }
   };
-
-  // Helper function to get path with correct base
-  const getPath = (relativePath) => {
-    if (relativePath.startsWith('/dashboard/')) {
-      // Replace the base path dynamically
-      if (relativePath.startsWith('/dashboard/recruiter')) {
-        return relativePath.replace('/dashboard/recruiter', basePath);
-      }
-      return relativePath;
-    }
-    return `${basePath}${relativePath}`;
-  };
-
-  const menuItems = [
-    {
-      label: 'Dashboard',
-      path: basePath,
-      icon: LayoutDashboard,
-      exact: true
-    },
-    {
-      label: 'Job Postings',
-      path: getPath('/jobs'),
-      icon: Briefcase,
-      submenu: [
-        { label: 'All Jobs', path: getPath('/jobs') },
-        { label: 'Create Job', path: getPath('/jobs/new') },
-        { label: 'Drafts', path: getPath('/jobs?status=draft') }
-      ],
-      allowedRoles: ['admin', 'manager', 'recruiter']
-    },
-    {
-      label: 'Candidates',
-      path: getPath('/candidates'),
-      icon: Users,
-      submenu: [
-        { label: 'Pipeline', path: getPath('/candidates') },
-        { label: 'All Candidates', path: getPath('/candidates?view=all') },
-        { label: 'Favorites', path: getPath('/candidates?view=favorites') }
-      ],
-      allowedRoles: ['admin', 'manager', 'recruiter']
-    },
-    {
-      label: 'Interviews',
-      path: getPath('/interviews'),
-      icon: Calendar,
-      submenu: [
-        { label: 'Calendar', path: getPath('/interviews') },
-        { label: 'Schedule', path: getPath('/interviews/new') },
-        { label: 'Upcoming', path: getPath('/interviews?status=upcoming') }
-      ],
-      allowedRoles: ['admin', 'manager', 'recruiter']
-    },
-    {
-      label: 'Messages',
-      path: getPath('/messages'),
-      icon: MessageSquare,
-      badge: 0,
-      allowedRoles: ['admin', 'manager', 'recruiter']
-    },
-    {
-      label: 'Team',
-      path: getPath('/team'),
-      icon: UserPlus,
-      allowedRoles: ['admin', 'manager', 'super_admin']
-    },
-    {
-      label: 'Platform Analytics',
-      path: getPath('/analytics'),
-      icon: BarChart3,
-      allowedRoles: ['super_admin']
-    },
-    {
-      label: 'Create Accounts',
-      path: getPath('/create-accounts'),
-      icon: UserPlus,
-      allowedRoles: ['super_admin']
-    },
-    {
-      label: 'Recruiters',
-      path: getPath('/recruiters'),
-      icon: Users,
-      allowedRoles: ['super_admin']
-    },
-    {
-      label: 'Recruiter Applications',
-      path: getPath('/recruiter-applications'),
-      icon: FileText,
-      allowedRoles: ['super_admin']
-    },
-    {
-      label: 'Organization',
-      path: getPath('/organization'),
-      icon: Building2,
-      allowedRoles: ['admin', 'super_admin']
-    },
-    {
-      label: 'Billing',
-      path: getPath('/billing'),
-      icon: CreditCard,
-      allowedRoles: ['admin']
-    }
-  ];
-  
-  const filteredMenuItems = menuItems.filter(item => {
-    if (item.allowedRoles) {
-      return item.allowedRoles.includes(userRole);
-    }
-    if (item.roles) {
-      return item.roles.includes(userRole);
-    }
-    return true;
-  });
 
   return (
     <aside 
@@ -216,7 +108,7 @@ const AdminSidebar = () => {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
           <div className="space-y-1">
-            {filteredMenuItems.map((item) => {
+            {menuItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
               const hasSubmenu = item.submenu && item.submenu.length > 0;
@@ -286,8 +178,22 @@ const AdminSidebar = () => {
                   {hasSubmenu && (isExpanded || active) && !isCollapsed && (
                     <div className="ml-4 mt-1 space-y-1 border-l-2 border-gray-200 dark:border-gray-700 pl-4 animate-in slide-in-from-top-2">
                       {item.submenu.map((subItem) => {
-                        const subActive = location.pathname === subItem.path || 
-                          (subItem.path.includes('?') && location.pathname === subItem.path.split('?')[0]);
+                        // Check if submenu item is active
+                        const [subItemPath, subItemQuery] = subItem.path.split('?');
+                        const currentPath = location.pathname;
+                        const currentQuery = location.search;
+                        
+                        // For items with query params, both path and query must match
+                        // For items without query params, only path must match (and no query in URL)
+                        let subActive = false;
+                        if (subItem.path.includes('?')) {
+                          // Item has query params - both path and query must match
+                          subActive = currentPath === subItemPath && 
+                                     (currentQuery === `?${subItemQuery}` || currentQuery === subItemQuery);
+                        } else {
+                          // Item has no query params - path must match and URL should have no query
+                          subActive = currentPath === subItemPath && currentQuery === '';
+                        }
                         
                         return (
                           <NavLink
@@ -330,8 +236,8 @@ const AdminSidebar = () => {
         {/* Bottom Profile Menu Section */}
         <div className="mt-auto border-t border-gray-200 dark:border-gray-700">
           <div className={`p-2 space-y-1 ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
-            {/* Buy Credits */}
-            {!isSuperAdmin && (
+            {/* Buy Credits - Only for applicants */}
+            {userRole === 'applicant' && (
               <NavLink
                 to="/dashboard/purchase"
                 className={({ isActive }) =>
@@ -369,83 +275,6 @@ const AdminSidebar = () => {
                 )}
               </NavLink>
             )}
-            
-            {/* Profile */}
-            {!isSuperAdmin && (
-              <NavLink
-                to="/dashboard/profile"
-                className={({ isActive }) =>
-                  `flex items-center ${isCollapsed ? 'justify-center' : ''} rounded-md ${isCollapsed ? 'py-2 px-2 w-10 h-10' : 'py-2.5 px-3 w-full'} text-sm font-medium transition-all duration-200 relative group ${
-                    isActive
-                      ? isCollapsed 
-                        ? 'bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400'
-                        : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
-                  }`
-                }
-                title={isCollapsed ? 'Profile' : ''}
-              >
-                <User className="h-5 w-5 flex-shrink-0" />
-                <span 
-                  className="ml-3 flex-1 whitespace-nowrap"
-                  style={{
-                    opacity: isCollapsed ? 0 : 1,
-                    width: isCollapsed ? 0 : 'auto',
-                    overflow: 'hidden',
-                    transition: 'opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                >
-                  Profile
-                </span>
-                {isActive('/dashboard/profile') && !isCollapsed && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
-                )}
-                {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
-                    Profile
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
-                  </div>
-                )}
-              </NavLink>
-            )}
-            
-            {/* Settings */}
-            <NavLink
-              to="/dashboard/settings"
-              className={({ isActive }) =>
-                `flex items-center ${isCollapsed ? 'justify-center' : ''} rounded-md ${isCollapsed ? 'py-2 px-2 w-10 h-10' : 'py-2.5 px-3 w-full'} text-sm font-medium transition-all duration-200 relative group ${
-                  isActive
-                    ? isCollapsed 
-                      ? 'bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400'
-                      : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
-                }`
-              }
-              title={isCollapsed ? 'Settings' : ''}
-            >
-              <Settings className="h-5 w-5 flex-shrink-0 transition-transform hover:rotate-90" />
-              <span 
-                className="ml-3 flex-1 whitespace-nowrap"
-                style={{
-                  display: isCollapsed ? 'none' : 'block',
-                  opacity: isCollapsed ? 0 : 1,
-                  width: isCollapsed ? 0 : 'auto',
-                  overflow: 'hidden',
-                  transition: 'opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-              >
-                Settings
-              </span>
-              {isActive('/dashboard/settings') && !isCollapsed && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
-              )}
-              {isCollapsed && (
-                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
-                  Settings
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
-                </div>
-              )}
-            </NavLink>
             
             {/* Theme Switcher */}
             <div className={`flex items-center ${isCollapsed ? 'justify-center' : ''} rounded-md ${isCollapsed ? 'py-2 px-2 w-10 h-10' : 'py-2.5 px-3 w-full'} text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200 group relative`}>
@@ -540,5 +369,5 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default Sidebar;
 

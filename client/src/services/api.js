@@ -167,6 +167,18 @@ export const authAPI = {
       method: 'POST',
     });
   },
+
+  getPublicConfig: async () => {
+    // This endpoint doesn't require authentication
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth/public-config`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data;
+  },
 };
 
 // Resume API
@@ -744,6 +756,19 @@ export const adminAPI = {
   getAllRecruiters: async () => {
     const response = await apiRequest('/admin/recruiters');
     return response.data || [];
+  },
+
+  getSystemConfig: async () => {
+    const response = await apiRequest('/admin/system-config');
+    return response.data;
+  },
+
+  updateSystemConfig: async (configData) => {
+    const response = await apiRequest('/admin/system-config', {
+      method: 'PUT',
+      body: JSON.stringify(configData),
+    });
+    return response.data;
   },
 };
 

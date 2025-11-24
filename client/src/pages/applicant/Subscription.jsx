@@ -225,7 +225,11 @@ const Subscription = () => {
                   value={method.id}
                   checked={selectedPayment === method.id}
                   onChange={() => setSelectedPayment(method.id)}
-                  className="size-4 accent-[var(--primary-color)]"
+                  className="h-4 w-4 cursor-pointer text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 border-gray-300 dark:border-gray-600"
+                  style={{ 
+                    accentColor: '#2563eb',
+                    color: '#2563eb'
+                  }}
                 />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-900 dark:text-white">

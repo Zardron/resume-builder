@@ -1,6 +1,6 @@
-import { RandomIdGenerator } from "../../utils/RandomIdGenerator";
-import { DEFAULT_FONT_SIZES } from "../../utils/fontSizeUtils";
-import { DEFAULT_PAGE_MARGINS } from "../../utils/marginUtils";
+import { RandomIdGenerator } from "../utils/RandomIdGenerator";
+import { DEFAULT_FONT_SIZES } from "../utils/fontSizeUtils";
+import { DEFAULT_PAGE_MARGINS } from "../utils/marginUtils";
 import { User, FileText, Briefcase, GraduationCap, Folder, Sparkles, Plus } from "lucide-react";
 
 export const DRAFT_STORAGE_KEY = "resume_builder_draft";
@@ -81,4 +81,5 @@ export const MARGIN_PRESETS = [
   { id: "0.75", label: "0.75 in", value: 72 },
   { id: "1", label: "1 in", value: 96 },
 ];
+
 

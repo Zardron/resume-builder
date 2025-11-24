@@ -4,10 +4,40 @@ import crypto from 'crypto';
 import User from '../models/User.js';
 import Organization from '../models/Organization.js';
 import TeamMember from '../models/TeamMember.js';
+import SystemConfig from '../models/SystemConfig.js';
 import { authenticate } from '../middleware/auth.js';
 import { sendVerificationEmail } from '../services/emailService.js';
 
 const router = express.Router();
+
+// Get public system configuration (no auth required)
+router.get('/public-config', async (req, res) => {
+  try {
+    const config = await SystemConfig.getConfig();
+    // Only return public settings that affect authentication
+    res.json({
+      success: true,
+      data: {
+        allowJobSeekerLoginSignup: config.general.allowJobSeekerLoginSignup,
+        allowTeamOrganizationLoginSignup: config.general.allowTeamOrganizationLoginSignup,
+        allowRecruiterLogin: config.general.allowRecruiterLogin,
+        maintenanceMode: config.general.maintenanceMode,
+      },
+    });
+  } catch (error) {
+    console.error('Get public config error:', error);
+    // Return defaults if error occurs
+    res.json({
+      success: true,
+      data: {
+        allowJobSeekerLoginSignup: true,
+        allowTeamOrganizationLoginSignup: true,
+        allowRecruiterLogin: true,
+        maintenanceMode: false,
+      },
+    });
+  }
+});
 
 // Generate JWT token
 const generateToken = (userId) => {
@@ -20,6 +50,15 @@ const generateToken = (userId) => {
 router.post('/register', async (req, res) => {
   try {
     const { fullName, email, password, userType, organization } = req.body;
+
+    // Check if job seeker registration is allowed
+    const systemConfig = await SystemConfig.getConfig();
+    if (!systemConfig.general.allowJobSeekerLoginSignup) {
+      return res.status(403).json({
+        success: false,
+        message: 'Job seeker registration is currently disabled. Please contact support for assistance.',
+      });
+    }
 
     // Validation
     if (!fullName || !email || !password) {
@@ -225,6 +264,24 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
+      });
+    }
+
+    // Check maintenance mode - allow super admins to login even during maintenance
+    const systemConfig = await SystemConfig.getConfig();
+    if (systemConfig.general.maintenanceMode && user.role !== 'super_admin') {
+      return res.status(503).json({
+        success: false,
+        message: 'Service is currently under maintenance. Please try again later.',
+        maintenanceMode: true,
+      });
+    }
+
+    // Check if job seeker login is allowed for applicant users
+    if (user.userType === 'applicant' && !systemConfig.general.allowJobSeekerLoginSignup) {
+      return res.status(403).json({
+        success: false,
+        message: 'Job seeker login is currently disabled. Please contact support for assistance.',
       });
     }
 

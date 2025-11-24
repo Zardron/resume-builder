@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
+import { checkMaintenanceMode } from './middleware/maintenance.js';
 
 // Import routes
 import authRoutes from './routes/auth.js';
@@ -67,7 +68,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/resumeiqh
   process.exit(1);
 });
 
-// Health check
+// Health check (bypass maintenance mode)
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -75,6 +76,10 @@ app.get('/', (req, res) => {
     version: '1.0.0',
   });
 });
+
+// Maintenance mode check middleware (applied to all API routes)
+// Note: This runs before authentication, so we need to handle super admin check in routes
+app.use('/api', checkMaintenanceMode);
 
 // API Routes
 app.use('/api/auth', authRoutes);

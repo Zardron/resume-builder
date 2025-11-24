@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftIcon } from 'lucide-react';
 import InputField from '../components/forms/InputField';
@@ -13,6 +13,7 @@ import { addNotification } from '../store/slices/notificationsSlice';
 import { fetchResumes } from '../store/slices/resumesSlice';
 import { fetchCreditsBalance } from '../store/slices/creditsSlice';
 import { fetchSubscriptionStatus } from '../store/slices/subscriptionsSlice';
+import { authAPI } from '../services/api';
 
 const validateEmail = (email) => email.trim() && email.includes('@');
 
@@ -52,6 +53,28 @@ const Register = () => {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isRegistrationAllowed, setIsRegistrationAllowed] = useState(true);
+  const [isCheckingConfig, setIsCheckingConfig] = useState(true);
+
+  // Check if registration is allowed
+  useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      try {
+        const response = await authAPI.getPublicConfig();
+        if (response && response.data) {
+          setIsRegistrationAllowed(response.data.allowJobSeekerLoginSignup);
+        }
+      } catch (error) {
+        console.error('Error checking registration status:', error);
+        // Default to allowing registration if check fails
+        setIsRegistrationAllowed(true);
+      } finally {
+        setIsCheckingConfig(false);
+      }
+    };
+
+    checkRegistrationStatus();
+  }, []);
 
   const handleInputChange = (name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -144,6 +167,76 @@ const Register = () => {
     }
   };
 
+
+  // Show loading state while checking config
+  if (isCheckingConfig) {
+    return (
+      <div className="relative flex w-full h-screen overflow-hidden">
+        <BackgroundEffects />
+        <div className="w-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show disabled message if registration is not allowed
+  if (!isRegistrationAllowed) {
+    return (
+      <div className="relative flex w-full h-screen overflow-hidden">
+        <BackgroundEffects />
+        
+        {/* Left Sidebar - Branding */}
+        <div className="hidden lg:flex w-1/2 h-full">
+          <AuthSidebar
+            title="ResumeIQHub"
+            description="Join thousands of companies and job seekers using our complete recruitment platform to connect talent with opportunity"
+          />
+        </div>
+
+        {/* Right Side - Disabled Message */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-slate-950 relative overflow-y-auto">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20 flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 transition-all duration-200 font-medium text-sm"
+          >
+            <ArrowLeftIcon className="size-4" />
+            <span>Back</span>
+          </button>
+
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
+            <ThemeSwitcher />
+          </div>
+
+          <div className="w-full max-w-xl">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-800 p-6 sm:p-8 text-center">
+              <div className="mb-6">
+                <div className="mx-auto w-16 h-16 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Registration Currently Disabled</h2>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Job seeker registration is currently disabled. Please contact support if you need assistance.
+                </p>
+              </div>
+              <Link
+                to="/"
+                className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Return to Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex w-full h-screen overflow-hidden">

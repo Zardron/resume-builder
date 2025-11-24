@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import TemplatePreviewModal from '../../components/ui/TemplatePreviewModal';
 import PaperSizeDropdown from '../../components/builder/PaperSizeDropdown';
 import FontDropdown from '../../components/builder/FontDropdown';
-import { PAPER_SIZES } from '../constants/resumeBuilderConstants';
+import { PAPER_SIZES } from '../../config/resumeBuilderConstants';
 import ColorPicker from '../../utils/ColorPicker';
 import { useApp } from '../../contexts/AppContext';
 import { AI_FEATURES } from '../../utils/aiFeatures';

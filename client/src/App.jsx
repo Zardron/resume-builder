@@ -6,6 +6,7 @@ import Breadcrumbs from './components/layout/Breadcrumbs';
 import LoadingSkeleton from './components/ui/LoadingSkeleton';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import GuestRoute from './components/routes/GuestRoute';
+import MaintenanceModeWrapper from './components/common/MaintenanceModeWrapper';
 import { SidebarProvider } from './contexts/SidebarContext';
 import 'animate.css';
 
@@ -29,12 +30,15 @@ const NotFound = lazy(() => import('./pages/public/NotFound'));
 // Recruiter pages
 const RecruiterDashboard = lazy(() => import('./pages/recruiter/RecruiterDashboard'));
 const JobsList = lazy(() => import('./pages/recruiter/JobsList'));
+const CreateJob = lazy(() => import('./pages/recruiter/CreateJob'));
 const CandidatesPipeline = lazy(() => import('./pages/recruiter/CandidatesPipeline'));
 const InterviewsCalendar = lazy(() => import('./pages/recruiter/InterviewsCalendar'));
+const ScheduleInterview = lazy(() => import('./pages/recruiter/ScheduleInterview'));
 const MessagesInbox = lazy(() => import('./pages/recruiter/MessagesInbox'));
 const AnalyticsDashboard = lazy(() => import('./pages/recruiter/AnalyticsDashboard'));
 const RecruiterApplications = lazy(() => import('./pages/recruiter/RecruiterApplications'));
 const RecruiterLayout = lazy(() => import('./pages/recruiter/RecruiterLayout'));
+const Billing = lazy(() => import('./pages/recruiter/Billing'));
 
 // Organization pages
 const TeamManagement = lazy(() => import('./pages/organization/TeamManagement'));
@@ -42,11 +46,18 @@ const OrganizationSettings = lazy(() => import('./pages/organization/Organizatio
 
 // Super Admin pages
 const PlatformAnalytics = lazy(() => import('./pages/admin/PlatformAnalytics'));
-const CreateAccounts = lazy(() => import('./pages/admin/CreateAccounts'));
 const Recruiters = lazy(() => import('./pages/admin/Recruiters'));
+const SystemConfiguration = lazy(() => import('./pages/admin/SystemConfiguration'));
+const CreateRecruiterAccount = lazy(() => import('./pages/admin/CreateRecruiterAccount'));
+const CreateTeamOrganizationAccount = lazy(() => import('./pages/admin/CreateTeamOrganizationAccount'));
+const SuperAdminLogin = lazy(() => import('./pages/admin/SuperAdminLogin'));
 
 // Applicant pages
 const ApplicantDashboard = lazy(() => import('./pages/applicant/ApplicantDashboard'));
+const BrowseJobs = lazy(() => import('./pages/applicant/BrowseJobs'));
+const MyApplications = lazy(() => import('./pages/applicant/MyApplications'));
+const MyInterviews = lazy(() => import('./pages/applicant/MyInterviews'));
+const Messages = lazy(() => import('./pages/applicant/Messages'));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -58,8 +69,9 @@ const App = () => (
   <SidebarProvider>
     <GlobalBackground />
     <ToastContainer />
-    <Suspense fallback={<PageLoader />}>
-    <Routes>
+    <MaintenanceModeWrapper>
+      <Suspense fallback={<PageLoader />}>
+      <Routes>
       <Route path="/" element={
         <GuestRoute>
           <Home />
@@ -114,8 +126,8 @@ const App = () => (
           </ProtectedRoute>
         } />
         <Route path="jobs/new" element={
-          <ProtectedRoute allowedRoles={['admin', 'manager']} allowedUserTypes={['recruiter', 'both']}>
-            <div>Create Job Page (TODO)</div>
+          <ProtectedRoute allowedRoles={['admin', 'manager', 'recruiter']} allowedUserTypes={['recruiter', 'both']}>
+            <CreateJob />
           </ProtectedRoute>
         } />
         <Route path="jobs/:id" element={
@@ -146,8 +158,8 @@ const App = () => (
           </ProtectedRoute>
         } />
         <Route path="interviews/new" element={
-          <ProtectedRoute allowedRoles={['admin', 'manager']} allowedUserTypes={['recruiter', 'both']}>
-            <div>Schedule Interview Page (TODO)</div>
+          <ProtectedRoute allowedRoles={['admin', 'manager', 'recruiter']} allowedUserTypes={['recruiter', 'both']}>
+            <ScheduleInterview />
           </ProtectedRoute>
         } />
         <Route path="interviews/:id" element={
@@ -187,7 +199,7 @@ const App = () => (
         {/* Billing - Only for organization admins */}
         <Route path="billing" element={
           <ProtectedRoute allowedRoles={['admin']}>
-            <div>Billing Page (TODO)</div>
+            <Billing />
           </ProtectedRoute>
         } />
       </Route>
@@ -221,7 +233,7 @@ const App = () => (
           {/* Create Accounts - Super Admin only */}
           <Route path="create-accounts" element={
             <ProtectedRoute allowedRoles={['super_admin']}>
-              <CreateAccounts />
+              <CreateRecruiterAccount />
             </ProtectedRoute>
           } />
           {/* Recruiters - Super Admin only */}
@@ -236,6 +248,24 @@ const App = () => (
               <RecruiterApplications />
             </ProtectedRoute>
           } />
+          {/* System Configuration - Super Admin only */}
+          <Route path="settings" element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <SystemConfiguration />
+            </ProtectedRoute>
+          } />
+          {/* Create Recruiter Account - Super Admin only */}
+          <Route path="create-recruiter-account" element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <CreateRecruiterAccount />
+            </ProtectedRoute>
+          } />
+          {/* Create Team Organization Account - Super Admin only */}
+          <Route path="create-team-organization-account" element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <CreateTeamOrganizationAccount />
+            </ProtectedRoute>
+          } />
         </Route>
       </Route>
 
@@ -248,7 +278,7 @@ const App = () => (
         } />
         <Route path="jobs" element={
           <ProtectedRoute>
-            <div>Browse Jobs Page (TODO)</div>
+            <BrowseJobs />
           </ProtectedRoute>
         } />
         <Route path="jobs/:id" element={
@@ -258,7 +288,7 @@ const App = () => (
         } />
         <Route path="applications" element={
           <ProtectedRoute>
-            <div>My Applications Page (TODO)</div>
+            <MyApplications />
           </ProtectedRoute>
         } />
         <Route path="applications/:id" element={
@@ -268,7 +298,7 @@ const App = () => (
         } />
         <Route path="interviews" element={
           <ProtectedRoute>
-            <div>My Interviews Page (TODO)</div>
+            <MyInterviews />
           </ProtectedRoute>
         } />
         <Route path="interviews/:id" element={
@@ -278,7 +308,7 @@ const App = () => (
         } />
         <Route path="messages" element={
           <ProtectedRoute>
-            <div>Messages Page (TODO)</div>
+            <Messages />
           </ProtectedRoute>
         } />
         <Route path="messages/:id" element={
@@ -293,6 +323,7 @@ const App = () => (
           <Login />
         </GuestRoute>
       } />
+      <Route path="/admin-login" element={<SuperAdminLogin />} />
       <Route path="/sign-up" element={
         <GuestRoute>
           <Register />
@@ -304,6 +335,7 @@ const App = () => (
       <Route path="*" element={<NotFound />} />
     </Routes>
     </Suspense>
+    </MaintenanceModeWrapper>
   </SidebarProvider>
 );
 

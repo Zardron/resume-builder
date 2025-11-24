@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import AdminSidebar from '../../components/layout/AdminSidebar';
+import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/layout/Footer';
 import Breadcrumbs from '../../components/layout/Breadcrumbs';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -10,7 +10,7 @@ const AdminLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-1 min-h-0">
-        <AdminSidebar />
+        <Sidebar />
         <main 
           className="flex-1 flex flex-col"
           style={{ 

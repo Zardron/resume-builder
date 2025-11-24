@@ -37,5 +37,9 @@ router.get('/organizations/:orgId', adminController.getOrganizationDetails);
 // Get all recruiters
 router.get('/recruiters', adminController.getAllRecruiters);
 
+// System configuration routes
+router.get('/system-config', adminController.getSystemConfig);
+router.put('/system-config', adminController.updateSystemConfig);
+
 export default router;
 

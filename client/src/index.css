@@ -615,3 +615,67 @@ body.modal-open {
   white-space: normal;
 }
 
+/* Radio Button Styles */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+input[type="radio"]:checked {
+  border-color: #2563eb;
+  background-color: white;
+}
+
+input[type="radio"]:checked::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: #2563eb;
+}
+
+input[type="radio"]:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+input[type="radio"]:hover {
+  border-color: #2563eb;
+}
+
+/* Dark mode radio buttons */
+.dark input[type="radio"] {
+  border-color: #4b5563;
+  background-color: #1f2937;
+}
+
+.dark input[type="radio"]:checked {
+  border-color: #3b82f6;
+  background-color: #1f2937;
+}
+
+.dark input[type="radio"]:checked::before {
+  background-color: #3b82f6;
+}
+
+.dark input[type="radio"]:focus {
+  outline-color: #3b82f6;
+}
+
+.dark input[type="radio"]:hover {
+  border-color: #3b82f6;
+}
+
