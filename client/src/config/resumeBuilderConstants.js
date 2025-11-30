@@ -1,4 +1,4 @@
-import { RandomIdGenerator } from "../utils/RandomIdGenerator";
+import { generateRandomId } from "../utils/RandomIdGenerator";
 import { DEFAULT_FONT_SIZES } from "../utils/fontSizeUtils";
 import { DEFAULT_PAGE_MARGINS } from "../utils/marginUtils";
 import { User, FileText, Briefcase, GraduationCap, Folder, Sparkles, Plus } from "lucide-react";
@@ -6,7 +6,7 @@ import { User, FileText, Briefcase, GraduationCap, Folder, Sparkles, Plus } from
 export const DRAFT_STORAGE_KEY = "resume_builder_draft";
 
 export const createInitialResumeData = () => ({
-  _id: RandomIdGenerator(),
+  _id: generateRandomId(),
   title: "",
   personal_info: {
     name: "",

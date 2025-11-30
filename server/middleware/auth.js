@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { logSecurityEvent } from '../utils/logger.js';
 
 export const authenticate = async (req, res, next) => {
   try {
@@ -7,6 +8,17 @@ export const authenticate = async (req, res, next) => {
                   req.cookies?.token;
 
     if (!token) {
+      // Log unauthorized access attempt
+      logSecurityEvent(
+        'authorization',
+        'Authentication required but no token provided',
+        {
+          severity: 'medium',
+          statusCode: 401,
+        },
+        req
+      ).catch(() => {});
+      
       return res.status(401).json({ 
         success: false, 
         message: 'Authentication required' 
@@ -17,6 +29,18 @@ export const authenticate = async (req, res, next) => {
     const user = await User.findById(decoded.userId).select('-password');
 
     if (!user) {
+      // Log invalid user token
+      logSecurityEvent(
+        'authorization',
+        'Token provided but user not found',
+        {
+          severity: 'high',
+          userId: decoded.userId,
+          statusCode: 401,
+        },
+        req
+      ).catch(() => {});
+      
       return res.status(401).json({ 
         success: false, 
         message: 'User not found' 
@@ -27,12 +51,34 @@ export const authenticate = async (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
+      // Log invalid token
+      logSecurityEvent(
+        'authorization',
+        'Invalid JWT token provided',
+        {
+          severity: 'medium',
+          statusCode: 401,
+        },
+        req
+      ).catch(() => {});
+      
       return res.status(401).json({ 
         success: false, 
         message: 'Invalid token' 
       });
     }
     if (error.name === 'TokenExpiredError') {
+      // Log expired token
+      logSecurityEvent(
+        'authorization',
+        'Expired JWT token provided',
+        {
+          severity: 'low',
+          statusCode: 401,
+        },
+        req
+      ).catch(() => {});
+      
       return res.status(401).json({ 
         success: false, 
         message: 'Token expired' 
@@ -76,7 +122,7 @@ export const requireSubscription = (req, res, next) => {
   if (req.user.subscription.status !== 'active') {
     return res.status(403).json({ 
       success: false, 
-      message: 'Premium subscription required' 
+      message: 'AI subscription required' 
     });
   }
 

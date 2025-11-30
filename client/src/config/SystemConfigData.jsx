@@ -1,16 +1,4 @@
-/**
- * SystemConfigData - Centralized system configuration data
- * 
- * This file defines all system configuration settings organized by category:
- * - general: Core platform settings and feature toggles
- * - security: Security and authentication settings
- * - notifications: Notification preferences
- * - integrations: Third-party service integrations
- */
-
-/**
- * Default configuration values
- */
+// SystemConfigData - Centralized system configuration data
 export const defaultConfig = {
   general: {
     siteName: 'ResumeIQHub',
@@ -70,10 +58,7 @@ export const defaultConfig = {
   },
 };
 
-/**
- * System Settings Configuration
- * Organized by logical groups for better UI organization
- */
+// System Settings Configuration - organized by logical groups
 export const systemSettingsConfig = {
   systemControl: [
     {
@@ -289,9 +274,7 @@ export const systemSettingsConfig = {
   ],
 };
 
-/**
- * Security Settings Configuration
- */
+// Security Settings Configuration
 export const securitySettingsConfig = [
   {
     key: 'sessionTimeout',
@@ -341,9 +324,7 @@ export const securitySettingsConfig = [
   },
 ];
 
-/**
- * Notification Settings Configuration
- */
+// Notification Settings Configuration
 export const notificationSettingsConfig = [
   {
     key: 'emailNotifications',
@@ -382,9 +363,7 @@ export const notificationSettingsConfig = [
   },
 ];
 
-/**
- * Integrations Settings Configuration
- */
+// Integrations Settings Configuration
 export const integrationsSettingsConfig = [
   {
     key: 'stripeEnabled',
@@ -402,9 +381,7 @@ export const integrationsSettingsConfig = [
   },
 ];
 
-/**
- * General Text Input Settings Configuration
- */
+// General Text Input Settings Configuration
 export const generalTextSettingsConfig = [
   {
     key: 'siteName',
@@ -422,42 +399,22 @@ export const generalTextSettingsConfig = [
   },
 ];
 
-/**
- * Get all system settings configuration grouped by section
- * @returns {Object} Object with grouped configuration items
- */
+// Get all system settings configuration grouped by section
 export const getSystemSettingsConfig = () => systemSettingsConfig;
 
-/**
- * Get all security settings configuration
- * @returns {Array} Array of security configuration items
- */
+// Get all security settings configuration
 export const getSecuritySettingsConfig = () => securitySettingsConfig;
 
-/**
- * Get all notification settings configuration
- * @returns {Array} Array of notification configuration items
- */
+// Get all notification settings configuration
 export const getNotificationSettingsConfig = () => notificationSettingsConfig;
 
-/**
- * Get all integrations settings configuration
- * @returns {Array} Array of integrations configuration items
- */
+// Get all integrations settings configuration
 export const getIntegrationsSettingsConfig = () => integrationsSettingsConfig;
 
-/**
- * Get all general text input settings configuration
- * @returns {Array} Array of general text configuration items
- */
+// Get all general text input settings configuration
 export const getGeneralTextSettingsConfig = () => generalTextSettingsConfig;
 
-/**
- * Get configuration item by key
- * @param {string} key - Configuration key
- * @param {string} category - Configuration category (general, security, notifications, integrations)
- * @returns {Object|null} Configuration item or null if not found
- */
+// Get configuration item by key
 export const getConfigItem = (key, category = 'general') => {
   // Search in system settings
   for (const group of Object.values(systemSettingsConfig)) {
@@ -476,11 +433,7 @@ export const getConfigItem = (key, category = 'general') => {
   return null;
 };
 
-/**
- * Get all configuration items for a specific category
- * @param {string} category - Configuration category
- * @returns {Array} Array of configuration items
- */
+// Get all configuration items for a specific category
 export const getConfigItemsByCategory = (category) => {
   const items = [];
   

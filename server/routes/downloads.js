@@ -31,7 +31,7 @@ router.post('/:id', authenticate, async (req, res) => {
     if (!hasCredits && !isSubscribed) {
       return res.status(403).json({
         success: false,
-        message: 'Insufficient credits. Please purchase credits or subscribe to Premium.',
+        message: 'Insufficient credits. Please purchase credits or subscribe to an AI plan.',
       });
     }
 

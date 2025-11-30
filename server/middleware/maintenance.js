@@ -2,14 +2,7 @@ import SystemConfig from '../models/SystemConfig.js';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-/**
- * Middleware to check maintenance mode
- * Super admins can bypass maintenance mode
- * Public endpoints like /api/auth/public-config and /api/auth/login are always allowed
- * 
- * Note: This middleware runs before authentication, so we need to check for super admin
- * by verifying the token if present
- */
+// Middleware to check maintenance mode - super admins can bypass
 export const checkMaintenanceMode = async (req, res, next) => {
   try {
     const path = req.path || req.url;

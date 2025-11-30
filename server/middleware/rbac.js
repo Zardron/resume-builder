@@ -1,9 +1,7 @@
 import TeamMember from '../models/TeamMember.js';
 import Organization from '../models/Organization.js';
 
-/**
- * Middleware to check if user has required role in organization
- */
+// Middleware to check if user has required role in organization
 export const requireRole = (...allowedRoles) => {
   return async (req, res, next) => {
     try {
@@ -67,9 +65,7 @@ export const requireRole = (...allowedRoles) => {
   };
 };
 
-/**
- * Middleware to check if user has specific permission
- */
+// Middleware to check if user has specific permission
 export const requirePermission = (permission) => {
   return async (req, res, next) => {
     try {
@@ -125,9 +121,7 @@ export const requirePermission = (permission) => {
   };
 };
 
-/**
- * Middleware to ensure user belongs to organization (for data access)
- */
+// Middleware to ensure user belongs to organization (for data access)
 export const ensureOrganizationAccess = async (req, res, next) => {
   try {
     const user = req.user;
@@ -173,9 +167,7 @@ export const ensureOrganizationAccess = async (req, res, next) => {
   }
 };
 
-/**
- * Middleware to check if user is applicant
- */
+// Middleware to check if user is applicant
 export const requireApplicant = (req, res, next) => {
   if (req.user.userType === 'applicant' || req.user.userType === 'both') {
     return next();
@@ -186,9 +178,7 @@ export const requireApplicant = (req, res, next) => {
   });
 };
 
-/**
- * Middleware to check if user is recruiter
- */
+// Middleware to check if user is recruiter
 export const requireRecruiter = (req, res, next) => {
   if (req.user.userType === 'recruiter' || req.user.userType === 'both' || req.user.organizationId) {
     return next();

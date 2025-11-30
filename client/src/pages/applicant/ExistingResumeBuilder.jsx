@@ -229,8 +229,8 @@ const ExistingResumeBuilder = () => {
     if (!isSubscribed) {
       addNotification({
         type: 'info',
-        title: 'Premium Feature',
-        message: 'Subscribe to unlock AI-powered resume parsing.',
+        title: 'AI Subscription Required',
+        message: 'Subscribe to an AI plan to unlock AI-powered resume parsing.',
       });
       return;
     }
@@ -749,6 +749,7 @@ const ExistingResumeBuilder = () => {
             <div className="w-full sm:w-2/3">
               <AIFeatureButton
                 label="AI Parse Resume"
+                featureId="resume-parsing"
                 description="Extract and auto-fill all resume data using AI"
                 onClick={handleAIParse}
                 disabled={isAIParsing}
@@ -794,6 +795,7 @@ const ExistingResumeBuilder = () => {
               </div>
               <AIFeatureButton
                 label={isAIEnhancing ? "Enhancing..." : "Enhance Content"}
+                featureId="content-enhancement"
                 description="Improve your resume with AI-powered content suggestions"
                 onClick={handleAIEnhance}
                 disabled={isAIEnhancing}
@@ -835,10 +837,10 @@ const ExistingResumeBuilder = () => {
 
       <hr className="border-gray-200 dark:border-gray-700 my-4" />
 
-      <div ref={formSectionRef} className="w-full flex items-center mt-2">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div ref={formSectionRef} className="w-full mt-2">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 lg:items-start">
           {/* Left Side - Form Sections */}
-          <div className="w-full ">
+          <div className="w-full">
             <div className="w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4">
               <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-4 transition-all duration-300 dark:bg-gray-900">
                 {/* Progress Bar */}
@@ -1100,7 +1102,7 @@ const ExistingResumeBuilder = () => {
           </div>
 
           {/* Right Side - Live Preview */}
-          <div className="w-full">
+          <div className="w-full lg:sticky lg:top-4">
             <ResumePreviewPanel
               paperSizes={PAPER_SIZES}
               selectedPaperSize={resumeData.paper_size}

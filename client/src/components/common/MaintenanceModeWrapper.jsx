@@ -5,11 +5,7 @@ import { authAPI } from '../../services/api';
 import MaintenanceMode from '../../pages/public/MaintenanceMode';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
 
-/**
- * MaintenanceModeWrapper - Checks maintenance mode and shows maintenance page if enabled
- * Super admins can bypass maintenance mode
- * Admin login page is always accessible
- */
+// MaintenanceModeWrapper - checks maintenance mode, super admins can bypass
 const MaintenanceModeWrapper = ({ children }) => {
   const { user, isInitialized } = useAppSelector((state) => state.auth);
   const location = useLocation();

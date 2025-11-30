@@ -1,8 +1,4 @@
-/**
- * Template Dummy Data
- * 12 different resume data sets optimized for A4 paper size (794px × 1123px)
- * Each dataset is carefully crafted to fit perfectly on a single A4 page
- */
+// Template Dummy Data - 12 resume data sets optimized for A4 paper size
 
 export const templateDummyData = [
   {

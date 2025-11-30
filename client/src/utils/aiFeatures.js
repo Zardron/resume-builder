@@ -197,3 +197,46 @@ export const getFeaturesByCategory = (tier) => {
   return grouped;
 };
 
+// Check if a user's subscription tier has access to a specific feature
+export const hasFeatureAccess = (userTier, featureId) => {
+  if (!userTier || userTier === 'free') return false;
+  
+  const requiredTier = getTierForFeature(featureId);
+  if (!requiredTier) return false;
+  
+  const tierLevels = {
+    'basic': 1,
+    'pro': 2,
+    'enterprise': 3,
+  };
+  
+  const userLevel = tierLevels[userTier] || 0;
+  const requiredLevel = tierLevels[requiredTier] || 999;
+  
+  return userLevel >= requiredLevel;
+};
+
+// Map frontend feature IDs to backend API route IDs
+export const FEATURE_TO_API_MAP = {
+  'content-enhancement': 'enhance-content',
+  'summary-enhancement': 'enhance-summary',
+  'job-description-enhancement': 'enhance-job-description',
+  'project-enhancement': 'enhance-project-description',
+  'grammar-check': 'grammar-check',
+  'action-verbs': 'action-verbs',
+  'resume-parsing': 'parse-resume',
+  'background-removal': 'remove-background',
+  'ats-optimization': 'ats-optimization',
+  'keyword-suggestions': 'keyword-suggestions',
+  'bullet-rewriting': 'rewrite-bullets',
+  'readability-score': 'readability-score',
+  'resume-scoring': 'resume-score',
+  'industry-suggestions': 'industry-suggestions',
+  'job-matching': 'job-matching',
+  'skill-gap-analysis': 'skill-gap-analysis',
+  'career-path-suggestions': 'career-path',
+  'cover-letter-generation': 'cover-letter',
+  'interview-prep': 'interview-prep',
+  'salary-estimation': 'salary-estimation',
+};
+

@@ -1,8 +1,10 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import InputField from "../../../components/forms/InputField";
 import AIFeatureButton from "../../../components/common/AIFeatureButton";
 import { useApp } from "../../../contexts/AppContext";
 import { enhanceJobDescription, rewriteBulletPoints, getActionVerbSuggestions } from "../../../utils/aiService";
+import { hasFeatureAccess, getTierForFeature } from "../../../utils/aiFeatures";
 import { 
   Plus, 
   Trash2, 
@@ -11,7 +13,12 @@ import {
   Calendar, 
   FileText,
   Building2,
-  ChevronDown
+  ChevronDown,
+  SparklesIcon,
+  Loader2,
+  Zap,
+  Lock,
+  ArrowRight
 } from "lucide-react";
 
 const ExperienceForm = ({ data, onChange, onValidationChange }) => {
@@ -20,8 +27,10 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
   const [expandedExperiences, setExpandedExperiences] = useState(new Set());
   const [enhancingExperience, setEnhancingExperience] = useState(null);
   const [actionVerbSuggestions, setActionVerbSuggestions] = useState({});
+  const [showAIMenu, setShowAIMenu] = useState({});
   const validationRef = useRef();
-  const { isSubscribed, addNotification } = useApp();
+  const menuRefs = useRef({});
+  const { isSubscribed, subscriptionTier, addNotification } = useApp();
 
   // Initialize with one empty experience if none exist
   useEffect(() => {
@@ -52,6 +61,25 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
   useEffect(() => {
     latestOnChangeRef.current?.(experiences);
   }, [experiences]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      Object.keys(menuRefs.current).forEach(expId => {
+        if (menuRefs.current[expId] && !menuRefs.current[expId].contains(event.target)) {
+          setShowAIMenu(prev => ({ ...prev, [expId]: false }));
+        }
+      });
+    };
+
+    if (Object.values(showAIMenu).some(Boolean)) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showAIMenu]);
 
   // Add new experience
   const addExperience = () => {
@@ -368,19 +396,45 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
                     </div>
                     
                     <div className="space-y-2">
-                      <AIFeatureButton
-                        label="Enhance Description with AI"
-                        description="Rewrite bullet points with action verbs and quantifiable results"
+                      {/* Combined AI Features Button */}
+                      <div className="relative" ref={el => menuRefs.current[experience.id] = el}>
+                        <button
+                          type="button"
+                          onClick={() => setShowAIMenu(prev => ({ ...prev, [experience.id]: !prev[experience.id] }))}
+                          disabled={enhancingExperience === experience.id || !experience.description?.trim()}
+                          className="group relative w-full flex items-center justify-between gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl disabled:scale-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+                        >
+                          <div className="relative z-10 flex items-center gap-2">
+                            <SparklesIcon className="h-4 w-4" />
+                            <span>
+                              {enhancingExperience === experience.id ? "Enhancing..." : "AI Enhance"}
+                            </span>
+                          </div>
+                          <ChevronDown className={`relative z-10 h-4 w-4 transition-transform duration-300 ${showAIMenu[experience.id] ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {showAIMenu[experience.id] && (
+                          <div className="absolute z-50 mt-2 w-full rounded-lg border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800">
+                            <div className="p-1">
+                              {/* Enhance Description with AI */}
+                              {(() => {
+                                const featureId = 'job-description-enhancement';
+                                const hasAccess = isSubscribed && hasFeatureAccess(subscriptionTier, featureId);
+                                const requiredTier = getTierForFeature(featureId);
+                                const tierNames = { 'basic': 'Basic', 'pro': 'Pro', 'enterprise': 'Enterprise' };
+                                const tierColors = {
+                                  'basic': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                                  'pro': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                                  'enterprise': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                                };
+
+                                if (hasAccess) {
+                                  return (
+                                    <button
+                                      type="button"
                         onClick={async () => {
-                          if (!isSubscribed) {
-                            addNotification({
-                              type: 'info',
-                              title: 'Subscription Required',
-                              message: 'Subscribe to unlock AI-powered job description enhancement.',
-                            });
-                            return;
-                          }
-                          
+                                        setShowAIMenu(prev => ({ ...prev, [experience.id]: false }));
                           if (!experience.description?.trim()) {
                             addNotification({
                               type: 'warning',
@@ -415,22 +469,88 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
                             setEnhancingExperience(null);
                           }
                         }}
-                        disabled={!experience.description?.trim() || enhancingExperience === experience.id}
-                      />
-                      
-                      <AIFeatureButton
-                        label="Get Action Verb Suggestions"
-                        description="Get powerful action verb suggestions to strengthen your bullet points"
-                        onClick={async () => {
-                          if (!isSubscribed) {
-                            addNotification({
-                              type: 'info',
-                              title: 'Subscription Required',
-                              message: 'Subscribe to unlock AI-powered action verb suggestions.',
-                            });
-                            return;
-                          }
-                          
+                                      disabled={enhancingExperience === experience.id || !experience.description?.trim()}
+                                      className="w-full flex items-center gap-3 rounded-md px-4 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                      <SparklesIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                      <div className="flex-1">
+                                        <div className="font-semibold">Enhance Description with AI</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                          Rewrite bullet points with action verbs and quantifiable results
+                                        </div>
+                                      </div>
+                                      {enhancingExperience === experience.id && <Loader2 className="h-4 w-4 animate-spin text-blue-600" />}
+                                    </button>
+                                  );
+                                }
+
+                                return (
+                                  <div className="flex items-start gap-3 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800/50">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700 flex-shrink-0 mt-0.5">
+                                      <Lock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="mb-1 flex items-center gap-2 flex-wrap">
+                                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                          Enhance Description with AI
+                                        </span>
+                                        {requiredTier && (
+                                          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${tierColors[requiredTier] || 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'}`}>
+                                            {tierNames[requiredTier] || requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                        Rewrite bullet points with action verbs and quantifiable results
+                                      </p>
+                                    </div>
+                                    <Link
+                                      to="/dashboard/subscription"
+                                      onClick={() => setShowAIMenu(prev => ({ ...prev, [experience.id]: false }))}
+                                      className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:shadow-md flex-shrink-0 whitespace-nowrap"
+                                    >
+                                      <span>
+                                        {(() => {
+                                          // Free account → Subscribe for Pro and Enterprise
+                                          if (!isSubscribed || !subscriptionTier || subscriptionTier === 'free') {
+                                            return 'Subscribe';
+                                          }
+                                          // Basic tier → Upgrade for Pro features
+                                          if (subscriptionTier === 'basic' && requiredTier === 'pro') {
+                                            return 'Upgrade';
+                                          }
+                                          // Pro tier → Upgrade for Enterprise features
+                                          if (subscriptionTier === 'pro' && requiredTier === 'enterprise') {
+                                            return 'Upgrade';
+                                          }
+                                          // All other cases → Subscribe
+                                          return 'Subscribe';
+                                        })()}
+                                      </span>
+                                      <ArrowRight className="h-3 w-3" />
+                                    </Link>
+                                  </div>
+                                );
+                              })()}
+
+                              {/* Get Action Verb Suggestions */}
+                              {(() => {
+                                const featureId = 'action-verbs';
+                                const hasAccess = isSubscribed && hasFeatureAccess(subscriptionTier, featureId);
+                                const requiredTier = getTierForFeature(featureId);
+                                const tierNames = { 'basic': 'Basic', 'pro': 'Pro', 'enterprise': 'Enterprise' };
+                                const tierColors = {
+                                  'basic': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                                  'pro': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                                  'enterprise': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                                };
+
+                                if (hasAccess) {
+                                  return (
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        setShowAIMenu(prev => ({ ...prev, [experience.id]: false }));
                           if (!experience.description?.trim()) {
                             addNotification({
                               type: 'warning',
@@ -460,7 +580,71 @@ const ExperienceForm = ({ data, onChange, onValidationChange }) => {
                           }
                         }}
                         disabled={!experience.description?.trim()}
-                      />
+                                      className="w-full flex items-center gap-3 rounded-md px-4 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                      <Zap className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                                      <div className="flex-1">
+                                        <div className="font-semibold">Get Action Verb Suggestions</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                          Get powerful action verb suggestions to strengthen your bullet points
+                                        </div>
+                                      </div>
+                                    </button>
+                                  );
+                                }
+
+                                return (
+                                  <div className="flex items-start gap-3 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800/50">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700 flex-shrink-0 mt-0.5">
+                                      <Lock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="mb-1 flex items-center gap-2 flex-wrap">
+                                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                          Get Action Verb Suggestions
+                                        </span>
+                                        {requiredTier && (
+                                          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${tierColors[requiredTier] || 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'}`}>
+                                            {tierNames[requiredTier] || requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                        Get powerful action verb suggestions to strengthen your bullet points
+                                      </p>
+                                    </div>
+                                    <Link
+                                      to="/dashboard/subscription"
+                                      onClick={() => setShowAIMenu(prev => ({ ...prev, [experience.id]: false }))}
+                                      className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:shadow-md flex-shrink-0 whitespace-nowrap"
+                                    >
+                                      <span>
+                                        {(() => {
+                                          // Free account → Subscribe for Pro and Enterprise
+                                          if (!isSubscribed || !subscriptionTier || subscriptionTier === 'free') {
+                                            return 'Subscribe';
+                                          }
+                                          // Basic tier → Upgrade for Pro features
+                                          if (subscriptionTier === 'basic' && requiredTier === 'pro') {
+                                            return 'Upgrade';
+                                          }
+                                          // Pro tier → Upgrade for Enterprise features
+                                          if (subscriptionTier === 'pro' && requiredTier === 'enterprise') {
+                                            return 'Upgrade';
+                                          }
+                                          // All other cases → Subscribe
+                                          return 'Subscribe';
+                                        })()}
+                                      </span>
+                                      <ArrowRight className="h-3 w-3" />
+                                    </Link>
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                       
                       {actionVerbSuggestions[experience.id] && (
                         <div className="mt-2 rounded-md border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/10">

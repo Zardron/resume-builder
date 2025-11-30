@@ -227,13 +227,18 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     setIsProfileMenuOpen(false);
+    const isSuperAdmin = user?.role === 'super_admin';
     try {
       await dispatch(logoutUser()).unwrap();
-      navigate('/sign-in', { state: { fromHome: true } });
+      // Redirect super admins to admin login page
+      const redirectPath = isSuperAdmin ? '/admin-login' : '/sign-in';
+      navigate(redirectPath, { state: { fromHome: true } });
     } catch (error) {
       console.error('Logout error:', error);
       // Still navigate even if logout fails
-      navigate('/sign-in', { state: { fromHome: true } });
+      // Redirect super admins to admin login page
+      const redirectPath = isSuperAdmin ? '/admin-login' : '/sign-in';
+      navigate(redirectPath, { state: { fromHome: true } });
     }
   };
 
@@ -244,9 +249,15 @@ const Navbar = () => {
   const isApplicantRoute = location.pathname.startsWith('/dashboard/applicant');
   const isHomePage = location.pathname === '/'; // Only home page has Banner
   
-  // Show sidebar for dashboard routes (but not for recruiter/admin routes which have their own AdminLayout)
-  // Actually, both recruiter and applicant routes have sidebars, so we need to account for that
+  // Show sidebar for dashboard routes (including admin routes which now have Navbar)
   const hasSidebar = isDashboardRoute; // All dashboard routes have sidebars
+  
+  // Determine sidebar width based on route (admin/recruiter use different widths)
+  const isAdminOrRecruiterRoute = isAdminRoute || isRecruiterRoute;
+  const sidebarWidths = {
+    collapsed: isAdminOrRecruiterRoute ? '4.5rem' : '4rem',
+    expanded: isAdminOrRecruiterRoute ? '17rem' : '16rem'
+  };
   
   // Get sidebar state from context (only if sidebar exists)
   let sidebarContext = null;
@@ -281,7 +292,7 @@ const Navbar = () => {
         ref={headerRef}
         className={navbarClasses}
         style={hasSidebar ? { 
-          left: isCollapsed ? '4.5rem' : '17rem',
+          left: isCollapsed ? sidebarWidths.collapsed : sidebarWidths.expanded,
           transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)',
           willChange: 'left'
         } : {}}
@@ -379,13 +390,14 @@ const Navbar = () => {
                       <span>Profile</span>
                     </button>
                   )}
+                 {user?.role !== 'super_admin' && (
                   <button
                     onClick={() => handleProfileNavigate('/dashboard/settings')}
                     className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-700"
                   >
                     <span>Settings</span>
                   </button>
-                  <div className="my-2 border-t border-gray-100 dark:border-gray-700" />
+                 )}
                   <button
                     onClick={handleLogout}
                     className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left font-medium text-[var(--error-color)] transition hover:bg-red-50 hover:text-[var(--error-color)] dark:hover:bg-red-500/10"
@@ -397,6 +409,8 @@ const Navbar = () => {
             </div>
           )}
           {!isLoggedIn && (
+           <>
+            <ThemeSwitcher />
             <Link
               to="/sign-in"
               state={{ fromHome: true }}
@@ -404,6 +418,7 @@ const Navbar = () => {
             >
               Sign in
             </Link>
+           </>
           )}
           <button
             onClick={() => setIsMenuOpen(true)}

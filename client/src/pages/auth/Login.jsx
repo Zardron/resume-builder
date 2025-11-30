@@ -11,6 +11,7 @@ import { addNotification } from '../../store/slices/notificationsSlice';
 import { fetchResumes } from '../../store/slices/resumesSlice';
 import { fetchCreditsBalance } from '../../store/slices/creditsSlice';
 import { fetchSubscriptionStatus } from '../../store/slices/subscriptionsSlice';
+import { authAPI } from '../../services/api';
 
 const validateEmail = (email) => email.trim() && email.includes('@');
 
@@ -41,6 +42,8 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [requiresVerification, setRequiresVerification] = useState(false);
+  const [isResendingVerification, setIsResendingVerification] = useState(false);
 
   const handleInputChange = (name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -50,6 +53,63 @@ const Login = () => {
     if (errorMessage) {
       setErrorMessage('');
     }
+    if (requiresVerification) {
+      setRequiresVerification(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (!formData.email) {
+      setErrorMessage('Please enter your email address first');
+      return;
+    }
+
+    setIsResendingVerification(true);
+    setErrorMessage('');
+    
+    try {
+      const result = await authAPI.resendVerificationUnauthenticated(formData.email);
+      
+      if (result.success) {
+        dispatch(addNotification({
+          type: 'success',
+          title: 'Verification Email Sent',
+          message: 'A new verification code has been sent to your email. Please check your inbox.',
+        }));
+        // Navigate to verify email page on success
+        navigate('/verify-email', { 
+          state: { email: formData.email }
+        });
+      } else {
+        // Still navigate even if API call fails - user can try again on verify page
+        dispatch(addNotification({
+          type: 'warning',
+          title: 'Verification Email',
+          message: result.message || 'Please check your email for the verification code.',
+        }));
+        navigate('/verify-email', { 
+          state: { email: formData.email }
+        });
+      }
+    } catch (error) {
+      // Still navigate even if there's an error - user can try again on verify page
+      dispatch(addNotification({
+        type: 'warning',
+        title: 'Verification Email',
+        message: 'Please check your email for the verification code. You can request a new one on the verification page.',
+      }));
+      navigate('/verify-email', { 
+        state: { email: formData.email }
+      });
+    } finally {
+      setIsResendingVerification(false);
+    }
+  };
+
+  const handleGoToVerifyEmail = () => {
+    navigate('/verify-email', { 
+      state: { email: formData.email }
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -94,20 +154,44 @@ const Login = () => {
         const redirectTo = state?.from?.pathname || '/dashboard';
         navigate(redirectTo, { replace: true });
       } catch (error) {
+        // Preserve email address on error - capture it immediately
+        const currentEmail = formData.email;
+        const currentPassword = formData.password;
+        
         // Check if error is due to unverified email
+        // When using .unwrap(), the rejected value from rejectWithValue is thrown directly
+        // So error IS the object directly: { message, requiresVerification, email }
         const errorObj = typeof error === 'object' ? error : { message: error };
-        if (errorObj.requiresVerification || (errorObj.message && (errorObj.message.includes('verify') || errorObj.message.includes('verification')))) {
-          dispatch(addNotification({
-            type: 'warning',
-            title: 'Email Not Verified',
-            message: 'Please verify your email address to continue.',
+        
+        // Check for verification error
+        const isVerificationError = 
+          errorObj.requiresVerification === true ||
+          (errorObj.message && typeof errorObj.message === 'string' && (
+            errorObj.message.toLowerCase().includes('verify') || 
+            errorObj.message.toLowerCase().includes('verification')
+          ));
+        
+        if (isVerificationError) {
+          // Set state to show verification section
+          setRequiresVerification(true);
+          setErrorMessage('');
+          // Always preserve email - don't clear it on error
+          setFormData(prev => ({ 
+            ...prev, 
+            email: currentEmail || prev.email,
+            password: '' // Clear password for security
           }));
-          navigate('/verify-email', { 
-            state: { email: errorObj.email || formData.email }
-          });
+          // Don't dispatch notification - the verification section handles this
         } else {
+          setRequiresVerification(false);
           const errorMessage = errorObj.message || error || 'Login failed. Please try again.';
           setErrorMessage(errorMessage);
+          // Always preserve email - don't clear it on error
+          setFormData(prev => ({ 
+            ...prev, 
+            email: currentEmail || prev.email,
+            password: '' // Clear password for security
+          }));
           dispatch(addNotification({
             type: 'error',
             title: 'Login Failed',
@@ -156,6 +240,31 @@ const Login = () => {
                   Sign in to your account to continue
                 </p>
               </header>
+
+              {requiresVerification && (
+                <div className="mb-6 p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-300 dark:border-yellow-700 shadow-md">
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-yellow-800 dark:text-yellow-200 mb-1">
+                        ⚠️ Account not verified!
+                      </p>
+                      <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                        Please verify your email address before logging in. click the button below to verify your email.
+                      </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <button
+                        type="button"
+                        onClick={handleResendVerification}
+                        disabled={isResendingVerification}
+                        className="flex-1 px-4 py-2.5 text-sm font-medium text-yellow-800 dark:text-yellow-200 bg-yellow-100 dark:bg-yellow-800/50 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-yellow-300 dark:border-yellow-700"
+                      >
+                        {isResendingVerification ? 'Sending...' : '📧 Verify Email'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col gap-4">
                 <button
@@ -232,7 +341,7 @@ const Login = () => {
                 </a>
               </div>
 
-              {errorMessage && (
+              {errorMessage && !requiresVerification && (
                 <div className="mt-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                   <p className="text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
                 </div>

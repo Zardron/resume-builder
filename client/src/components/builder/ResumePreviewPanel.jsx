@@ -117,10 +117,11 @@ const ResumePreviewPanel = ({
 
   return (
     <div
-      className={`w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4 ${containerClassName} lg:sticky lg:top-16`}
+      className={`w-full relative rounded-md lg:col-span-5 overflow-hidden mb-4 ${containerClassName}`}
       onContextMenu={handleContextMenu}
+      style={{ maxHeight: 'calc(100vh - 2rem)', overflow: 'hidden' }}
     >
-      <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300">
+      <div className="bg-white rounded-md shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 h-full flex flex-col">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 dark:bg-gray-900">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -246,13 +247,14 @@ const ResumePreviewPanel = ({
 
         <hr className="border-gray-200 dark:border-gray-700 mx-4" />
 
-        <div className="py-0 dark:bg-gray-900 p-4 mt-4">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-md w-full">
+        <div className="py-0 dark:bg-gray-900 p-4 mt-4 flex-1 flex flex-col min-h-0">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-md w-full flex-1 flex flex-col min-h-0">
             <div
               ref={previewContainerRef}
-              className={`max-h-[600px] sm:max-h-[700px] lg:max-h-[800px] xl:max-h-[900px] overflow-x-auto w-full ${
+              className={`flex-1 overflow-x-auto w-full ${
                 isPreviewLocked ? "overflow-hidden" : "overflow-y-auto"
               }`}
+              style={{ minHeight: 0 }}
             >
           <div className="flex justify-start items-start min-w-0 w-full h-full">
                 <div
@@ -381,8 +383,8 @@ const ResumePreviewPanel = ({
               ) : null}
                 </div>
               {isPreviewLocked ? (
-                <div className="absolute p-4 inset-x-0 bottom-0 top-1/2 z-20 pointer-events-none">
-                    <div className="relative h-full overflow-hidden">
+                <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                    <div className="relative w-full h-full overflow-hidden">
                       <div className="absolute inset-0">
                         <div
                           className="absolute inset-0 backdrop-blur-sm"

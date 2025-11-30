@@ -16,9 +16,9 @@ export const fetchSubscriptionStatus = createAsyncThunk(
 
 export const subscribe = createAsyncThunk(
   'subscriptions/subscribe',
-  async ({ paymentMethod, subscriptionDuration = 1 }, { rejectWithValue }) => {
+  async ({ paymentMethod, subscriptionDuration = 1, planId = 'enterprise' }, { rejectWithValue }) => {
     try {
-      const response = await subscriptionAPI.subscribe(paymentMethod, subscriptionDuration);
+      const response = await subscriptionAPI.subscribe(paymentMethod, subscriptionDuration, planId);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -43,6 +43,18 @@ export const reactivateSubscription = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await subscriptionAPI.reactivate();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const upgradeSubscription = createAsyncThunk(
+  'subscriptions/upgrade',
+  async ({ planId, paymentMethod }, { rejectWithValue }) => {
+    try {
+      const response = await subscriptionAPI.upgrade(planId, paymentMethod);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -124,6 +136,20 @@ const subscriptionsSlice = createSlice({
         state.isSubscribed = action.payload.subscription?.status === 'active';
       })
       .addCase(reactivateSubscription.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      // Upgrade
+      .addCase(upgradeSubscription.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(upgradeSubscription.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.subscription = action.payload.subscription;
+        state.isSubscribed = action.payload.subscription?.status === 'active';
+      })
+      .addCase(upgradeSubscription.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

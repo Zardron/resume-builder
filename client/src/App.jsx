@@ -7,7 +7,10 @@ import LoadingSkeleton from './components/ui/LoadingSkeleton';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import GuestRoute from './components/routes/GuestRoute';
 import MaintenanceModeWrapper from './components/common/MaintenanceModeWrapper';
+import RouteTracker from './components/common/RouteTracker';
+import UserActivityTracker from './components/common/UserActivityTracker';
 import { SidebarProvider } from './contexts/SidebarContext';
+import { AppProvider } from './contexts/AppContext';
 import 'animate.css';
 
 // Lazy load pages for better performance
@@ -18,6 +21,7 @@ const Dashboard = lazy(() => import('./pages/applicant/Dashboard'));
 const Builder = lazy(() => import('./pages/applicant/Builder'));
 const PurchaseCredits = lazy(() => import('./pages/applicant/PurchaseCredits'));
 const Subscription = lazy(() => import('./pages/applicant/Subscription'));
+const UpgradeSubscription = lazy(() => import('./pages/applicant/UpgradeSubscription'));
 const Profile = lazy(() => import('./pages/applicant/Profile'));
 const Settings = lazy(() => import('./pages/applicant/Settings'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -31,10 +35,15 @@ const NotFound = lazy(() => import('./pages/public/NotFound'));
 const RecruiterDashboard = lazy(() => import('./pages/recruiter/RecruiterDashboard'));
 const JobsList = lazy(() => import('./pages/recruiter/JobsList'));
 const CreateJob = lazy(() => import('./pages/recruiter/CreateJob'));
+const JobDetail = lazy(() => import('./pages/recruiter/JobDetail'));
+const EditJob = lazy(() => import('./pages/recruiter/EditJob'));
 const CandidatesPipeline = lazy(() => import('./pages/recruiter/CandidatesPipeline'));
+const CandidateDetail = lazy(() => import('./pages/recruiter/CandidateDetail'));
 const InterviewsCalendar = lazy(() => import('./pages/recruiter/InterviewsCalendar'));
 const ScheduleInterview = lazy(() => import('./pages/recruiter/ScheduleInterview'));
+const InterviewDetail = lazy(() => import('./pages/recruiter/InterviewDetail'));
 const MessagesInbox = lazy(() => import('./pages/recruiter/MessagesInbox'));
+const Conversation = lazy(() => import('./pages/recruiter/Conversation'));
 const AnalyticsDashboard = lazy(() => import('./pages/recruiter/AnalyticsDashboard'));
 const RecruiterApplications = lazy(() => import('./pages/recruiter/RecruiterApplications'));
 const RecruiterLayout = lazy(() => import('./pages/recruiter/RecruiterLayout'));
@@ -51,13 +60,21 @@ const SystemConfiguration = lazy(() => import('./pages/admin/SystemConfiguration
 const CreateRecruiterAccount = lazy(() => import('./pages/admin/CreateRecruiterAccount'));
 const CreateTeamOrganizationAccount = lazy(() => import('./pages/admin/CreateTeamOrganizationAccount'));
 const SuperAdminLogin = lazy(() => import('./pages/admin/SuperAdminLogin'));
+const LoginAttempts = lazy(() => import('./pages/admin/LoginAttempts'));
+const SecurityLogs = lazy(() => import('./pages/admin/SecurityLogs'));
+const AuditLogs = lazy(() => import('./pages/admin/AuditLogs'));
+const ClientLogs = lazy(() => import('./pages/admin/ClientLogs'));
 
 // Applicant pages
 const ApplicantDashboard = lazy(() => import('./pages/applicant/ApplicantDashboard'));
 const BrowseJobs = lazy(() => import('./pages/applicant/BrowseJobs'));
+const ApplicantJobDetail = lazy(() => import('./pages/applicant/JobDetail'));
 const MyApplications = lazy(() => import('./pages/applicant/MyApplications'));
+const ApplicationDetail = lazy(() => import('./pages/applicant/ApplicationDetail'));
 const MyInterviews = lazy(() => import('./pages/applicant/MyInterviews'));
+const ApplicantInterviewDetail = lazy(() => import('./pages/applicant/InterviewDetail'));
 const Messages = lazy(() => import('./pages/applicant/Messages'));
+const ApplicantConversation = lazy(() => import('./pages/applicant/Conversation'));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -67,11 +84,14 @@ const PageLoader = () => (
 
 const App = () => (
   <SidebarProvider>
-    <GlobalBackground />
-    <ToastContainer />
-    <MaintenanceModeWrapper>
-      <Suspense fallback={<PageLoader />}>
-      <Routes>
+    <AppProvider>
+      <GlobalBackground />
+      <ToastContainer />
+      <MaintenanceModeWrapper>
+        <RouteTracker />
+        <UserActivityTracker />
+        <Suspense fallback={<PageLoader />}>
+        <Routes>
       <Route path="/" element={
         <GuestRoute>
           <Home />
@@ -98,6 +118,11 @@ const App = () => (
         <Route path="subscription" element={
           <ProtectedRoute>
             <Subscription />
+          </ProtectedRoute>
+        } />
+        <Route path="subscription/upgrade" element={
+          <ProtectedRoute>
+            <UpgradeSubscription />
           </ProtectedRoute>
         } />
         <Route path="profile" element={
@@ -132,12 +157,12 @@ const App = () => (
         } />
         <Route path="jobs/:id" element={
           <ProtectedRoute allowedRoles={['admin', 'manager']} allowedUserTypes={['recruiter', 'both']}>
-            <div>Job Detail Page (TODO)</div>
+            <JobDetail />
           </ProtectedRoute>
         } />
         <Route path="jobs/:id/edit" element={
           <ProtectedRoute allowedRoles={['admin', 'manager']} allowedUserTypes={['recruiter', 'both']}>
-            <div>Edit Job Page (TODO)</div>
+            <EditJob />
           </ProtectedRoute>
         } />
         {/* Candidate-related routes */}
@@ -148,7 +173,7 @@ const App = () => (
         } />
         <Route path="candidates/:id" element={
           <ProtectedRoute allowedRoles={['admin', 'manager']} allowedUserTypes={['recruiter', 'both']}>
-            <div>Candidate Detail Page (TODO)</div>
+            <CandidateDetail />
           </ProtectedRoute>
         } />
         {/* Interview-related routes */}
@@ -164,7 +189,7 @@ const App = () => (
         } />
         <Route path="interviews/:id" element={
           <ProtectedRoute allowedRoles={['admin', 'manager']} allowedUserTypes={['recruiter', 'both']}>
-            <div>Interview Detail Page (TODO)</div>
+            <InterviewDetail />
           </ProtectedRoute>
         } />
         {/* Message-related routes */}
@@ -175,7 +200,7 @@ const App = () => (
         } />
         <Route path="messages/:id" element={
           <ProtectedRoute allowedRoles={['admin', 'manager']} allowedUserTypes={['recruiter', 'both']}>
-            <div>Conversation Page (TODO)</div>
+            <Conversation />
           </ProtectedRoute>
         } />
         {/* Analytics */}
@@ -254,6 +279,30 @@ const App = () => (
               <SystemConfiguration />
             </ProtectedRoute>
           } />
+          {/* Login Attempts - Super Admin only */}
+          <Route path="login-attempts" element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <LoginAttempts />
+            </ProtectedRoute>
+          } />
+          {/* Security Logs - Super Admin only */}
+          <Route path="security-logs" element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <SecurityLogs />
+            </ProtectedRoute>
+          } />
+          {/* Audit Logs - Super Admin only */}
+          <Route path="audit-logs" element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <AuditLogs />
+            </ProtectedRoute>
+          } />
+          {/* Client Logs - Super Admin only */}
+          <Route path="client-logs" element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <ClientLogs />
+            </ProtectedRoute>
+          } />
           {/* Create Recruiter Account - Super Admin only */}
           <Route path="create-recruiter-account" element={
             <ProtectedRoute allowedRoles={['super_admin']}>
@@ -283,7 +332,7 @@ const App = () => (
         } />
         <Route path="jobs/:id" element={
           <ProtectedRoute>
-            <div>Job Detail Page (TODO)</div>
+            <ApplicantJobDetail />
           </ProtectedRoute>
         } />
         <Route path="applications" element={
@@ -293,7 +342,7 @@ const App = () => (
         } />
         <Route path="applications/:id" element={
           <ProtectedRoute>
-            <div>Application Detail Page (TODO)</div>
+            <ApplicationDetail />
           </ProtectedRoute>
         } />
         <Route path="interviews" element={
@@ -303,7 +352,7 @@ const App = () => (
         } />
         <Route path="interviews/:id" element={
           <ProtectedRoute>
-            <div>Interview Detail Page (TODO)</div>
+            <ApplicantInterviewDetail />
           </ProtectedRoute>
         } />
         <Route path="messages" element={
@@ -313,7 +362,7 @@ const App = () => (
         } />
         <Route path="messages/:id" element={
           <ProtectedRoute>
-            <div>Conversation Page (TODO)</div>
+            <ApplicantConversation />
           </ProtectedRoute>
         } />
       </Route>
@@ -336,6 +385,7 @@ const App = () => (
     </Routes>
     </Suspense>
     </MaintenanceModeWrapper>
+    </AppProvider>
   </SidebarProvider>
 );
 

@@ -1,23 +1,36 @@
 import sgMail from '@sendgrid/mail';
 
 // Initialize SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+} else {
+  console.warn('⚠️  SENDGRID_API_KEY not set - email functionality will be disabled');
+}
 
-/**
- * Send email using SendGrid
- * @param {Object} options - Email options
- * @param {string} options.to - Recipient email
- * @param {string} options.subject - Email subject
- * @param {string} options.text - Plain text content
- * @param {string} options.html - HTML content
- * @param {Object} options.dynamicTemplateData - Data for SendGrid template
- * @returns {Promise}
- */
+// Get the from email address
+const getFromEmail = () => {
+  const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'resume.iq2025@gmail.com';
+  
+  if (!process.env.SENDGRID_FROM_EMAIL) {
+    console.warn(`⚠️  SENDGRID_FROM_EMAIL not set - using default: ${fromEmail}`);
+    console.warn('⚠️  Make sure this email is verified in your SendGrid account as a Sender Identity');
+  }
+  
+  return fromEmail;
+};
+
+// Send email using SendGrid
 export const sendEmail = async ({ to, subject, text, html, dynamicTemplateData }) => {
   try {
+    if (!process.env.SENDGRID_API_KEY) {
+      throw new Error('SENDGRID_API_KEY is not configured. Email sending is disabled.');
+    }
+
+    const fromEmail = getFromEmail();
+    
     const msg = {
       to,
-      from: process.env.SENDGRID_FROM_EMAIL || 'noreply@resumeiqhub.com',
+      from: fromEmail,
       subject,
       text,
       html,
@@ -28,25 +41,33 @@ export const sendEmail = async ({ to, subject, text, html, dynamicTemplateData }
     };
 
     await sgMail.send(msg);
-    console.log(`✅ Email sent successfully to ${to}`);
+    console.log(`Email sent to ${to}`);
     return { success: true };
   } catch (error) {
-    console.error('❌ SendGrid error:', error);
-    if (error.response) {
+    console.error('SendGrid error:', error);
+    
+    // Provide helpful error messages for common issues
+    if (error.response?.body?.errors) {
+      const errors = error.response.body.errors;
+      errors.forEach(err => {
+        if (err.field === 'from' && err.message.includes('verified Sender Identity')) {
+          console.error('\n❌ SENDGRID SENDER IDENTITY ERROR:');
+          console.error(`   The "from" email address (${getFromEmail()}) is not verified in SendGrid.`);
+          console.error('   To fix this:');
+          console.error('   1. Go to https://app.sendgrid.com/settings/sender_auth/senders/new');
+          console.error('   2. Verify the sender identity for:', getFromEmail());
+          console.error('   3. Or set SENDGRID_FROM_EMAIL to a verified email address in your .env file');
+          console.error('   4. See: https://sendgrid.com/docs/for-developers/sending-email/sender-identity/\n');
+        }
+      });
       console.error('Error response body:', error.response.body);
     }
+    
     throw error;
   }
 };
 
-/**
- * Send email verification email
- * @param {string} to - Recipient email
- * @param {string} name - Recipient name
- * @param {string} verificationUrl - Verification URL
- * @param {string} verificationCode - Verification code
- * @returns {Promise}
- */
+// Send email verification email
 export const sendVerificationEmail = async (to, name, verificationUrl, verificationCode) => {
   try {
     // Read the HTML template
@@ -81,14 +102,7 @@ export const sendVerificationEmail = async (to, name, verificationUrl, verificat
   }
 };
 
-/**
- * Send password reset email
- * @param {string} to - Recipient email
- * @param {string} name - Recipient name
- * @param {string} resetUrl - Password reset URL
- * @param {string} resetCode - Password reset code
- * @returns {Promise}
- */
+// Send password reset email
 export const sendPasswordResetEmail = async (to, name, resetUrl, resetCode) => {
   const subject = 'Reset Your Password - ResumeIQHub';
   const text = `Hi ${name},\n\nYou requested to reset your password. Click this link to reset: ${resetUrl}\n\nOr use this reset code: ${resetCode}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this email.`;
@@ -113,12 +127,7 @@ export const sendPasswordResetEmail = async (to, name, resetUrl, resetCode) => {
   });
 };
 
-/**
- * Send welcome email
- * @param {string} to - Recipient email
- * @param {string} name - Recipient name
- * @returns {Promise}
- */
+// Send welcome email
 export const sendWelcomeEmail = async (to, name) => {
   const subject = 'Welcome to ResumeIQHub!';
   const text = `Hi ${name},\n\nWelcome to ResumeIQHub! We're excited to have you on board.\n\nStart building your professional resume today!`;

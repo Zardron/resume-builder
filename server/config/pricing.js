@@ -1,11 +1,4 @@
-/**
- * Centralized Pricing Configuration
- * 
- * IMPORTANT: All pricing must be in PHP (₱) to match frontend.
- * Update both frontend and backend when changing prices.
- * 
- * Last updated: January 2025
- */
+// Centralized Pricing Configuration - All pricing in PHP (₱) to match frontend
 
 // Base credit price (PHP)
 export const BASE_CREDIT_PRICE = 20;

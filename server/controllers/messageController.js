@@ -2,9 +2,7 @@ import Conversation from '../models/Conversation.js';
 import Message from '../models/Message.js';
 import Application from '../models/Application.js';
 
-/**
- * Get all conversations
- */
+// Get all conversations
 export const getConversations = async (req, res) => {
   try {
     const user = req.user;
@@ -47,9 +45,7 @@ export const getConversations = async (req, res) => {
   }
 };
 
-/**
- * Get conversation by ID
- */
+// Get conversation by ID
 export const getConversationById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -92,9 +88,7 @@ export const getConversationById = async (req, res) => {
   }
 };
 
-/**
- * Get or create conversation by application
- */
+// Get or create conversation by application
 export const getOrCreateConversation = async (req, res) => {
   try {
     const { applicationId } = req.params;
@@ -164,9 +158,7 @@ export const getOrCreateConversation = async (req, res) => {
   }
 };
 
-/**
- * Get messages in conversation
- */
+// Get messages in conversation
 export const getMessages = async (req, res) => {
   try {
     const { conversationId } = req.params;
@@ -229,9 +221,7 @@ export const getMessages = async (req, res) => {
   }
 };
 
-/**
- * Send message
- */
+// Send message
 export const sendMessage = async (req, res) => {
   try {
     const { conversationId } = req.params;
@@ -305,9 +295,7 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-/**
- * Mark message as read
- */
+// Mark message as read
 export const markMessageAsRead = async (req, res) => {
   try {
     const message = await Message.findById(req.params.messageId);
@@ -351,9 +339,7 @@ export const markMessageAsRead = async (req, res) => {
   }
 };
 
-/**
- * Get message templates
- */
+// Get message templates
 export const getMessageTemplates = async (req, res) => {
   try {
     // Message templates for recruiters
@@ -402,9 +388,7 @@ export const getMessageTemplates = async (req, res) => {
   }
 };
 
-/**
- * Send message using template
- */
+// Send message using template
 export const sendTemplateMessage = async (req, res) => {
   try {
     const { conversationId, templateId, variables } = req.body;

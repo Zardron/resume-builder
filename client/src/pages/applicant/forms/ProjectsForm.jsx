@@ -358,6 +358,7 @@ const ProjectsForm = ({ data, onChange, onValidationChange }) => {
                     
                     <AIFeatureButton
                       label="Enhance Description with AI"
+                      featureId="project-enhancement"
                       description="Improve project descriptions with impactful language and achievements"
                       onClick={async () => {
                         if (!isSubscribed) {

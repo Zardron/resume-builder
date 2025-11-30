@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Briefcase, Users, Calendar, 
   MessageSquare, Settings, Building2,
   CreditCard, UserPlus, ChevronRight, PanelLeftClose, PanelLeftOpen,
-  User, Sparkles, Moon, Sun, LogOut, BarChart3, FileText
+  User, Sparkles, Moon, Sun, LogOut, BarChart3, FileText, Shield, Monitor
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { logoutUser } from '../../store/slices/authSlice';
@@ -47,10 +47,14 @@ const AdminSidebar = () => {
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      navigate('/sign-in', { state: { fromHome: true } });
+      // Redirect super admins to admin login page
+      const redirectPath = isSuperAdmin ? '/admin-login' : '/sign-in';
+      navigate(redirectPath, { state: { fromHome: true } });
     } catch (error) {
       console.error('Logout error:', error);
-      navigate('/sign-in', { state: { fromHome: true } });
+      // Redirect super admins to admin login page
+      const redirectPath = isSuperAdmin ? '/admin-login' : '/sign-in';
+      navigate(redirectPath, { state: { fromHome: true } });
     }
   };
 
@@ -141,6 +145,30 @@ const AdminSidebar = () => {
       label: 'Recruiter Applications',
       path: getPath('/recruiter-applications'),
       icon: FileText,
+      allowedRoles: ['super_admin']
+    },
+    {
+      label: 'Login Attempts',
+      path: getPath('/login-attempts'),
+      icon: Shield,
+      allowedRoles: ['super_admin']
+    },
+    {
+      label: 'Security Logs',
+      path: getPath('/security-logs'),
+      icon: Shield,
+      allowedRoles: ['super_admin']
+    },
+    {
+      label: 'Audit Logs',
+      path: getPath('/audit-logs'),
+      icon: FileText,
+      allowedRoles: ['super_admin']
+    },
+    {
+      label: 'Client Logs',
+      path: getPath('/client-logs'),
+      icon: Monitor,
       allowedRoles: ['super_admin']
     },
     {

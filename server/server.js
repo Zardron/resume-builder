@@ -1,9 +1,15 @@
 import express from 'express';
+import http from 'http';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 import { checkMaintenanceMode } from './middleware/maintenance.js';
+import { loadAndValidateEnv } from './config/envValidator.js';
+import { logInfo, logError } from './utils/logger.js';
+import { apiRateLimiter } from './middleware/rateLimiter.js';
+import { securityHeaders, requestId } from './middleware/security.js';
+import { initializeSocket } from './services/socketService.js';
 
 // Import routes
 import authRoutes from './routes/auth.js';
@@ -22,6 +28,12 @@ import dashboardRoutes from './routes/dashboards.js';
 import billingRoutes from './routes/billing.js';
 import adminRoutes from './routes/admin.js';
 import recruiterApplicationRoutes from './routes/recruiterApplications.js';
+import logsRoutes from './routes/logs.js';
+import aiRoutes from './routes/ai.js';
+import { requestLogger, suspiciousActivityDetector } from './middleware/requestLogger.js';
+
+// Validate environment variables before starting
+loadAndValidateEnv();
 
 const app = express();
 const PORT = process.env.PORT || 5001; // Changed to 5001 to avoid AirPlay conflict
@@ -53,18 +65,26 @@ const corsOptions = {
   exposedHeaders: ['Authorization'],
 };
 
+// Security middleware (apply early)
+app.use(requestId);
+app.use(securityHeaders);
+
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Limit request body size to prevent DoS attacks
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
+
+// Apply rate limiting to all API routes
+app.use('/api', apiRateLimiter);
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/resumeiqhub')
 .then(() => {
-  console.log('✅ Connected to MongoDB');
+  logInfo('Connected to MongoDB');
 })
 .catch((error) => {
-  console.error('❌ MongoDB connection error:', error);
+  logError('MongoDB connection error', error);
   process.exit(1);
 });
 
@@ -78,8 +98,12 @@ app.get('/', (req, res) => {
 });
 
 // Maintenance mode check middleware (applied to all API routes)
-// Note: This runs before authentication, so we need to handle super admin check in routes
+// Runs before authentication, so super admin check is handled in routes
 app.use('/api', checkMaintenanceMode);
+
+// Security logging middleware (apply to all API routes)
+app.use('/api', suspiciousActivityDetector);
+app.use('/api', requestLogger);
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -98,8 +122,12 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/organizations', billingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/recruiter-applications', recruiterApplicationRoutes);
+app.use('/api/logs', logsRoutes);
+app.use('/api/ai', aiRoutes);
 console.log('✅ Admin routes registered at /api/admin');
 console.log('✅ Recruiter application routes registered at /api/recruiter-applications');
+console.log('✅ Logs routes registered at /api/logs');
+console.log('✅ AI routes registered at /api/ai');
 
 // 404 handler
 app.use((req, res) => {
@@ -111,7 +139,12 @@ app.use((req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  logError('Unhandled error', err, {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+  });
+  
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal server error',
@@ -119,9 +152,17 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📡 API available at http://localhost:${PORT}/api`);
+// Create HTTP server
+const server = http.createServer(app);
+
+// Initialize Socket.io
+initializeSocket(server);
+
+// Start server
+server.listen(PORT, () => {
+  logInfo(`Server is running on port ${PORT}`);
+  logInfo(`API available at http://localhost:${PORT}/api`);
+  logInfo(`Socket.io server initialized`);
 });
 
 export default app;

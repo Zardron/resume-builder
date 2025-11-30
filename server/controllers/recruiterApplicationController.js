@@ -1,9 +1,7 @@
 import RecruiterApplication from '../models/RecruiterApplication.js';
 import { sendEmail } from '../services/emailService.js';
 
-/**
- * Create a new recruiter application
- */
+// Create a new recruiter application
 export const createRecruiterApplication = async (req, res) => {
   try {
     const { fullName, email, company, position, message, selectedPlan } = req.body;
@@ -95,9 +93,7 @@ export const createRecruiterApplication = async (req, res) => {
   }
 };
 
-/**
- * Get all recruiter applications (Super Admin only)
- */
+// Get all recruiter applications (Super Admin only)
 export const getRecruiterApplications = async (req, res) => {
   try {
     const { status } = req.query;
@@ -125,9 +121,7 @@ export const getRecruiterApplications = async (req, res) => {
   }
 };
 
-/**
- * Get single recruiter application
- */
+// Get single recruiter application
 export const getRecruiterApplication = async (req, res) => {
   try {
     const application = await RecruiterApplication.findById(req.params.id)
@@ -154,9 +148,7 @@ export const getRecruiterApplication = async (req, res) => {
   }
 };
 
-/**
- * Update recruiter application status (Super Admin only)
- */
+// Update recruiter application status (Super Admin only)
 export const updateRecruiterApplicationStatus = async (req, res) => {
   try {
     const { status, reviewNotes } = req.body;
@@ -264,9 +256,7 @@ export const updateRecruiterApplicationStatus = async (req, res) => {
   }
 };
 
-/**
- * Delete recruiter application (Super Admin only)
- */
+// Delete recruiter application (Super Admin only)
 export const deleteRecruiterApplication = async (req, res) => {
   try {
     const application = await RecruiterApplication.findByIdAndDelete(req.params.id);

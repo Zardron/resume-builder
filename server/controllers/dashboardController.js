@@ -8,9 +8,7 @@ import User from '../models/User.js';
 
 // ==================== RECRUITER DASHBOARD ====================
 
-/**
- * Get recruiter dashboard stats
- */
+// Get recruiter dashboard stats
 export const getRecruiterStats = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -64,9 +62,7 @@ export const getRecruiterStats = async (req, res) => {
   }
 };
 
-/**
- * Get recruiter pipeline
- */
+// Get recruiter pipeline
 export const getRecruiterPipeline = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -120,9 +116,7 @@ export const getRecruiterPipeline = async (req, res) => {
   }
 };
 
-/**
- * Get recruiter team activity
- */
+// Get recruiter team activity
 export const getRecruiterActivity = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -166,9 +160,7 @@ export const getRecruiterActivity = async (req, res) => {
   }
 };
 
-/**
- * Get recruiter upcoming interviews
- */
+// Get recruiter upcoming interviews
 export const getRecruiterUpcomingInterviews = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -204,9 +196,7 @@ export const getRecruiterUpcomingInterviews = async (req, res) => {
 
 // ==================== APPLICANT DASHBOARD ====================
 
-/**
- * Get applicant dashboard overview
- */
+// Get applicant dashboard overview
 export const getApplicantOverview = async (req, res) => {
   try {
     const user = req.user;
@@ -265,9 +255,7 @@ export const getApplicantOverview = async (req, res) => {
   }
 };
 
-/**
- * Get recommended jobs for applicant
- */
+// Get recommended jobs for applicant
 export const getApplicantRecommendedJobs = async (req, res) => {
   try {
     const user = req.user;
@@ -334,9 +322,7 @@ export const getApplicantRecommendedJobs = async (req, res) => {
   }
 };
 
-/**
- * Get applicant applications
- */
+// Get applicant applications
 export const getApplicantApplications = async (req, res) => {
   try {
     const user = req.user;
@@ -376,9 +362,7 @@ export const getApplicantApplications = async (req, res) => {
   }
 };
 
-/**
- * Get applicant dashboard stats
- */
+// Get applicant dashboard stats
 export const getApplicantStats = async (req, res) => {
   try {
     const user = req.user;
@@ -428,9 +412,7 @@ export const getApplicantStats = async (req, res) => {
   }
 };
 
-/**
- * Helper function to calculate profile completeness
- */
+// Helper function to calculate profile completeness
 function calculateProfileCompleteness(user) {
   let completed = 0;
   let total = 0;

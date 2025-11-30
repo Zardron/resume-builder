@@ -2,9 +2,7 @@ import Interview from '../models/Interview.js';
 import Application from '../models/Application.js';
 import User from '../models/User.js';
 
-/**
- * Get all interviews
- */
+// Get all interviews
 export const getInterviews = async (req, res) => {
   try {
     const user = req.user;
@@ -63,9 +61,7 @@ export const getInterviews = async (req, res) => {
   }
 };
 
-/**
- * Get single interview
- */
+// Get single interview
 export const getInterview = async (req, res) => {
   try {
     const interview = await Interview.findById(req.params.id)
@@ -114,9 +110,7 @@ export const getInterview = async (req, res) => {
   }
 };
 
-/**
- * Create interview
- */
+// Create interview
 export const createInterview = async (req, res) => {
   try {
     const {
@@ -197,9 +191,7 @@ export const createInterview = async (req, res) => {
   }
 };
 
-/**
- * Update interview
- */
+// Update interview
 export const updateInterview = async (req, res) => {
   try {
     const interview = await Interview.findById(req.params.id);
@@ -248,9 +240,7 @@ export const updateInterview = async (req, res) => {
   }
 };
 
-/**
- * Confirm interview (applicant)
- */
+// Confirm interview (applicant)
 export const confirmInterview = async (req, res) => {
   try {
     const interview = await Interview.findById(req.params.id);
@@ -288,9 +278,7 @@ export const confirmInterview = async (req, res) => {
   }
 };
 
-/**
- * Reschedule interview
- */
+// Reschedule interview
 export const rescheduleInterview = async (req, res) => {
   try {
     const { scheduledAt, reason } = req.body;
@@ -337,9 +325,7 @@ export const rescheduleInterview = async (req, res) => {
   }
 };
 
-/**
- * Cancel interview
- */
+// Cancel interview
 export const cancelInterview = async (req, res) => {
   try {
     const { reason } = req.body;
@@ -383,9 +369,7 @@ export const cancelInterview = async (req, res) => {
   }
 };
 
-/**
- * Delete interview
- */
+// Delete interview
 export const deleteInterview = async (req, res) => {
   try {
     const interview = await Interview.findById(req.params.id);
@@ -429,9 +413,7 @@ export const deleteInterview = async (req, res) => {
   }
 };
 
-/**
- * Submit interview feedback
- */
+// Submit interview feedback
 export const submitFeedback = async (req, res) => {
   try {
     const { rating, notes, recommendation } = req.body;
@@ -511,9 +493,7 @@ export const submitFeedback = async (req, res) => {
   }
 };
 
-/**
- * Get calendar events (upcoming interviews)
- */
+// Get calendar events (upcoming interviews)
 export const getCalendar = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;

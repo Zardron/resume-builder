@@ -25,12 +25,16 @@ const apiRequest = async (endpoint, options = {}) => {
   const token = getToken();
   const headers = {
     'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
     ...options.headers,
   };
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
+
+  const method = options.method || 'GET';
+  const startTime = Date.now();
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -73,10 +77,20 @@ const apiRequest = async (endpoint, options = {}) => {
         }
       }
       // Handle 403 (forbidden) - might be email verification required
-      if (response.status === 403 && data.requiresVerification) {
+      // Also check message for verification keywords as fallback
+      const isVerificationError = 
+        data.requiresVerification === true ||
+        (response.status === 403 && data.message && (
+          data.message.toLowerCase().includes('verify') || 
+          data.message.toLowerCase().includes('verification')
+        ));
+      
+      if (isVerificationError) {
         const error = new Error(data.message || 'Email verification required');
         error.requiresVerification = true;
+        error.status = response.status;
         error.email = data.data?.user?.email;
+        error.response = data;
         throw error;
       }
       
@@ -84,11 +98,32 @@ const apiRequest = async (endpoint, options = {}) => {
       const error = new Error(data.message || 'Request failed');
       error.status = response.status;
       error.response = data;
+      // Preserve requiresVerification if it exists in response
+      if (data.requiresVerification !== undefined) {
+        error.requiresVerification = data.requiresVerification;
+      }
       throw error;
     }
 
+    // Log successful API request (fire and forget)
+    const { logAPIRequest } = await import('./loggingService');
+    logAPIRequest(endpoint, method, response.status).catch(() => {
+      // Silently fail if logging service is not available
+    });
+
     return data;
   } catch (error) {
+    // Log failed API request (fire and forget)
+    const { logAPIRequest } = await import('./loggingService');
+    logAPIRequest(endpoint, method, error.status || 0, error).catch(() => {
+      // Silently fail if logging service is not available
+    });
+
+    // Handle rate limit errors
+    if (error.status === 429) {
+      const { logRateLimit } = await import('./loggingService');
+      logRateLimit(endpoint, error.response?.retryAfter).catch(() => {});
+    }
     // Handle network errors and other fetch failures
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       // Network error - don't remove token, just throw the error
@@ -102,7 +137,10 @@ const apiRequest = async (endpoint, options = {}) => {
       error.status = 0; // Network error
     }
     
-    console.error('API Error:', error);
+    // Log error for debugging (only in development)
+    if (import.meta.env.DEV) {
+      console.error('API Error:', error);
+    }
     throw error;
   }
 };
@@ -162,10 +200,39 @@ export const authAPI = {
     });
   },
 
+  verifyEmailUnauthenticated: async (code, email) => {
+    // This endpoint doesn't require authentication
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth/verify-email-unauthenticated`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code, email }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to verify email');
+    }
+    return data;
+  },
+
   resendVerification: async () => {
     return await apiRequest('/auth/resend-verification', {
       method: 'POST',
     });
+  },
+
+  resendVerificationUnauthenticated: async (email) => {
+    // This endpoint doesn't require authentication
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth/resend-verification-unauthenticated`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json();
+    return data;
   },
 
   getPublicConfig: async () => {
@@ -178,6 +245,12 @@ export const authAPI = {
     });
     const data = await response.json();
     return data;
+  },
+
+  updateActivity: async () => {
+    return await apiRequest('/auth/activity', {
+      method: 'POST',
+    });
   },
 };
 
@@ -243,10 +316,10 @@ export const subscriptionAPI = {
     return response.data;
   },
 
-  subscribe: async (paymentMethod, subscriptionDuration = 1) => {
+  subscribe: async (paymentMethod, subscriptionDuration = 1, planId = 'enterprise') => {
     const response = await apiRequest('/subscriptions/subscribe', {
       method: 'POST',
-      body: JSON.stringify({ paymentMethod, subscriptionDuration }),
+      body: JSON.stringify({ paymentMethod, subscriptionDuration, planId }),
     });
     return response.data;
   },
@@ -261,6 +334,14 @@ export const subscriptionAPI = {
     return await apiRequest('/subscriptions/reactivate', {
       method: 'POST',
     });
+  },
+
+  upgrade: async (planId, paymentMethod) => {
+    const response = await apiRequest('/subscriptions/upgrade', {
+      method: 'POST',
+      body: JSON.stringify({ planId, paymentMethod }),
+    });
+    return response.data;
   },
 };
 
@@ -770,6 +851,76 @@ export const adminAPI = {
     });
     return response.data;
   },
+
+  getLoginAttempts: async (filters = {}) => {
+    const queryParams = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
+        queryParams.append(key, filters[key]);
+      }
+    });
+    const queryString = queryParams.toString();
+    const endpoint = `/admin/login-attempts${queryString ? `?${queryString}` : ''}`;
+    const response = await apiRequest(endpoint);
+    return response.data;
+  },
+
+  getSecurityLogs: async (filters = {}) => {
+    const queryParams = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
+        queryParams.append(key, filters[key]);
+      }
+    });
+    const queryString = queryParams.toString();
+    const endpoint = `/admin/security-logs${queryString ? `?${queryString}` : ''}`;
+    const response = await apiRequest(endpoint);
+    return response.data;
+  },
+
+  getAuditLogs: async (filters = {}) => {
+    const queryParams = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
+        queryParams.append(key, filters[key]);
+      }
+    });
+    const queryString = queryParams.toString();
+    const endpoint = `/admin/audit-logs${queryString ? `?${queryString}` : ''}`;
+    const response = await apiRequest(endpoint);
+    return response.data;
+  },
+
+  getClientLogs: async (filters = {}) => {
+    const queryParams = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
+        queryParams.append(key, filters[key]);
+      }
+    });
+    const queryString = queryParams.toString();
+    const endpoint = `/admin/client-logs${queryString ? `?${queryString}` : ''}`;
+    const response = await apiRequest(endpoint);
+    return response.data;
+  },
+
+  getAllUsers: async () => {
+    const response = await apiRequest('/admin/users');
+    return response.data || [];
+  },
+
+  toggleUserBan: async (userId, isBanned) => {
+    const response = await apiRequest(`/admin/users/${userId}/ban`, {
+      method: 'PATCH',
+      body: JSON.stringify({ isBanned }),
+    });
+    return response.data;
+  },
+
+  getPlatformStats: async (period = '30') => {
+    const response = await apiRequest(`/admin/platform-stats?period=${period}`);
+    return response.data;
+  },
 };
 
 // Recruiter Applications API
@@ -804,6 +955,161 @@ export const recruiterApplicationsAPI = {
   delete: async (id) => {
     const response = await apiRequest(`/recruiter-applications/${id}`, {
       method: 'DELETE',
+    });
+    return response.data;
+  },
+};
+
+// AI API
+export const aiAPI = {
+  enhanceSummary: async (summary, profession) => {
+    const response = await apiRequest('/ai/enhance-summary', {
+      method: 'POST',
+      body: JSON.stringify({ summary, profession }),
+    });
+    return response.data?.enhancedSummary;
+  },
+
+  enhanceJobDescription: async (description) => {
+    const response = await apiRequest('/ai/enhance-job-description', {
+      method: 'POST',
+      body: JSON.stringify({ description }),
+    });
+    return response.data?.enhancedDescription;
+  },
+
+  enhanceProjectDescription: async (description) => {
+    const response = await apiRequest('/ai/enhance-project-description', {
+      method: 'POST',
+      body: JSON.stringify({ description }),
+    });
+    return response.data?.enhancedDescription;
+  },
+
+  enhanceContent: async (content, contentType) => {
+    const response = await apiRequest('/ai/enhance-content', {
+      method: 'POST',
+      body: JSON.stringify({ content, contentType }),
+    });
+    return response.data?.enhancedContent;
+  },
+
+  checkGrammar: async (text) => {
+    const response = await apiRequest('/ai/grammar-check', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+    return response.data;
+  },
+
+  getActionVerbs: async (text) => {
+    const response = await apiRequest('/ai/action-verbs', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+    return response.data?.suggestions || [];
+  },
+
+  rewriteBullets: async (text) => {
+    const response = await apiRequest('/ai/rewrite-bullets', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+    return response.data?.rewritten;
+  },
+
+  getKeywords: async (resumeText, jobDescription) => {
+    const response = await apiRequest('/ai/keyword-suggestions', {
+      method: 'POST',
+      body: JSON.stringify({ resumeText, jobDescription }),
+    });
+    return response.data;
+  },
+
+  getReadability: async (text) => {
+    const response = await apiRequest('/ai/readability-score', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+    return response.data;
+  },
+
+  getATSOptimization: async (resumeData) => {
+    const response = await apiRequest('/ai/ats-optimization', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData }),
+    });
+    return response.data;
+  },
+
+  getResumeScore: async (resumeData) => {
+    const response = await apiRequest('/ai/resume-score', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData }),
+    });
+    return response.data;
+  },
+
+  getIndustrySuggestions: async (resumeData, industry) => {
+    const response = await apiRequest('/ai/industry-suggestions', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData, industry }),
+    });
+    return response.data;
+  },
+
+  matchJobDescription: async (resumeData, jobDescription) => {
+    const response = await apiRequest('/ai/job-matching', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData, jobDescription }),
+    });
+    return response.data;
+  },
+
+  analyzeSkillGaps: async (resumeData, targetRole) => {
+    const response = await apiRequest('/ai/skill-gap-analysis', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData, targetRole }),
+    });
+    return response.data;
+  },
+
+  getCareerPath: async (resumeData) => {
+    const response = await apiRequest('/ai/career-path', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData }),
+    });
+    return response.data;
+  },
+
+  generateCoverLetter: async (resumeData, jobDescription, companyName) => {
+    const response = await apiRequest('/ai/cover-letter', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData, jobDescription, companyName }),
+    });
+    return response.data?.coverLetter;
+  },
+
+  generateInterviewQuestions: async (resumeData) => {
+    const response = await apiRequest('/ai/interview-prep', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData }),
+    });
+    return response.data?.questions || [];
+  },
+
+  estimateSalary: async (resumeData, location, role) => {
+    const response = await apiRequest('/ai/salary-estimation', {
+      method: 'POST',
+      body: JSON.stringify({ resumeData, location, role }),
+    });
+    return response.data;
+  },
+
+  parseResume: async (fileContent, fileType) => {
+    const response = await apiRequest('/ai/parse-resume', {
+      method: 'POST',
+      body: JSON.stringify({ fileContent, fileType }),
     });
     return response.data;
   },

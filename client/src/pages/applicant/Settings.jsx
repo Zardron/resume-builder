@@ -599,7 +599,7 @@ const Settings = () => {
                       Available AI Features
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-gray-500">
-                      Subscribe to Premium to unlock all these AI-powered features.
+                      Subscribe to an AI plan to unlock all these AI-powered features.
                     </p>
                   </header>
                   

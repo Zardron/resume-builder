@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar';
+import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
 import Breadcrumbs from '../../components/layout/Breadcrumbs';
 import { useSidebar } from '../../contexts/SidebarContext';

@@ -5,6 +5,7 @@ import AIFeatureButton from "../../../components/common/AIFeatureButton";
 import { UploadIcon, X, SparklesIcon, Loader2, Plus, Trash2, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../../contexts/AppContext";
+import { getTierForFeature } from "../../../utils/aiFeatures";
 
 const PersonalInfoForm = ({
   data,
@@ -427,10 +428,23 @@ const PersonalInfoForm = ({
                       <Lock className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-semibold text-gray-900 dark:text-white">
                           AI Background Removal
                         </span>
+                        {(() => {
+                          const requiredTier = getTierForFeature('background-removal');
+                          const tierColors = {
+                            'basic': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                            'pro': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                            'enterprise': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                          };
+                          return requiredTier && (
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${tierColors[requiredTier] || 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'}`}>
+                              {requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}
+                            </span>
+                          );
+                        })()}
                         {!isSubscribed && (
                           <span className="inline-flex items-center gap-1 rounded-full bg-[var(--primary-color)]/10 px-2 py-0.5 text-xs font-semibold text-[var(--primary-color)]">
                             <Lock className="h-3 w-3" />

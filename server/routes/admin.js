@@ -41,5 +41,20 @@ router.get('/recruiters', adminController.getAllRecruiters);
 router.get('/system-config', adminController.getSystemConfig);
 router.put('/system-config', adminController.updateSystemConfig);
 
+// Login attempts routes
+router.get('/login-attempts', adminController.getLoginAttempts);
+
+// Security logging routes
+router.get('/security-logs', adminController.getSecurityLogs);
+router.get('/audit-logs', adminController.getAuditLogs);
+router.get('/client-logs', adminController.getClientLogs);
+
+// User management routes
+router.get('/users', adminController.getAllUsers);
+router.patch('/users/:userId/ban', adminController.toggleUserBan);
+
+// Platform statistics route
+router.get('/platform-stats', adminController.getPlatformStats);
+
 export default router;
 

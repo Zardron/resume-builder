@@ -2,12 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
 
-/**
- * GuestRoute - Route guard that redirects authenticated users away from public pages
- * Used for pages like login, register, and home that should only be accessible to guests
- * @param {Object} props
- * @param {React.ReactNode} props.children - Component to render if user is not authenticated
- */
+// GuestRoute - redirects authenticated users away from public pages
 const GuestRoute = ({ children }) => {
   const { isAuthenticated, isInitialized } = useAppSelector((state) => state.auth);
 

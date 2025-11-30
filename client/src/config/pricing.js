@@ -1,11 +1,4 @@
-/**
- * Client-side Pricing Configuration
- * 
- * IMPORTANT: This must match server/config/pricing.js exactly.
- * Update both files when changing prices.
- * 
- * Last updated: January 2025
- */
+// Client-side Pricing Configuration - must match server/config/pricing.js
 
 // Base credit price (PHP)
 export const BASE_CREDIT_PRICE = 20;

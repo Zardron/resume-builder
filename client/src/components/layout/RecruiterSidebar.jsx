@@ -46,12 +46,17 @@ const RecruiterSidebar = () => {
   };
 
   const handleLogout = async () => {
+    const isSuperAdmin = user?.role === 'super_admin';
     try {
       await dispatch(logoutUser()).unwrap();
-      navigate('/sign-in', { state: { fromHome: true } });
+      // Redirect super admins to admin login page
+      const redirectPath = isSuperAdmin ? '/admin-login' : '/sign-in';
+      navigate(redirectPath, { state: { fromHome: true } });
     } catch (error) {
       console.error('Logout error:', error);
-      navigate('/sign-in', { state: { fromHome: true } });
+      // Redirect super admins to admin login page
+      const redirectPath = isSuperAdmin ? '/admin-login' : '/sign-in';
+      navigate(redirectPath, { state: { fromHome: true } });
     }
   };
 

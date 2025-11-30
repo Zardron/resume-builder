@@ -12,14 +12,25 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Log error for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
+    
     this.setState({
       error,
       errorInfo,
     });
 
-    // You can log to an error reporting service here
-    // Example: logErrorToService(error, errorInfo);
+    // Log error to security logging service
+    import('../../services/loggingService').then(({ logError }) => {
+      logError(error, {
+        componentStack: errorInfo?.componentStack,
+        errorBoundary: true,
+      });
+    }).catch(() => {
+      // Silently fail if logging service is not available
+    });
   }
 
   handleReset = () => {

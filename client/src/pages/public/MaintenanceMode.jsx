@@ -16,7 +16,10 @@ const MaintenanceMode = () => {
           setMaintenanceMode(response.data.maintenanceMode);
         }
       } catch (error) {
-        console.error('Error checking maintenance status:', error);
+        // Silently fail - maintenance mode check should not break the page
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error checking maintenance status:', error);
+        }
       } finally {
         setIsChecking(false);
       }

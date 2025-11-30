@@ -18,7 +18,7 @@ const SuperAdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: 'admin@resumeiqhub.com', password: '' });
   const [errors, setErrors] = useState({ email: false, password: false });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -48,14 +48,20 @@ const SuperAdminLogin = () => {
     if (!newErrors.email && !newErrors.password) {
       setIsLoading(true);
       try {
-        const result = await dispatch(loginUser({
+        const loginPromise = dispatch(loginUser({
           email: formData.email,
           password: formData.password,
           remember: false,
-        })).unwrap();
+        }));
+        
+        if (!loginPromise || typeof loginPromise.then !== 'function') {
+          throw new Error('Login action did not return a promise');
+        }
+        
+        const result = await loginPromise.unwrap();
         
         // Check if user is super admin
-        if (result.user.role !== 'super_admin') {
+        if (result?.user?.role !== 'super_admin') {
           dispatch(addNotification({
             type: 'error',
             title: 'Access Denied',
@@ -72,16 +78,21 @@ const SuperAdminLogin = () => {
           message: `Logged in as ${result.user.fullName || result.user.name}`,
         }));
         
-        // Load user data
-        dispatch(fetchResumes());
-        dispatch(fetchCreditsBalance());
-        dispatch(fetchSubscriptionStatus());
+        // Load user data (don't await these, let them run in background)
+        try {
+          dispatch(fetchResumes()).catch(() => {});
+          dispatch(fetchCreditsBalance()).catch(() => {});
+          dispatch(fetchSubscriptionStatus()).catch(() => {});
+        } catch (dataLoadError) {
+          // Silently fail - these are not critical for login
+          console.error('Failed to load user data:', dataLoadError);
+        }
         
         // Redirect to admin dashboard
         navigate('/dashboard/admin', { replace: true });
       } catch (error) {
-        const errorObj = typeof error === 'object' ? error : { message: error };
-        if (errorObj.requiresVerification || (errorObj.message && (errorObj.message.includes('verify') || errorObj.message.includes('verification')))) {
+        const errorObj = typeof error === 'object' && error !== null ? error : { message: String(error) };
+        if (errorObj.requiresVerification || (errorObj.message && typeof errorObj.message === 'string' && (errorObj.message.includes('verify') || errorObj.message.includes('verification')))) {
           dispatch(addNotification({
             type: 'warning',
             title: 'Email Not Verified',
@@ -91,7 +102,7 @@ const SuperAdminLogin = () => {
             state: { email: errorObj.email || formData.email }
           });
         } else {
-          const errorMessage = errorObj.message || error || 'Login failed. Please try again.';
+          const errorMessage = errorObj.message || String(error) || 'Login failed. Please try again.';
           setErrorMessage(errorMessage);
           dispatch(addNotification({
             type: 'error',

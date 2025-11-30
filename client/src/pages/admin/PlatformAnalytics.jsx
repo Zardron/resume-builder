@@ -2,8 +2,13 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Users, Building2, Briefcase, UserCheck, Search, Filter, Download, Eye, Sparkles, Shield, User, Circle, XCircle } from 'lucide-react';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import ConfirmationModal from '../../utils/ConfirmationModal';
+import { adminAPI } from '../../services/api';
+import { useAppSelector } from '../../store/hooks';
+import { onUserStatusUpdate } from '../../services/socketService';
 
 const PlatformAnalytics = () => {
+  const { user: currentUser } = useAppSelector((state) => state.auth);
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('overview');
   const [isLoading, setIsLoading] = useState(true);
@@ -16,44 +21,41 @@ const PlatformAnalytics = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('all');
   const [showSubscribersOnly, setShowSubscribersOnly] = useState(false);
+  const [showBanConfirmation, setShowBanConfirmation] = useState(false);
+  const [userToBan, setUserToBan] = useState(null);
+  const [banningUserId, setBanningUserId] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // TODO: Fetch platform-wide data from API
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        // Simulated data
-        setTimeout(() => {
-          setData({
-            organizations: [
-              { id: 1, name: 'Tech Corp', industry: 'Technology', size: 'medium', users: 25, jobs: 12, createdAt: '2024-01-01' },
-              { id: 2, name: 'StartupXYZ', industry: 'Finance', size: 'small', users: 8, jobs: 5, createdAt: '2024-01-05' },
-              { id: 3, name: 'DesignCo', industry: 'Design', size: 'small', users: 12, jobs: 8, createdAt: '2024-01-10' }
-            ],
-            users: [
-              { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin', organization: 'Tech Corp', status: 'online', joinedAt: '2024-01-01', hasAISubscription: true },
-              { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'recruiter', organization: 'StartupXYZ', status: 'online', joinedAt: '2024-01-05', hasAISubscription: true },
-              { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'applicant', organization: null, status: 'offline', joinedAt: '2024-01-10', hasAISubscription: false },
-              { id: 4, name: 'Alice Williams', email: 'alice@example.com', role: 'manager', organization: 'Tech Corp', status: 'online', joinedAt: '2024-01-12', hasAISubscription: true },
-              { id: 5, name: 'Charlie Brown', email: 'charlie@example.com', role: 'applicant', organization: null, status: 'offline', joinedAt: '2024-01-15', hasAISubscription: false },
-              { id: 6, name: 'Diana Prince', email: 'diana@example.com', role: 'recruiter', organization: 'DesignCo', status: 'online', joinedAt: '2024-01-18', hasAISubscription: true },
-              { id: 7, name: 'Edward Norton', email: 'edward@example.com', role: 'admin', organization: 'StartupXYZ', status: 'offline', joinedAt: '2024-01-20', hasAISubscription: false }
-            ],
-            recruiters: [
-              { id: 1, name: 'Jane Manager', email: 'jane@example.com', organization: 'StartupXYZ', role: 'manager', jobsPosted: 5, candidatesManaged: 32 },
-              { id: 2, name: 'Alice Recruiter', email: 'alice@example.com', organization: 'Tech Corp', role: 'recruiter', jobsPosted: 3, candidatesManaged: 18 }
-            ],
-            jobs: [
-              { id: 1, title: 'Senior Developer', organization: 'Tech Corp', status: 'active', applications: 45, postedAt: '2024-01-10' },
-              { id: 2, title: 'Product Manager', organization: 'StartupXYZ', status: 'active', applications: 32, postedAt: '2024-01-12' },
-              { id: 3, title: 'UX Designer', organization: 'DesignCo', status: 'draft', applications: 0, postedAt: '2024-01-13' }
-            ]
-          });
-          setIsLoading(false);
-        }, 1000);
+        setError(null);
+        
+        // Fetch users from API
+        const users = await adminAPI.getAllUsers();
+        
+        // Ensure users is an array
+        const usersArray = Array.isArray(users) ? users : [];
+        
+        setData({
+          organizations: [],
+          users: usersArray,
+          recruiters: [],
+          jobs: []
+        });
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching platform data:', error);
+        setError(error.message || 'Failed to load users. Please try again.');
         setIsLoading(false);
+        // Set empty data on error
+        setData({
+          organizations: [],
+          users: [],
+          recruiters: [],
+          jobs: []
+        });
       }
     };
 
@@ -73,6 +75,33 @@ const PlatformAnalytics = () => {
       setSearchParams(newSearchParams, { replace: true });
     }
   }, [searchParams, setSearchParams, showSubscribersOnly]);
+
+  // Listen for real-time user status updates
+  useEffect(() => {
+    if (activeTab !== 'users') {
+      return;
+    }
+
+    const unsubscribe = onUserStatusUpdate((statusUpdate) => {
+      // Update user status in real-time
+      setData(prevData => ({
+        ...prevData,
+        users: prevData.users.map(user => {
+          // Handle both string and ObjectId comparison
+          const userId = typeof user.id === 'object' ? user.id.toString() : String(user.id);
+          const updateUserId = String(statusUpdate.userId);
+          
+          return userId === updateUserId
+            ? { ...user, status: statusUpdate.status }
+            : user;
+        }),
+      }));
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [activeTab]);
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Building2 },
@@ -132,7 +161,9 @@ const PlatformAnalytics = () => {
   };
 
   // Calculate total subscribers
-  const totalSubscribers = data.users.filter(user => user.hasAISubscription === true).length;
+  const totalSubscribers = Array.isArray(data.users) 
+    ? data.users.filter(user => user && user.hasAISubscription === true).length 
+    : 0;
 
   // Handle clicking on Total Subscriber card
   const handleSubscriberClick = useCallback(() => {
@@ -142,8 +173,92 @@ const PlatformAnalytics = () => {
     setActiveTab('users');
   }, []);
 
+  // Handle ban toggle
+  const handleBanToggle = async (user, currentBanStatus) => {
+    if (!user || !user.id) {
+      console.error('Invalid user data');
+      return;
+    }
+
+    // Check if user is trying to ban themselves
+    const isCurrentUser = currentUser && (currentUser.id === user.id || currentUser.email === user.email);
+    if (isCurrentUser && !currentBanStatus) {
+      alert('You cannot ban your own account');
+      return;
+    }
+
+    // If trying to ban (toggle from false to true), show confirmation
+    if (!currentBanStatus) {
+      setUserToBan(user);
+      setShowBanConfirmation(true);
+    } else {
+      // If unbanning (toggle from true to false), do it directly
+      await toggleBanStatus(user.id, false);
+    }
+  };
+
+  // Confirm ban action
+  const confirmBan = async () => {
+    if (userToBan) {
+      await toggleBanStatus(userToBan.id, true);
+      setShowBanConfirmation(false);
+      setUserToBan(null);
+    }
+  };
+
+  // Toggle ban status
+  const toggleBanStatus = async (userId, isBanned) => {
+    if (!userId) {
+      console.error('Invalid user ID');
+      return;
+    }
+
+    try {
+      setBanningUserId(userId);
+      await adminAPI.toggleUserBan(userId, isBanned);
+      
+      // Update local state
+      setData(prevData => ({
+        ...prevData,
+        users: (prevData.users || []).map(user => 
+          user && user.id === userId ? { ...user, isBanned } : user
+        )
+      }));
+    } catch (error) {
+      console.error('Error toggling ban status:', error);
+      const errorMessage = error.response?.message || error.message || 'Failed to update user ban status. Please try again.';
+      alert(errorMessage);
+    } finally {
+      setBanningUserId(null);
+    }
+  };
+
   if (isLoading) {
     return <LoadingSkeleton type="default" className="w-full h-64" />;
+  }
+
+  if (error) {
+    return (
+      <div className="w-full">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Platform Analytics</h1>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              View and manage all platform data
+            </p>
+          </div>
+        </div>
+        <div className="rounded-md border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20 p-6">
+          <p className="text-red-600 dark:text-red-400">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-[var(--primary-color)] text-white rounded-md hover:bg-[var(--secondary-color)] transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -327,6 +442,7 @@ const PlatformAnalytics = () => {
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Organization</th>
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</th>
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Joined</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Ban</th>
                       <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Actions</th>
                     </>
                   )}
@@ -378,8 +494,8 @@ const PlatformAnalytics = () => {
                         <>
                           <td className="whitespace-nowrap px-6 py-4">
                             <div className="flex items-center gap-2">
-                              <div className="font-medium text-gray-900 dark:text-white">{item.name}</div>
-                              {item.hasAISubscription && (
+                              <div className="font-medium text-gray-900 dark:text-white">{item?.name || 'N/A'}</div>
+                              {item?.hasAISubscription && (
                                 <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:from-blue-900/30 dark:to-cyan-900/30 dark:text-blue-300" title="AI Subscribed">
                                   <Sparkles className="h-3 w-3" />
                                   AI
@@ -387,32 +503,54 @@ const PlatformAnalytics = () => {
                               )}
                             </div>
                           </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{item.email}</td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{item?.email || 'N/A'}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 capitalize">
-                              {item.role === 'admin' && <Shield className="h-3 w-3" />}
-                              {item.role === 'manager' && <UserCheck className="h-3 w-3" />}
-                              {item.role === 'recruiter' && <Briefcase className="h-3 w-3" />}
-                              {item.role === 'applicant' && <User className="h-3 w-3" />}
-                              {item.role}
+                              {item?.role === 'admin' && <Shield className="h-3 w-3" />}
+                              {item?.role === 'manager' && <UserCheck className="h-3 w-3" />}
+                              {item?.role === 'recruiter' && <Briefcase className="h-3 w-3" />}
+                              {item?.role === 'applicant' && <User className="h-3 w-3" />}
+                              {item?.role || 'N/A'}
                             </span>
                           </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{item.organization || 'N/A'}</td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{item?.organization || 'N/A'}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
-                              item.status === 'online' 
+                              item?.status === 'online' 
                                 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' 
                                 : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
                             }`}>
                               <Circle className={`h-3 w-3 fill-current ${
-                                item.status === 'online' 
+                                item?.status === 'online' 
                                   ? 'text-green-600 dark:text-green-400 drop-shadow-[0_0_4px_rgba(34,197,94,0.6)]' 
                                   : 'text-red-600 dark:text-red-400 drop-shadow-[0_0_4px_rgba(239,68,68,0.6)]'
                               }`} />
-                              {item.status}
+                              {item?.status || 'offline'}
                             </span>
                           </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{new Date(item.joinedAt).toLocaleDateString()}</td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                            {item?.joinedAt ? new Date(item.joinedAt).toLocaleDateString() : 'N/A'}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {(() => {
+                              if (!item || !item.id) return null;
+                              const isCurrentUser = currentUser && (currentUser.id === item.id || currentUser.email === item.email);
+                              const isDisabled = banningUserId === item.id || (isCurrentUser && !item.isBanned);
+                              return (
+                                <label className={`relative inline-flex items-center ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}>
+                                  <input
+                                    type="checkbox"
+                                    checked={item.isBanned || false}
+                                    onChange={() => handleBanToggle(item, item.isBanned || false)}
+                                    disabled={isDisabled}
+                                    className="sr-only peer"
+                                    title={isCurrentUser && !item.isBanned ? 'You cannot ban your own account' : ''}
+                                  />
+                                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                </label>
+                              );
+                            })()}
+                          </td>
                           <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                             <button className="text-[var(--primary-color)] hover:text-[var(--secondary-color)]">
                               <Eye className="h-4 w-4" />
@@ -473,7 +611,7 @@ const PlatformAnalytics = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <td colSpan={activeTab === 'users' ? 8 : activeTab === 'organizations' ? 7 : activeTab === 'recruiters' ? 7 : 6} className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
                       No {activeTab} found
                     </td>
                   </tr>
@@ -482,6 +620,18 @@ const PlatformAnalytics = () => {
             </table>
           </div>
         </div>
+      )}
+
+      {/* Ban Confirmation Modal */}
+      {showBanConfirmation && userToBan && (
+        <ConfirmationModal
+          title="Ban User"
+          message={`Are you sure you want to ban ${userToBan.name} (${userToBan.email})? This will prevent them from accessing the platform.`}
+          confirmButtonText="Ban User"
+          cancelButtonText="Cancel"
+          setShowConfirmationModal={setShowBanConfirmation}
+          onConfirm={confirmBan}
+        />
       )}
     </div>
   );

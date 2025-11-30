@@ -14,22 +14,11 @@ import {
   User,
   FolderKanban,
   CheckSquare,
+  Shield,
+  Monitor,
 } from 'lucide-react';
 
-/**
- * SideNavData - Centralized navigation data based on RolePermissions.md
- * 
- * This file defines all navigation items with their permissions per role:
- * - super_admin: Platform-wide access, manages all organizations
- * - admin: Organization Admin - Company/team owner
- * - manager: Recruiter Manager - Team leadership role
- * - recruiter: Primary hiring role
- * - applicant: Job seeker role
- */
-
-/**
- * Get base path based on user role
- */
+// SideNavData - Centralized navigation data based on RolePermissions.md
 export const getBasePath = (userRole) => {
   if (userRole === 'super_admin') {
     return '/dashboard/admin';
@@ -40,9 +29,7 @@ export const getBasePath = (userRole) => {
   return '/dashboard';
 };
 
-/**
- * Helper function to get path with correct base
- */
+// Helper function to get path with correct base
 export const getPath = (relativePath, basePath) => {
   if (relativePath.startsWith('/dashboard/')) {
     if (relativePath.startsWith('/dashboard/recruiter')) {
@@ -56,10 +43,7 @@ export const getPath = (relativePath, basePath) => {
   return `${basePath}${relativePath}`;
 };
 
-/**
- * Navigation items for Super Admin
- * Platform-wide access, manages all organizations
- */
+// Navigation items for Super Admin - platform-wide access
 const superAdminNavItems = [
   {
     label: 'Dashboard',
@@ -111,6 +95,30 @@ const superAdminNavItems = [
     allowedRoles: ['super_admin'],
   },
   {
+    label: 'Login Attempts',
+    path: '/dashboard/admin/login-attempts',
+    icon: Shield,
+    allowedRoles: ['super_admin'],
+  },
+  {
+    label: 'Security Logs',
+    path: '/dashboard/admin/security-logs',
+    icon: Shield,
+    allowedRoles: ['super_admin'],
+  },
+  {
+    label: 'Audit Logs',
+    path: '/dashboard/admin/audit-logs',
+    icon: FileText,
+    allowedRoles: ['super_admin'],
+  },
+  {
+    label: 'Client Logs',
+    path: '/dashboard/admin/client-logs',
+    icon: Monitor,
+    allowedRoles: ['super_admin'],
+  },
+  {
     label: 'System Configuration',
     path: '/dashboard/admin/settings',
     icon: Settings,
@@ -118,10 +126,7 @@ const superAdminNavItems = [
   },
 ];
 
-/**
- * Navigation items for Organization Admin
- * Company/team owner, manages organization settings
- */
+// Navigation items for Organization Admin - company/team owner
 const organizationAdminNavItems = [
   {
     label: 'Dashboard',
@@ -204,10 +209,7 @@ const organizationAdminNavItems = [
   },
 ];
 
-/**
- * Navigation items for Recruiter Manager
- * Team leadership role, manages recruiters in team
- */
+// Navigation items for Recruiter Manager - team leadership role
 const recruiterManagerNavItems = [
   {
     label: 'Dashboard',
@@ -276,10 +278,7 @@ const recruiterManagerNavItems = [
   },
 ];
 
-/**
- * Navigation items for Recruiter
- * Primary hiring role, posts and manages jobs
- */
+// Navigation items for Recruiter - primary hiring role
 const recruiterNavItems = [
   {
     label: 'Dashboard',
@@ -335,10 +334,7 @@ const recruiterNavItems = [
   },
 ];
 
-/**
- * Navigation items for Applicant
- * Job seeker role
- */
+// Navigation items for Applicant - job seeker role
 const applicantNavItems = [
   {
     label: 'Dashboard',
@@ -353,7 +349,7 @@ const applicantNavItems = [
     icon: FileText,
     allowedRoles: ['applicant'],
     submenu: [
-      { label: 'My Resumes', path: '/dashboard/builder' },
+      { label: 'Resume Builder', path: '/dashboard/builder' },
       { label: 'Create Resume', path: '/dashboard/builder?action=create' },
     ],
   },
@@ -403,11 +399,7 @@ const applicantNavItems = [
 ];
 
 
-/**
- * Get navigation items for a specific role
- * @param {string} userRole - The user's role
- * @returns {Array} Array of navigation items for the role
- */
+// Get navigation items for a specific role
 export const getNavItemsForRole = (userRole) => {
   const basePath = getBasePath(userRole);
   
@@ -454,12 +446,7 @@ export const getNavItemsForRole = (userRole) => {
   return processedItems;
 };
 
-/**
- * Filter navigation items based on user role
- * @param {Array} items - Array of navigation items
- * @param {string} userRole - The user's role
- * @returns {Array} Filtered array of navigation items
- */
+// Filter navigation items based on user role
 export const filterNavItemsByRole = (items, userRole) => {
   return items.filter(item => {
     if (item.allowedRoles) {
@@ -470,9 +457,7 @@ export const filterNavItemsByRole = (items, userRole) => {
   });
 };
 
-/**
- * Get all navigation items (for reference/debugging)
- */
+// Get all navigation items (for reference/debugging)
 export const getAllNavItems = () => {
   return {
     superAdmin: superAdminNavItems,

@@ -16,6 +16,7 @@ export const AppProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscriptionTier, setSubscriptionTier] = useState('free');
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize app - check if user is logged in
@@ -44,6 +45,7 @@ export const AppProvider = ({ children }) => {
             
             setCredits(userData.credits || 0);
             setIsSubscribed(userData.subscription?.status === 'active');
+            setSubscriptionTier(userData.subscription?.plan || 'free');
             
             // Load resumes
             await loadResumes();
@@ -194,6 +196,7 @@ export const AppProvider = ({ children }) => {
       // Update subscription status if subscription data is provided
       if (updates.subscription) {
         setIsSubscribed(updates.subscription.status === 'active');
+        setSubscriptionTier(updates.subscription.plan || 'free');
       }
       
       // Update credits if provided
@@ -219,6 +222,7 @@ export const AppProvider = ({ children }) => {
       setResumes([]);
       setCredits(0);
       setIsSubscribed(false);
+      setSubscriptionTier('free');
       removeToken();
     }
   }, []);
@@ -258,6 +262,8 @@ export const AppProvider = ({ children }) => {
     // Subscription
     isSubscribed,
     setIsSubscribed,
+    subscriptionTier,
+    setSubscriptionTier,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

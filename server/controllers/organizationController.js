@@ -5,15 +5,11 @@ import Application from '../models/Application.js';
 import Interview from '../models/Interview.js';
 import Message from '../models/Message.js';
 
-/**
- * Create a new organization
- */
 export const createOrganization = async (req, res) => {
   try {
     const { name, industry, size, website, logo } = req.body;
     const user = req.user;
 
-    // Check if user already has an organization
     if (user.organizationId) {
       return res.status(400).json({
         success: false,
@@ -21,7 +17,6 @@ export const createOrganization = async (req, res) => {
       });
     }
 
-    // Create organization
     const organization = new Organization({
       name,
       industry,
@@ -33,18 +28,16 @@ export const createOrganization = async (req, res) => {
         status: 'trial',
         seats: 1,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days trial
+        endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       },
     });
 
     await organization.save();
 
-    // Update user
     user.organizationId = organization._id;
     user.userType = user.userType === 'applicant' ? 'both' : 'recruiter';
     await user.save();
 
-    // Create team member record (admin)
     const teamMember = new TeamMember({
       organizationId: organization._id,
       userId: user._id,
@@ -64,7 +57,7 @@ export const createOrganization = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Organization created successfully',
+      message: 'Organization created',
       data: {
         organization,
         teamMember,
@@ -74,15 +67,12 @@ export const createOrganization = async (req, res) => {
     console.error('Create organization error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create organization',
+      message: 'Could not create organization',
       error: error.message,
     });
   }
 };
 
-/**
- * Get organization details
- */
 export const getOrganization = async (req, res) => {
   try {
     const organization = await Organization.findById(req.params.orgId);
@@ -102,15 +92,13 @@ export const getOrganization = async (req, res) => {
     console.error('Get organization error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get organization',
+      message: 'Could not fetch organization',
       error: error.message,
     });
   }
 };
 
-/**
- * Update organization
- */
+// Update organization
 export const updateOrganization = async (req, res) => {
   try {
     const { name, industry, size, website, logo, settings } = req.body;
@@ -136,22 +124,20 @@ export const updateOrganization = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Organization updated successfully',
+      message: 'Organization updated',
       data: organization,
     });
   } catch (error) {
     console.error('Update organization error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update organization',
+      message: 'Could not update organization',
       error: error.message,
     });
   }
 };
 
-/**
- * Get organization team members
- */
+// Get organization team members
 export const getTeamMembers = async (req, res) => {
   try {
     const teamMembers = await TeamMember.find({
@@ -169,15 +155,13 @@ export const getTeamMembers = async (req, res) => {
     console.error('Get team members error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get team members',
+      message: 'Could not fetch team members',
       error: error.message,
     });
   }
 };
 
-/**
- * Invite team member
- */
+// Invite team member
 export const inviteTeamMember = async (req, res) => {
   try {
     const { email, role, department, permissions } = req.body;
@@ -234,22 +218,20 @@ export const inviteTeamMember = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Team member invited successfully',
+      message: 'Team member invited',
       data: teamMember,
     });
   } catch (error) {
     console.error('Invite team member error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to invite team member',
+      message: 'Could not invite team member',
       error: error.message,
     });
   }
 };
 
-/**
- * Update team member role
- */
+// Update team member role
 export const updateTeamMemberRole = async (req, res) => {
   try {
     const { role, permissions } = req.body;
@@ -271,22 +253,20 @@ export const updateTeamMemberRole = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Team member updated successfully',
+      message: 'Team member updated',
       data: teamMember,
     });
   } catch (error) {
     console.error('Update team member error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update team member',
+      message: 'Could not update team member',
       error: error.message,
     });
   }
 };
 
-/**
- * Remove team member
- */
+// Remove team member
 export const removeTeamMember = async (req, res) => {
   try {
     const teamMember = await TeamMember.findById(req.params.memberId);
@@ -319,21 +299,19 @@ export const removeTeamMember = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Team member removed successfully',
+      message: 'Team member removed',
     });
   } catch (error) {
     console.error('Remove team member error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to remove team member',
+      message: 'Could not remove team member',
       error: error.message,
     });
   }
 };
 
-/**
- * Get team activity
- */
+// Get team activity
 export const getTeamActivity = async (req, res) => {
   try {
     const { limit = 50 } = req.query;
@@ -378,7 +356,7 @@ export const getTeamActivity = async (req, res) => {
     console.error('Get team activity error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get team activity',
+      message: 'Could not fetch team activity',
       error: error.message,
     });
   }

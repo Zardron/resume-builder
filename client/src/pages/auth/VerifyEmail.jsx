@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { ArrowLeftIcon, Mail, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import InputField from '../../components/forms/InputField';
@@ -6,7 +6,7 @@ import AuthSidebar from '../../components/layout/AuthSidebar';
 import ThemeSwitcher from '../../utils/ThemeSwitcher';
 import BackgroundEffects from '../../components/common/BackgroundEffects';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { authAPI, getToken } from '../../services/api';
+import { authAPI, getToken, setToken } from '../../services/api';
 import { initializeAuth } from '../../store/slices/authSlice';
 import { addNotification } from '../../store/slices/notificationsSlice';
 import { fetchResumes } from '../../store/slices/resumesSlice';
@@ -24,15 +24,143 @@ const VerifyEmail = () => {
   const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [autoVerifying, setAutoVerifying] = useState(false);
+  const hasAutoSubmitted = useRef(false);
   
   const email = location.state?.email || user?.email || '';
+  
+  // Memoize the code string to prevent unnecessary re-renders
+  const codeString = useMemo(() => verificationCode.join(''), [verificationCode]);
+
+  // Handle auto-verification from URL parameters
+  const handleAutoVerify = async (code) => {
+    try {
+      let result;
+      
+      // If token is in URL, user should be authenticated after setting token
+      // Otherwise, use unauthenticated endpoint if email is available
+      const searchParams = new URLSearchParams(location.search);
+      const tokenFromUrl = searchParams.get('token');
+      
+      if (tokenFromUrl || (isAuthenticated || getToken())) {
+        // Use authenticated endpoint if token is present or user is authenticated
+        result = await authAPI.verifyEmail(code);
+      } else if (email) {
+        // Use unauthenticated endpoint if no token but email is available
+        result = await authAPI.verifyEmailUnauthenticated(code, email);
+        
+        // If token is returned, store it
+        if (result.success && result.data?.token) {
+          setToken(result.data.token, true);
+        }
+      } else {
+        throw new Error('Email address is required for verification');
+      }
+      
+      if (result.success) {
+        setSuccess(true);
+        dispatch(addNotification({
+          type: 'success',
+          title: 'Email Verified!',
+          message: 'Your email has been verified successfully.',
+        }));
+
+        // Refresh auth state
+        await dispatch(initializeAuth());
+        
+        // Load user data
+        dispatch(fetchResumes());
+        dispatch(fetchCreditsBalance());
+        dispatch(fetchSubscriptionStatus());
+
+        // Clean up URL parameters
+        navigate('/verify-email', { replace: true });
+
+        // Redirect to dashboard after a slight delay to show success message
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 3000);
+      }
+    } catch (error) {
+      setError(error.message || 'Invalid verification code. Please try again.');
+      setVerificationCode(['', '', '', '', '', '']);
+      // Clean up URL parameters on error
+      navigate('/verify-email', { replace: true });
+    } finally {
+      setIsLoading(false);
+      setAutoVerifying(false);
+    }
+  };
+
+  // Extract token and code from URL query parameters
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const tokenFromUrl = searchParams.get('token');
+    const codeFromUrl = searchParams.get('code');
+
+    // If both token and code are present in URL, auto-verify
+    if (tokenFromUrl && codeFromUrl) {
+      // Store the token if provided
+      if (tokenFromUrl) {
+        setToken(tokenFromUrl, true);
+      }
+
+      // Auto-verify with the code from URL
+      setAutoVerifying(true);
+      setIsLoading(true);
+      
+      // Set the code in the input fields for visual feedback
+      const codeArray = codeFromUrl.split('').slice(0, 6);
+      setVerificationCode(codeArray);
+
+      // Automatically verify
+      handleAutoVerify(codeFromUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   useEffect(() => {
-    // If user is not authenticated, redirect to login
-    if (!isAuthenticated && !getToken()) {
-      navigate('/sign-in', { replace: true });
+    // If user is not authenticated and no token in URL, redirect to login
+    // But only if we're not auto-verifying (which might set the token)
+    // Also allow access if email is provided in location state (from login/register pages)
+    if (!autoVerifying && !isAuthenticated && !getToken()) {
+      const searchParams = new URLSearchParams(location.search);
+      const tokenFromUrl = searchParams.get('token');
+      const emailFromState = location.state?.email;
+      
+      // Allow access if email is provided in state (user came from login/register)
+      // or if there's a token in the URL
+      if (!tokenFromUrl && !emailFromState) {
+        navigate('/sign-in', { replace: true });
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, autoVerifying, location.search, location.state]);
+
+  // Auto-submit when all 6 digits are entered
+  useEffect(() => {
+    if (codeString.length === 6 && !isLoading && !autoVerifying && !success && email && !hasAutoSubmitted.current) {
+      hasAutoSubmitted.current = true;
+      // Small delay to ensure UI is updated
+      const timer = setTimeout(() => {
+        const syntheticEvent = {
+          preventDefault: () => {},
+        };
+        // Call handleVerify directly
+        handleVerify(syntheticEvent).catch(() => {
+          // Error handling is done in handleVerify
+          hasAutoSubmitted.current = false; // Reset on error so user can try again
+        });
+      }, 200);
+      
+      return () => clearTimeout(timer);
+    }
+    
+    // Reset the flag when code changes (user is typing a new code)
+    if (codeString.length < 6) {
+      hasAutoSubmitted.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [codeString, isLoading, autoVerifying, success, email]);
 
   const handleCodeChange = (index, value) => {
     if (!/^\d*$/.test(value)) return; // Only allow digits
@@ -60,12 +188,29 @@ const VerifyEmail = () => {
   const handlePaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').trim();
-    if (/^\d{6}$/.test(pastedData)) {
-      const codeArray = pastedData.split('');
+    
+    // Extract only digits from pasted data
+    const digitsOnly = pastedData.replace(/\D/g, '');
+    
+    // If we have 6 or more digits, use the first 6
+    if (digitsOnly.length >= 6) {
+      const codeArray = digitsOnly.slice(0, 6).split('');
       setVerificationCode(codeArray);
       setError('');
       // Focus last input
       document.getElementById('code-5')?.focus();
+      // Auto-submit will be handled by the useEffect when state updates
+    } else if (digitsOnly.length > 0) {
+      // If less than 6 digits, fill what we can
+      const codeArray = [...verificationCode];
+      for (let i = 0; i < Math.min(digitsOnly.length, 6); i++) {
+        codeArray[i] = digitsOnly[i];
+      }
+      setVerificationCode(codeArray);
+      setError('');
+      // Focus the next empty input or the last one
+      const nextIndex = Math.min(digitsOnly.length, 5);
+      document.getElementById(`code-${nextIndex}`)?.focus();
     }
   };
 
@@ -78,14 +223,33 @@ const VerifyEmail = () => {
       return;
     }
 
+    if (!email) {
+      setError('Email address is required');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
 
     try {
-      const result = await authAPI.verifyEmail(code);
+      let result;
+      
+      // Use unauthenticated endpoint if user is not authenticated
+      if (!isAuthenticated && !getToken()) {
+        result = await authAPI.verifyEmailUnauthenticated(code, email);
+        
+        // If token is returned, store it
+        if (result.success && result.data?.token) {
+          setToken(result.data.token, true);
+        }
+      } else {
+        // Use authenticated endpoint if user is logged in
+        result = await authAPI.verifyEmail(code);
+      }
       
       if (result.success) {
         setSuccess(true);
+        hasAutoSubmitted.current = false; // Reset for potential future use
         dispatch(addNotification({
           type: 'success',
           title: 'Email Verified!',
@@ -100,12 +264,13 @@ const VerifyEmail = () => {
         dispatch(fetchCreditsBalance());
         dispatch(fetchSubscriptionStatus());
 
-        // Redirect to dashboard after 2 seconds
+        // Redirect to dashboard after a slight delay to show success message
         setTimeout(() => {
           navigate('/dashboard', { replace: true });
-        }, 2000);
+        }, 3000);
       }
     } catch (error) {
+      hasAutoSubmitted.current = false; // Reset on error so user can try again
       setError(error.message || 'Invalid verification code. Please try again.');
       setVerificationCode(['', '', '', '', '', '']);
       document.getElementById('code-0')?.focus();
@@ -119,7 +284,28 @@ const VerifyEmail = () => {
     setError('');
 
     try {
-      const result = await authAPI.resendVerification();
+      // Try authenticated resend first, fall back to unauthenticated if not logged in
+      let result;
+      if (isAuthenticated || getToken()) {
+        try {
+          result = await authAPI.resendVerification();
+        } catch (authError) {
+          // If authenticated resend fails, try unauthenticated
+          if (email) {
+            result = await authAPI.resendVerificationUnauthenticated(email);
+          } else {
+            throw authError;
+          }
+        }
+      } else {
+        // Use unauthenticated resend if no token
+        if (!email) {
+          setError('Email address is required to resend verification code.');
+          setIsResending(false);
+          return;
+        }
+        result = await authAPI.resendVerificationUnauthenticated(email);
+      }
       
       if (result.success) {
         dispatch(addNotification({
@@ -129,9 +315,16 @@ const VerifyEmail = () => {
         }));
         setVerificationCode(['', '', '', '', '', '']);
         document.getElementById('code-0')?.focus();
+      } else {
+        setError(result.message || 'Failed to resend verification email. Please try again.');
       }
     } catch (error) {
-      setError(error.message || 'Failed to resend verification email. Please try again.');
+      // Check if it's a SendGrid configuration error
+      if (error.response?.error === 'SENDGRID_SENDER_IDENTITY_NOT_VERIFIED') {
+        setError('Email service is temporarily unavailable. Please contact support for assistance.');
+      } else {
+        setError(error.message || 'Failed to resend verification email. Please try again.');
+      }
     } finally {
       setIsResending(false);
     }
@@ -209,7 +402,10 @@ const VerifyEmail = () => {
             </header>
 
             <div className="w-full mb-6">
-              <div className="flex gap-2 justify-center">
+              <div 
+                className="flex gap-2 justify-center"
+                onPaste={handlePaste}
+              >
                 {verificationCode.map((digit, index) => (
                   <input
                     key={index}
@@ -242,7 +438,7 @@ const VerifyEmail = () => {
               disabled={isLoading || verificationCode.join('').length !== 6}
               className="w-full h-11 rounded-md text-white bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] hover:from-[var(--secondary-color)] hover:to-[var(--primary-color)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mb-4"
             >
-              {isLoading ? 'Verifying...' : 'Verify Email'}
+              {isLoading ? (autoVerifying ? 'Verifying automatically...' : 'Verifying...') : 'Verify Email'}
             </button>
 
             <div className="w-full text-center">

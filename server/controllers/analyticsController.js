@@ -5,9 +5,7 @@ import Interview from '../models/Interview.js';
 import TeamMember from '../models/TeamMember.js';
 import Message from '../models/Message.js';
 
-/**
- * Get analytics overview
- */
+// Get analytics overview
 export const getOverview = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -136,9 +134,7 @@ export const getOverview = async (req, res) => {
   }
 };
 
-/**
- * Get hiring funnel
- */
+// Get hiring funnel
 export const getHiringFunnel = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -202,9 +198,7 @@ export const getHiringFunnel = async (req, res) => {
   }
 };
 
-/**
- * Get time to hire analytics
- */
+// Get time to hire analytics
 export const getTimeToHire = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -258,9 +252,7 @@ export const getTimeToHire = async (req, res) => {
   }
 };
 
-/**
- * Get source analytics
- */
+// Get source analytics
 export const getSourceAnalytics = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -303,9 +295,7 @@ export const getSourceAnalytics = async (req, res) => {
   }
 };
 
-/**
- * Get team performance
- */
+// Get team performance
 export const getTeamPerformance = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;
@@ -380,9 +370,7 @@ export const getTeamPerformance = async (req, res) => {
   }
 };
 
-/**
- * Get job performance
- */
+// Get job performance
 export const getJobPerformance = async (req, res) => {
   try {
     const organizationId = req.organizationId || req.user.organizationId;

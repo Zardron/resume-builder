@@ -1,9 +1,8 @@
 import JobPosting from '../models/JobPosting.js';
 import Application from '../models/Application.js';
+import { logError, logInfo } from '../utils/logger.js';
+import { buildPagination, buildSort, buildSearchQuery, optimizedFind } from '../utils/queryOptimizer.js';
 
-/**
- * Get all jobs (filtered by user role)
- */
 export const getJobs = async (req, res) => {
   try {
     const { organizationId, status, location, employmentType, experienceLevel, search } = req.query;
@@ -11,14 +10,12 @@ export const getJobs = async (req, res) => {
 
     const query = {};
 
-    // If user is recruiter, filter by their organization
     if (user.organizationId) {
       query.organizationId = user.organizationId;
     } else if (organizationId) {
       query.organizationId = organizationId;
     }
 
-    // If user is applicant, only show active jobs
     if (user.userType === 'applicant' || !user.organizationId) {
       query.status = 'active';
     } else if (status) {
@@ -45,12 +42,23 @@ export const getJobs = async (req, res) => {
       ];
     }
 
-    const jobs = await JobPosting.find(query)
-      .populate('organizationId', 'name logo')
-      .populate('postedBy', 'fullName')
-      .sort({ createdAt: -1 })
-      .limit(parseInt(req.query.limit) || 50)
-      .skip(parseInt(req.query.skip) || 0);
+    const { limit, skip } = buildPagination(req.query);
+    const sort = buildSort(req.query.sortBy, req.query.sortOrder);
+    
+    if (search) {
+      const searchQuery = buildSearchQuery(search, ['title', 'description']);
+      Object.assign(query, searchQuery);
+    }
+    
+    const jobs = await optimizedFind(JobPosting, query, {
+      populate: [
+        { path: 'organizationId', select: 'name logo' },
+        { path: 'postedBy', select: 'fullName' },
+      ],
+      sort,
+      limit,
+      skip,
+    });
 
     const total = await JobPosting.countDocuments(query);
 
@@ -59,23 +67,22 @@ export const getJobs = async (req, res) => {
       data: jobs,
       pagination: {
         total,
-        limit: parseInt(req.query.limit) || 50,
-        skip: parseInt(req.query.skip) || 0,
+        limit,
+        skip,
+        page: Math.floor(skip / limit) + 1,
+        totalPages: Math.ceil(total / limit),
       },
     });
   } catch (error) {
-    console.error('Get jobs error:', error);
+    logError('Get jobs error', error, { userId: req.user?._id, query: req.query });
     res.status(500).json({
       success: false,
-      message: 'Failed to get jobs',
-      error: error.message,
+      message: 'Could not load jobs',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Get single job
- */
 export const getJob = async (req, res) => {
   try {
     const job = await JobPosting.findById(req.params.id)
@@ -89,7 +96,6 @@ export const getJob = async (req, res) => {
       });
     }
 
-    // Increment view count
     job.viewCount += 1;
     await job.save();
 
@@ -98,18 +104,15 @@ export const getJob = async (req, res) => {
       data: job,
     });
   } catch (error) {
-    console.error('Get job error:', error);
+    logError('Get job error', error, { jobId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
-      message: 'Failed to get job',
-      error: error.message,
+      message: 'Could not load job',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Create job posting
- */
 export const createJob = async (req, res) => {
   try {
     const user = req.user;
@@ -127,7 +130,6 @@ export const createJob = async (req, res) => {
       postedBy: user._id,
     };
 
-    // If status is active, set publishedAt
     if (jobData.status === 'active') {
       jobData.publishedAt = new Date();
     }
@@ -137,22 +139,19 @@ export const createJob = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Job posting created successfully',
+      message: 'Job created',
       data: job,
     });
   } catch (error) {
-    console.error('Create job error:', error);
+    logError('Create job error', error, { userId: req.user?._id, organizationId: req.user?.organizationId });
     res.status(500).json({
       success: false,
-      message: 'Failed to create job posting',
-      error: error.message,
+      message: 'Could not create job',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Update job posting
- */
 export const updateJob = async (req, res) => {
   try {
     const job = await JobPosting.findById(req.params.id);
@@ -172,14 +171,12 @@ export const updateJob = async (req, res) => {
       });
     }
 
-    // Update fields
     Object.keys(req.body).forEach(key => {
       if (key !== 'organizationId' && key !== 'postedBy') {
         job[key] = req.body[key];
       }
     });
 
-    // If status changed to active and not published, set publishedAt
     if (req.body.status === 'active' && !job.publishedAt) {
       job.publishedAt = new Date();
     }
@@ -188,22 +185,19 @@ export const updateJob = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Job posting updated successfully',
+      message: 'Job updated',
       data: job,
     });
   } catch (error) {
-    console.error('Update job error:', error);
+    logError('Update job error', error, { jobId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
-      message: 'Failed to update job posting',
-      error: error.message,
+      message: 'Could not update job',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Delete/Archive job posting
- */
 export const deleteJob = async (req, res) => {
   try {
     const job = await JobPosting.findById(req.params.id);
@@ -223,27 +217,23 @@ export const deleteJob = async (req, res) => {
       });
     }
 
-    // Instead of deleting, archive it
     job.status = 'archived';
     await job.save();
 
     res.json({
       success: true,
-      message: 'Job posting archived successfully',
+      message: 'Job archived',
     });
   } catch (error) {
-    console.error('Delete job error:', error);
+    logError('Delete job error', error, { jobId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
-      message: 'Failed to delete job posting',
-      error: error.message,
+      message: 'Could not archive job',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Duplicate job posting
- */
 export const duplicateJob = async (req, res) => {
   try {
     const originalJob = await JobPosting.findById(req.params.id);
@@ -263,7 +253,6 @@ export const duplicateJob = async (req, res) => {
       });
     }
 
-    // Create duplicate
     const jobData = originalJob.toObject();
     delete jobData._id;
     delete jobData.createdAt;
@@ -281,22 +270,19 @@ export const duplicateJob = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Job posting duplicated successfully',
+      message: 'Job duplicated',
       data: newJob,
     });
   } catch (error) {
-    console.error('Duplicate job error:', error);
+    logError('Duplicate job error', error, { jobId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
-      message: 'Failed to duplicate job posting',
-      error: error.message,
+      message: 'Could not duplicate job',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Get job analytics
- */
 export const getJobAnalytics = async (req, res) => {
   try {
     const job = await JobPosting.findById(req.params.id);
@@ -334,18 +320,15 @@ export const getJobAnalytics = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get job analytics error:', error);
+    logError('Get job analytics error', error, { jobId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
-      message: 'Failed to get job analytics',
-      error: error.message,
+      message: 'Could not load analytics',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Publish job
- */
 export const publishJob = async (req, res) => {
   try {
     const job = await JobPosting.findById(req.params.id);
@@ -371,22 +354,19 @@ export const publishJob = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Job published successfully',
+      message: 'Job published',
       data: job,
     });
   } catch (error) {
-    console.error('Publish job error:', error);
+    logError('Publish job error', error, { jobId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
-      message: 'Failed to publish job',
-      error: error.message,
+      message: 'Could not publish job',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };
 
-/**
- * Pause job
- */
 export const pauseJob = async (req, res) => {
   try {
     const job = await JobPosting.findById(req.params.id);
@@ -411,15 +391,15 @@ export const pauseJob = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Job paused successfully',
+      message: 'Job paused',
       data: job,
     });
   } catch (error) {
-    console.error('Pause job error:', error);
+    logError('Pause job error', error, { jobId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
-      message: 'Failed to pause job',
-      error: error.message,
+      message: 'Could not pause job',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message }),
     });
   }
 };

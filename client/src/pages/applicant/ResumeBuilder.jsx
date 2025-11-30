@@ -65,6 +65,7 @@ import { createHalfBlurredPreviewImage } from "../../utils/previewImageUtils";
 import AIFeatureButton from "../../components/common/AIFeatureButton";
 import { getResumeScore } from "../../utils/aiService";
 import { useApp } from "../../contexts/AppContext";
+import { getTierForFeature, AI_FEATURES } from "../../utils/aiFeatures";
 
 const getPreviewDimensions = (size) =>
   PAPER_DIMENSIONS[size] || PAPER_DIMENSIONS.A4;
@@ -76,7 +77,7 @@ const LOADING_DELAY = 1500;
 
 const ResumeBuilder = () => {
   const navigate = useNavigate();
-  const { isSubscribed, addNotification } = useApp();
+  const { isSubscribed, subscriptionTier, addNotification } = useApp();
 
   const handleBack = () => {
     if (window.history.state?.idx > 0) {
@@ -700,6 +701,143 @@ const ResumeBuilder = () => {
         </div>
       </div>
 
+      {/* AI Features Overview Section - Show when template is selected */}
+      {isTemplateSelected && (
+        <div className="mb-6 rounded-md border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+          <div className="mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="h-5 w-5 text-[var(--primary-color)]" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Available AI Features
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              All AI-powered features available in the resume builder, organized by subscription tier.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {/* Basic Tier Features */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                  Basic Tier
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {AI_FEATURES.basic.length} features
+                </span>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {AI_FEATURES.basic.map((feature) => (
+                  <div
+                    key={feature.id}
+                    className="flex items-start gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/50"
+                  >
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className="h-2 w-2 rounded-full bg-green-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-900 dark:text-white">
+                        {feature.name}
+                      </p>
+                      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Pro Tier Features */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                  Pro Tier
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {AI_FEATURES.pro.length} features
+                </span>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {AI_FEATURES.pro.map((feature) => (
+                  <div
+                    key={feature.id}
+                    className="flex items-start gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/50"
+                  >
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className="h-2 w-2 rounded-full bg-blue-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-900 dark:text-white">
+                        {feature.name}
+                      </p>
+                      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Enterprise Tier Features */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                  Enterprise Tier
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {AI_FEATURES.enterprise.length} features
+                </span>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {AI_FEATURES.enterprise.map((feature) => (
+                  <div
+                    key={feature.id}
+                    className="flex items-start gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/50"
+                  >
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className="h-2 w-2 rounded-full bg-red-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-900 dark:text-white">
+                        {feature.name}
+                      </p>
+                      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {!isSubscribed && (
+            <div className="mt-6 rounded-md border border-[var(--primary-color)]/20 bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--accent-color)]/10 p-4">
+              <div className="flex items-start gap-3">
+                <Sparkles className="h-5 w-5 text-[var(--primary-color)] flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    Unlock All AI Features
+                  </p>
+                  <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                    Subscribe to an AI plan to access all {AI_FEATURES.basic.length + AI_FEATURES.pro.length + AI_FEATURES.enterprise.length} AI-powered features. 
+                    <Link
+                      to="/dashboard/subscription"
+                      className="ml-1 font-semibold text-[var(--primary-color)] underline underline-offset-2 hover:no-underline"
+                    >
+                      View plans →
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* AI Resume Scoring Section */}
       {isTitleConfirmed && (
         <div className="mb-6 rounded-md border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
@@ -711,9 +849,14 @@ const ResumeBuilder = () => {
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-                  AI Resume Scoring
-                </h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    AI Resume Scoring
+                  </h3>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                    Enterprise
+                  </span>
+                </div>
                 <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
                   Get comprehensive AI-powered resume strength score with detailed improvement suggestions.
                 </p>
@@ -791,6 +934,7 @@ const ResumeBuilder = () => {
             <div className="flex-shrink-0">
               <AIFeatureButton
                 label={isScoringResume ? "Analyzing..." : "Score Resume"}
+                featureId="resume-scoring"
                 description="Get comprehensive AI-powered resume strength score"
                 onClick={handleResumeScoring}
                 disabled={isScoringResume}
@@ -800,8 +944,8 @@ const ResumeBuilder = () => {
         </div>
       )}
 
-      <div ref={formSectionRef} className="w-full flex items-center mt-2">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 dark:bg-gray-900">
+      <div ref={formSectionRef} className="w-full mt-2">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 dark:bg-gray-900 lg:items-start">
           {/* Left Side */}
           <div className="w-full">
             {/* Section Navigation */}
@@ -898,24 +1042,161 @@ const ResumeBuilder = () => {
                     />
                   )}
                   {isTemplateSelected ? (
-                    <TemplateSelector
-                      selectedTemplate={resumeData.template}
-                      onTemplateSelect={(templateId) => {
-                        setResumeData((prev) => ({
-                          ...prev,
-                          template: templateId,
-                        }));
-                      }}
-                      selectedColor={resumeData.accent_color}
-                      onColorSelect={(color) => {
-                        setResumeData((prev) => ({
-                          ...prev,
-                          accent_color: color,
-                        }));
-                      }}
-                      selectedPaperSize={resumeData.paper_size}
-                      onPaperSizeSelect={handlePaperSizeChange}
-                    />
+                    <>
+                      <TemplateSelector
+                        selectedTemplate={resumeData.template}
+                        onTemplateSelect={(templateId) => {
+                          setResumeData((prev) => ({
+                            ...prev,
+                            template: templateId,
+                          }));
+                        }}
+                        selectedColor={resumeData.accent_color}
+                        onColorSelect={(color) => {
+                          setResumeData((prev) => ({
+                            ...prev,
+                            accent_color: color,
+                          }));
+                        }}
+                        selectedPaperSize={resumeData.paper_size}
+                        onPaperSizeSelect={handlePaperSizeChange}
+                      />
+                      
+                      {/* AI Features Overview Section */}
+                      <div className="mt-6 rounded-md border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+                        <div className="mb-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Sparkles className="h-5 w-5 text-[var(--primary-color)]" />
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                              Available AI Features
+                            </h3>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            All AI-powered features available in the resume builder, organized by subscription tier.
+                          </p>
+                        </div>
+
+                        <div className="space-y-6">
+                          {/* Basic Tier Features */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                                Basic Tier
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {AI_FEATURES.basic.length} features
+                              </span>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                              {AI_FEATURES.basic.map((feature) => (
+                                <div
+                                  key={feature.id}
+                                  className="flex items-start gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/50"
+                                >
+                                  <div className="flex-shrink-0 mt-0.5">
+                                    <div className="h-2 w-2 rounded-full bg-green-500" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-medium text-gray-900 dark:text-white">
+                                      {feature.name}
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                                      {feature.description}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Pro Tier Features */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                Pro Tier
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {AI_FEATURES.pro.length} features
+                              </span>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                              {AI_FEATURES.pro.map((feature) => (
+                                <div
+                                  key={feature.id}
+                                  className="flex items-start gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/50"
+                                >
+                                  <div className="flex-shrink-0 mt-0.5">
+                                    <div className="h-2 w-2 rounded-full bg-blue-500" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-medium text-gray-900 dark:text-white">
+                                      {feature.name}
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                                      {feature.description}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Enterprise Tier Features */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                                Enterprise Tier
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {AI_FEATURES.enterprise.length} features
+                              </span>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                              {AI_FEATURES.enterprise.map((feature) => (
+                                <div
+                                  key={feature.id}
+                                  className="flex items-start gap-2 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/50"
+                                >
+                                  <div className="flex-shrink-0 mt-0.5">
+                                    <div className="h-2 w-2 rounded-full bg-red-500" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-medium text-gray-900 dark:text-white">
+                                      {feature.name}
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                                      {feature.description}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {!isSubscribed && (
+                          <div className="mt-6 rounded-md border border-[var(--primary-color)]/20 bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--accent-color)]/10 p-4">
+                            <div className="flex items-start gap-3">
+                              <Sparkles className="h-5 w-5 text-[var(--primary-color)] flex-shrink-0 mt-0.5" />
+                              <div className="flex-1">
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                  Unlock All AI Features
+                                </p>
+                                <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                                  Subscribe to an AI plan to access all {AI_FEATURES.basic.length + AI_FEATURES.pro.length + AI_FEATURES.enterprise.length} AI-powered features. 
+                                  <Link
+                                    to="/dashboard/subscription"
+                                    className="ml-1 font-semibold text-[var(--primary-color)] underline underline-offset-2 hover:no-underline"
+                                  >
+                                    View plans →
+                                  </Link>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </>
                   ) : (
                     <>
                       {activeSection.id === "personal" && (
@@ -1088,7 +1369,7 @@ const ResumeBuilder = () => {
             </div>
           </div>
           {/* Right Side */}
-          <div className="w-full dark:bg-gray-900">
+          <div className="w-full dark:bg-gray-900 lg:sticky lg:top-4">
             <ResumePreviewPanel
               paperSizes={PAPER_SIZES}
               selectedPaperSize={resumeData.paper_size}

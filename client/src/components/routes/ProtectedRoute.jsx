@@ -2,14 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
 
-/**
- * ProtectedRoute - Route guard for role-based access control
- * @param {Object} props
- * @param {React.ReactNode} props.children - Component to render if access granted
- * @param {Array<string>} props.allowedRoles - Array of allowed roles (e.g., ['recruiter', 'admin'])
- * @param {Array<string>} props.allowedUserTypes - Array of allowed user types (e.g., ['recruiter', 'applicant'])
- * @param {boolean} props.requireAuth - Whether authentication is required (default: true)
- */
+// ProtectedRoute - Route guard for role-based access control
 const ProtectedRoute = ({ 
   children, 
   allowedRoles = [], 

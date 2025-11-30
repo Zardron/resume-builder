@@ -3,9 +3,6 @@ import JobPosting from '../models/JobPosting.js';
 import Resume from '../models/Resume.js';
 import User from '../models/User.js';
 
-/**
- * Get all applications (filtered by user role)
- */
 export const getApplications = async (req, res) => {
   try {
     const user = req.user;
@@ -13,11 +10,9 @@ export const getApplications = async (req, res) => {
 
     const query = {};
 
-    // Applicants can only see their own applications
     if (user.userType === 'applicant' || !user.organizationId) {
       query.applicantId = user._id;
     } else {
-      // Recruiters see applications for their organization
       query.organizationId = user.organizationId;
     }
 
@@ -57,15 +52,12 @@ export const getApplications = async (req, res) => {
     console.error('Get applications error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get applications',
+      message: 'Could not fetch applications',
       error: error.message,
     });
   }
 };
 
-/**
- * Get single application
- */
 export const getApplication = async (req, res) => {
   try {
     const application = await Application.findById(req.params.id)
@@ -81,7 +73,6 @@ export const getApplication = async (req, res) => {
       });
     }
 
-    // Check access
     const user = req.user;
     if (user.userType === 'applicant' || !user.organizationId) {
       if (application.applicantId.toString() !== user._id.toString()) {
@@ -107,21 +98,17 @@ export const getApplication = async (req, res) => {
     console.error('Get application error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get application',
+      message: 'Could not fetch application',
       error: error.message,
     });
   }
 };
 
-/**
- * Create application (apply to job)
- */
 export const createApplication = async (req, res) => {
   try {
     const { jobPostingId, resumeId, coverLetter, answers } = req.body;
     const user = req.user;
 
-    // Validate
     if (!jobPostingId || !resumeId) {
       return res.status(400).json({
         success: false,
@@ -129,7 +116,6 @@ export const createApplication = async (req, res) => {
       });
     }
 
-    // Check if job exists and is active
     const job = await JobPosting.findById(jobPostingId);
     if (!job) {
       return res.status(404).json({
@@ -145,7 +131,6 @@ export const createApplication = async (req, res) => {
       });
     }
 
-    // Check if resume belongs to user
     const resume = await Resume.findById(resumeId);
     if (!resume || resume.userId.toString() !== user._id.toString()) {
       return res.status(404).json({
@@ -154,7 +139,6 @@ export const createApplication = async (req, res) => {
       });
     }
 
-    // Check if already applied
     const existingApplication = await Application.findOne({
       jobPostingId,
       applicantId: user._id,
@@ -167,11 +151,7 @@ export const createApplication = async (req, res) => {
       });
     }
 
-    // Calculate screening score (simplified - would use AI in production)
     let screeningScore = 50; // Base score
-    // Add logic to calculate based on resume and job requirements
-
-    // Create application
     const application = new Application({
       jobPostingId,
       applicantId: user._id,
@@ -185,28 +165,24 @@ export const createApplication = async (req, res) => {
 
     await application.save();
 
-    // Update job application count
     job.applicationCount += 1;
     await job.save();
 
     res.status(201).json({
       success: true,
-      message: 'Application submitted successfully',
+      message: 'Application submitted',
       data: application,
     });
   } catch (error) {
     console.error('Create application error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to submit application',
+      message: 'Could not submit application',
       error: error.message,
     });
   }
 };
 
-/**
- * Update application status (recruiter only)
- */
 export const updateApplicationStatus = async (req, res) => {
   try {
     const { status, stage } = req.body;
@@ -219,7 +195,6 @@ export const updateApplicationStatus = async (req, res) => {
       });
     }
 
-    // Check organization access
     if (application.organizationId.toString() !== req.user.organizationId?.toString()) {
       return res.status(403).json({
         success: false,
@@ -234,22 +209,19 @@ export const updateApplicationStatus = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Application status updated successfully',
+      message: 'Status updated',
       data: application,
     });
   } catch (error) {
     console.error('Update application status error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update application status',
+      message: 'Could not update status',
       error: error.message,
     });
   }
 };
 
-/**
- * Add note to application (recruiter only)
- */
 export const addNote = async (req, res) => {
   try {
     const { note } = req.body;
@@ -262,7 +234,6 @@ export const addNote = async (req, res) => {
       });
     }
 
-    // Check organization access
     if (application.organizationId.toString() !== req.user.organizationId?.toString()) {
       return res.status(403).json({
         success: false,
@@ -279,22 +250,19 @@ export const addNote = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Note added successfully',
+      message: 'Note added',
       data: application,
     });
   } catch (error) {
     console.error('Add note error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to add note',
+      message: 'Could not add note',
       error: error.message,
     });
   }
 };
 
-/**
- * Add tags to application
- */
 export const addTags = async (req, res) => {
   try {
     const { tags } = req.body;
@@ -307,7 +275,6 @@ export const addTags = async (req, res) => {
       });
     }
 
-    // Check organization access
     if (application.organizationId.toString() !== req.user.organizationId?.toString()) {
       return res.status(403).json({
         success: false,
@@ -315,7 +282,6 @@ export const addTags = async (req, res) => {
       });
     }
 
-    // Add new tags (avoid duplicates)
     if (Array.isArray(tags)) {
       tags.forEach(tag => {
         if (!application.tags.includes(tag)) {
@@ -328,22 +294,20 @@ export const addTags = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Tags added successfully',
+      message: 'Tags added',
       data: application,
     });
   } catch (error) {
     console.error('Add tags error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to add tags',
+      message: 'Could not add tags',
       error: error.message,
     });
   }
 };
 
-/**
- * Rate application
- */
+// Rate application
 export const rateApplication = async (req, res) => {
   try {
     const { rating } = req.body;
@@ -356,7 +320,6 @@ export const rateApplication = async (req, res) => {
       });
     }
 
-    // Check organization access
     if (application.organizationId.toString() !== req.user.organizationId?.toString()) {
       return res.status(403).json({
         success: false,
@@ -376,22 +339,20 @@ export const rateApplication = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Rating added successfully',
+      message: 'Rating added',
       data: application,
     });
   } catch (error) {
     console.error('Rate application error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to rate application',
+      message: 'Could not rate application',
       error: error.message,
     });
   }
 };
 
-/**
- * Withdraw application (applicant only)
- */
+// Withdraw application (applicant only)
 export const withdrawApplication = async (req, res) => {
   try {
     const application = await Application.findById(req.params.id);
@@ -403,7 +364,6 @@ export const withdrawApplication = async (req, res) => {
       });
     }
 
-    // Check if user owns this application
     if (application.applicantId.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -416,22 +376,19 @@ export const withdrawApplication = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Application withdrawn successfully',
+      message: 'Application withdrawn',
       data: application,
     });
   } catch (error) {
     console.error('Withdraw application error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to withdraw application',
+      message: 'Could not withdraw application',
       error: error.message,
     });
   }
 };
 
-/**
- * Get AI match score
- */
 export const getAIMatch = async (req, res) => {
   try {
     const application = await Application.findById(req.params.id)
@@ -445,7 +402,6 @@ export const getAIMatch = async (req, res) => {
       });
     }
 
-    // Check organization access
     if (application.organizationId.toString() !== req.user.organizationId?.toString()) {
       return res.status(403).json({
         success: false,
@@ -453,7 +409,6 @@ export const getAIMatch = async (req, res) => {
       });
     }
 
-    // Calculate match score (simplified - would use AI in production)
     const resume = application.resumeId;
     const job = application.jobPostingId;
 
@@ -465,7 +420,6 @@ export const getAIMatch = async (req, res) => {
       location: 0,
     };
 
-    // Skills matching
     if (resume?.aiParsedData?.skills && job?.skills) {
       const matchingSkills = resume.aiParsedData.skills.filter(skill =>
         job.skills.some(js => js.toLowerCase().includes(skill.toLowerCase()) || skill.toLowerCase().includes(js.toLowerCase()))
@@ -473,7 +427,6 @@ export const getAIMatch = async (req, res) => {
       breakdown.skills = (matchingSkills.length / Math.max(job.skills.length, 1)) * 30;
     }
 
-    // Experience matching
     if (resume?.aiParsedData?.experience && job?.screeningCriteria?.minExperience) {
       if (resume.aiParsedData.experience >= job.screeningCriteria.minExperience) {
         breakdown.experience = 30;
@@ -482,12 +435,10 @@ export const getAIMatch = async (req, res) => {
       }
     }
 
-    // Education matching
     if (resume?.aiParsedData?.education?.length > 0 && job?.screeningCriteria?.educationLevel) {
       breakdown.education = 20;
     }
 
-    // Location matching
     if (job?.location?.type === 'remote') {
       breakdown.location = 20;
     } else if (resume?.userId) {
@@ -515,15 +466,13 @@ export const getAIMatch = async (req, res) => {
     console.error('Get AI match error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get AI match score',
+      message: 'Could not get match score',
       error: error.message,
     });
   }
 };
 
-/**
- * Bulk action on applications
- */
+// Bulk action on applications
 export const bulkAction = async (req, res) => {
   try {
     const { applicationIds, action, data } = req.body;
@@ -591,7 +540,7 @@ export const bulkAction = async (req, res) => {
     console.error('Bulk action error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to perform bulk action',
+      message: 'Could not perform bulk action',
       error: error.message,
     });
   }

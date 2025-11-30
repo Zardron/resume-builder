@@ -39,7 +39,7 @@ const paymentSchema = new mongoose.Schema({
   // For subscriptions
   subscriptionPlan: {
     type: String,
-    enum: ['premium'],
+    enum: ['basic', 'pro', 'enterprise'],
   },
   subscriptionDuration: {
     type: Number, // in months

@@ -18,8 +18,16 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters'],
+    minlength: [8, 'Password must be at least 8 characters'],
+    maxlength: [128, 'Password must be less than 128 characters'],
     select: false, // Don't return password by default
+    validate: {
+      validator: function(v) {
+        // Password must contain at least one uppercase, one lowercase, one number, and one special character
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(v);
+      },
+      message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+    },
   },
   role: {
     type: String,
@@ -44,7 +52,7 @@ const userSchema = new mongoose.Schema({
   subscription: {
     plan: {
       type: String,
-      enum: ['free', 'premium'],
+      enum: ['free', 'basic', 'pro', 'enterprise'],
       default: 'free',
     },
     status: {
@@ -66,12 +74,17 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isBanned: {
+    type: Boolean,
+    default: false,
+  },
   emailVerificationToken: String,
   emailVerificationCode: String,
   emailVerificationExpires: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
   lastLogin: Date,
+  lastActivity: Date, // Track last user activity for online/offline status
   profile: {
     title: String,
     company: String,

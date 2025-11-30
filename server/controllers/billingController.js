@@ -3,9 +3,7 @@ import Payment from '../models/Payment.js';
 import TeamMember from '../models/TeamMember.js';
 import { LEGACY_ORGANIZATION_BILLING_PLANS } from '../config/pricing.js';
 
-/**
- * Get subscription status
- */
+// Get subscription status
 export const getSubscription = async (req, res) => {
   try {
     const organization = await Organization.findById(req.params.orgId);
@@ -40,10 +38,7 @@ export const getSubscription = async (req, res) => {
   }
 };
 
-/**
- * Get available plans
- * NOTE: Using PHP pricing to match frontend. Prices aligned with ORGANIZATION_PLANS in pricing.js
- */
+// Get available plans (PHP pricing to match frontend)
 export const getPlans = async (req, res) => {
   try {
     const plans = [
@@ -108,9 +103,7 @@ export const getPlans = async (req, res) => {
   }
 };
 
-/**
- * Subscribe to plan
- */
+// Subscribe to plan
 export const subscribe = async (req, res) => {
   try {
     const { plan, paymentMethod, seats } = req.body;
@@ -213,9 +206,7 @@ export const subscribe = async (req, res) => {
   }
 };
 
-/**
- * Update subscription plan
- */
+// Update subscription plan
 export const updatePlan = async (req, res) => {
   try {
     const { plan, seats } = req.body;
@@ -281,9 +272,7 @@ export const updatePlan = async (req, res) => {
   }
 };
 
-/**
- * Get billing invoices
- */
+// Get billing invoices
 export const getInvoices = async (req, res) => {
   try {
     const organization = await Organization.findById(req.params.orgId);
@@ -322,9 +311,7 @@ export const getInvoices = async (req, res) => {
   }
 };
 
-/**
- * Get payment methods
- */
+// Get payment methods
 export const getPaymentMethods = async (req, res) => {
   try {
     const organization = await Organization.findById(req.params.orgId);
@@ -365,9 +352,7 @@ export const getPaymentMethods = async (req, res) => {
   }
 };
 
-/**
- * Add payment method
- */
+// Add payment method
 export const addPaymentMethod = async (req, res) => {
   try {
     const { paymentMethodId } = req.body;

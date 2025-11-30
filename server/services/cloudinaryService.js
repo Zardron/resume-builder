@@ -8,17 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-/**
- * Upload file to Cloudinary
- * @param {Buffer|string|Readable} file - File to upload (buffer, file path, or stream)
- * @param {Object} options - Upload options
- * @param {string} options.folder - Folder path in Cloudinary
- * @param {string} options.public_id - Public ID for the file
- * @param {string} options.resource_type - Resource type (image, video, raw, auto)
- * @param {string} options.format - File format
- * @param {Object} options.transformation - Image transformation options
- * @returns {Promise<Object>} Upload result
- */
+// Upload file to Cloudinary
 export const uploadFile = async (file, options = {}) => {
   try {
     const {
@@ -69,12 +59,7 @@ export const uploadFile = async (file, options = {}) => {
   }
 };
 
-/**
- * Upload image to Cloudinary
- * @param {Buffer|string|Readable} image - Image file
- * @param {Object} options - Upload options
- * @returns {Promise<Object>} Upload result
- */
+// Upload image to Cloudinary
 export const uploadImage = async (image, options = {}) => {
   return uploadFile(image, {
     ...options,
@@ -82,12 +67,7 @@ export const uploadImage = async (image, options = {}) => {
   });
 };
 
-/**
- * Upload avatar image
- * @param {Buffer|string|Readable} image - Avatar image
- * @param {string} userId - User ID
- * @returns {Promise<Object>} Upload result
- */
+// Upload avatar image
 export const uploadAvatar = async (image, userId) => {
   return uploadImage(image, {
     folder: 'resumeiqhub/avatars',
@@ -100,12 +80,7 @@ export const uploadAvatar = async (image, userId) => {
   });
 };
 
-/**
- * Upload resume PDF
- * @param {Buffer|string|Readable} pdf - PDF file
- * @param {string} resumeId - Resume ID
- * @returns {Promise<Object>} Upload result
- */
+// Upload resume PDF
 export const uploadResumePDF = async (pdf, resumeId) => {
   return uploadFile(pdf, {
     folder: 'resumeiqhub/resumes',
@@ -115,12 +90,7 @@ export const uploadResumePDF = async (pdf, resumeId) => {
   });
 };
 
-/**
- * Upload organization logo
- * @param {Buffer|string|Readable} logo - Logo image
- * @param {string} organizationId - Organization ID
- * @returns {Promise<Object>} Upload result
- */
+// Upload organization logo
 export const uploadLogo = async (logo, organizationId) => {
   return uploadImage(logo, {
     folder: 'resumeiqhub/logos',
@@ -133,12 +103,7 @@ export const uploadLogo = async (logo, organizationId) => {
   });
 };
 
-/**
- * Delete file from Cloudinary
- * @param {string} public_id - Public ID of the file to delete
- * @param {string} resource_type - Resource type (image, video, raw)
- * @returns {Promise<Object>} Deletion result
- */
+// Delete file from Cloudinary
 export const deleteFile = async (public_id, resource_type = 'image') => {
   try {
     const result = await cloudinary.uploader.destroy(public_id, {
@@ -156,12 +121,7 @@ export const deleteFile = async (public_id, resource_type = 'image') => {
   }
 };
 
-/**
- * Generate image URL with transformations
- * @param {string} public_id - Public ID of the image
- * @param {Object} transformation - Transformation options
- * @returns {string} Transformed image URL
- */
+// Generate image URL with transformations
 export const getImageUrl = (public_id, transformation = {}) => {
   return cloudinary.url(public_id, {
     secure: true,

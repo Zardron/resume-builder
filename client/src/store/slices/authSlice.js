@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { authAPI } from '../../services/api';
 import { getToken, removeToken, setToken } from '../../services/api';
+import { disconnectSocket } from '../../services/socketService';
 
 // Track if initialization is in progress to prevent race conditions
 let initializationInProgress = false;
@@ -89,17 +90,36 @@ export const loginUser = createAsyncThunk(
           remember,
         };
       }
-      return rejectWithValue(response.message || 'Login failed');
+      // Always reject with an object for consistent error handling
+      return rejectWithValue({
+        message: response.message || 'Login failed',
+        requiresVerification: response.requiresVerification || false,
+      });
     } catch (error) {
       // Handle 403 status (email not verified)
-      if (error.requiresVerification) {
-        return rejectWithValue({
-          message: error.message || 'Please verify your email address',
+      // Check both the error object and response status
+      const isVerificationError = 
+        error.requiresVerification === true ||
+        error.status === 403 ||
+        (error.response && error.response.requiresVerification === true) ||
+        (error.message && typeof error.message === 'string' && (
+          error.message.toLowerCase().includes('verify') || 
+          error.message.toLowerCase().includes('verification')
+        ));
+      
+      if (isVerificationError) {
+        const rejectionValue = {
+          message: error.message || 'Please verify your email address before logging in. Check your email for the verification code.',
           requiresVerification: true,
-          email: error.email,
-        });
+          email: error.email || error.response?.data?.user?.email,
+        };
+        return rejectWithValue(rejectionValue);
       }
-      return rejectWithValue(error.message || 'Login failed');
+      // Always reject with an object for consistent error handling
+      return rejectWithValue({
+        message: error.message || 'Login failed',
+        requiresVerification: false,
+      });
     }
   }
 );
@@ -129,9 +149,11 @@ export const logoutUser = createAsyncThunk(
     try {
       await authAPI.logout();
       removeToken();
+      disconnectSocket(); // Disconnect socket on logout
       return true;
     } catch (error) {
       removeToken();
+      disconnectSocket(); // Disconnect socket even on error
       return rejectWithValue(error.message);
     }
   }

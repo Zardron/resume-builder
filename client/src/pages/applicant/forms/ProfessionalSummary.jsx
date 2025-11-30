@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { SparklesIcon, Loader2, FileText, RefreshCw } from 'lucide-react';
+import { SparklesIcon, Loader2, FileText, RefreshCw, ChevronDown, CheckCircle, Lock, ArrowRight } from 'lucide-react';
 import AIFeatureButton from '../../../components/common/AIFeatureButton';
 import { useApp } from '../../../contexts/AppContext';
 import { enhanceProfessionalSummary, checkGrammarAndSpelling, getReadabilityScore } from '../../../utils/aiService';
+import { hasFeatureAccess, getTierForFeature } from '../../../utils/aiFeatures';
 
 const ProfessionalSummary = ({
   data,
@@ -16,9 +17,11 @@ const ProfessionalSummary = ({
   const [grammarResults, setGrammarResults] = useState(null);
   const [readabilityResults, setReadabilityResults] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
+  const [showAIMenu, setShowAIMenu] = useState(false);
   const validationRef = useRef();
-  const { isSubscribed, addNotification } = useApp();
+  const { isSubscribed, subscriptionTier, addNotification } = useApp();
   const textareaRef = useRef();
+  const menuRef = useRef(null);
 
   // Validate professional summary field
   const validateField = (field, value) => {
@@ -71,6 +74,23 @@ const ProfessionalSummary = ({
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, [data?.professional_summary]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowAIMenu(false);
+      }
+    };
+
+    if (showAIMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showAIMenu]);
 
   const handleChange = (value) => {
     onChange({ ...data, professionalSummary: value });
@@ -310,33 +330,215 @@ const ProfessionalSummary = ({
             </div>
             
             <div className="space-y-2">
-              <AIFeatureButton
-                label="Enhance with AI"
-                description={wordCount > 75 
+              {/* Combined AI Features Button */}
+              <div className="relative" ref={menuRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowAIMenu(!showAIMenu)}
+                  disabled={isEnhancing || isCheckingGrammar || !data?.professional_summary?.trim()}
+                  className="group relative w-full flex items-center justify-between gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl disabled:scale-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+                >
+                  <div className="relative z-10 flex items-center gap-2">
+                    <SparklesIcon className="h-4 w-4" />
+                    <span>
+                      {isEnhancing ? "Enhancing..." : isCheckingGrammar ? "Checking..." : "AI Enhance"}
+                    </span>
+                  </div>
+                  <ChevronDown className={`relative z-10 h-4 w-4 transition-transform duration-300 ${showAIMenu ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {showAIMenu && (
+                  <div className="absolute z-50 mt-2 w-full rounded-lg border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800">
+                    <div className="p-1">
+                      {/* Enhance with AI */}
+                      {(() => {
+                        const featureId = 'summary-enhancement';
+                        const hasAccess = isSubscribed && hasFeatureAccess(subscriptionTier, featureId);
+                        const requiredTier = getTierForFeature(featureId);
+                        const tierNames = { 'basic': 'Basic', 'pro': 'Pro', 'enterprise': 'Enterprise' };
+                        const tierColors = {
+                          'basic': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                          'pro': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                          'enterprise': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                        };
+
+                        if (hasAccess) {
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowAIMenu(false);
+                                handleAIEnhance();
+                              }}
+                              disabled={isEnhancing || !data?.professional_summary?.trim()}
+                              className="w-full flex items-center gap-3 rounded-md px-4 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <SparklesIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Enhance with AI</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  {wordCount > 75 
+                                    ? "Summarize long text to recommended length" 
+                                    : wordCount < 30 
+                                    ? "Enhance short text with impact words" 
+                                    : "Optimize grammar and ATS compatibility"}
+                                </div>
+                              </div>
+                              {isEnhancing && <Loader2 className="h-4 w-4 animate-spin text-blue-600" />}
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <div className="flex items-start gap-3 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800/50">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700 flex-shrink-0 mt-0.5">
+                              <Lock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="mb-1 flex items-center gap-2 flex-wrap">
+                                <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                  Enhance with AI
+                                </span>
+                                {requiredTier && (
+                                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${tierColors[requiredTier] || 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'}`}>
+                                    {tierNames[requiredTier] || requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                {wordCount > 75 
                   ? "Summarize long text to recommended length" 
                   : wordCount < 30 
                   ? "Enhance short text with impact words" 
-                  : "Optimize grammar and ATS compatibility"
-                }
-                onClick={handleAIEnhance}
-                disabled={isEnhancing || !data?.professional_summary?.trim()}
-              />
+                                  : "Optimize grammar and ATS compatibility"}
+                              </p>
+                            </div>
+                            <Link
+                              to="/dashboard/subscription"
+                              onClick={() => setShowAIMenu(false)}
+                              className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:shadow-md flex-shrink-0 whitespace-nowrap"
+                            >
+                              <span>
+                                {(() => {
+                                  // Free account → Subscribe for Pro and Enterprise
+                                  if (!isSubscribed || !subscriptionTier || subscriptionTier === 'free') {
+                                    return 'Subscribe';
+                                  }
+                                  // Basic tier → Upgrade for Pro features
+                                  if (subscriptionTier === 'basic' && requiredTier === 'pro') {
+                                    return 'Upgrade';
+                                  }
+                                  // Pro tier → Upgrade for Enterprise features
+                                  if (subscriptionTier === 'pro' && requiredTier === 'enterprise') {
+                                    return 'Upgrade';
+                                  }
+                                  // All other cases → Subscribe
+                                  return 'Subscribe';
+                                })()}
+                              </span>
+                              <ArrowRight className="h-3 w-3" />
+                            </Link>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Grammar Check */}
+                      {(() => {
+                        const featureId = 'grammar-check';
+                        const hasAccess = isSubscribed && hasFeatureAccess(subscriptionTier, featureId);
+                        const requiredTier = getTierForFeature(featureId);
+                        const tierNames = { 'basic': 'Basic', 'pro': 'Pro', 'enterprise': 'Enterprise' };
+                        const tierColors = {
+                          'basic': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                          'pro': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                          'enterprise': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                        };
+
+                        if (hasAccess) {
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowAIMenu(false);
+                                handleGrammarCheck();
+                              }}
+                              disabled={isCheckingGrammar || !data?.professional_summary?.trim()}
+                              className="w-full flex items-center gap-3 rounded-md px-4 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Grammar Check</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  Check grammar and spelling
+                                </div>
+                              </div>
+                              {isCheckingGrammar && <Loader2 className="h-4 w-4 animate-spin text-green-600" />}
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <div className="flex items-start gap-3 rounded-md border-2 border-dashed border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-800/50">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700 flex-shrink-0 mt-0.5">
+                              <Lock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="mb-1 flex items-center gap-2 flex-wrap">
+                                <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                  Grammar Check
+                                </span>
+                                {requiredTier && (
+                                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${tierColors[requiredTier] || 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'}`}>
+                                    {tierNames[requiredTier] || requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                Check grammar and spelling
+                              </p>
+                            </div>
+                            <Link
+                              to="/dashboard/subscription"
+                              onClick={() => setShowAIMenu(false)}
+                              className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:shadow-md flex-shrink-0 whitespace-nowrap"
+                            >
+                              <span>
+                                {(() => {
+                                  // Free account → Subscribe for Pro and Enterprise
+                                  if (!isSubscribed || !subscriptionTier || subscriptionTier === 'free') {
+                                    return 'Subscribe';
+                                  }
+                                  // Basic tier → Upgrade for Pro features
+                                  if (subscriptionTier === 'basic' && requiredTier === 'pro') {
+                                    return 'Upgrade';
+                                  }
+                                  // Pro tier → Upgrade for Enterprise features
+                                  if (subscriptionTier === 'pro' && requiredTier === 'enterprise') {
+                                    return 'Upgrade';
+                                  }
+                                  // All other cases → Subscribe
+                                  return 'Subscribe';
+                                })()}
+                              </span>
+                              <ArrowRight className="h-3 w-3" />
+                            </Link>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                )}
+              </div>
               
-              <div className="grid grid-cols-1 gap-2">
-                <AIFeatureButton
-                  label={isCheckingGrammar ? "Checking..." : "Grammar Check"}
-                  description="Check grammar and spelling"
-                  onClick={handleGrammarCheck}
-                  disabled={isCheckingGrammar || !data?.professional_summary?.trim()}
-                />
-                
+              {/* Readability Score - Separate button */}
                 <AIFeatureButton
                   label={isCheckingReadability ? "Analyzing..." : "Readability Score"}
+                  featureId="readability-score"
                   description="Get readability analysis"
                   onClick={handleReadabilityCheck}
                   disabled={isCheckingReadability || !data?.professional_summary?.trim()}
                 />
-              </div>
               
               {!isSubscribed && (
                 <div className="rounded-md border border-blue-100 bg-blue-50/50 p-3 text-xs dark:border-blue-900/30 dark:bg-blue-900/10">
