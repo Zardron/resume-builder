@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, FileText, Edit, Trash2, Calendar } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Plus, FileText, Edit, Trash2, Calendar, Upload, Lock, ArrowRight, Sparkles } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import { hasFeatureAccess, getTierForFeature } from '../../utils/aiFeatures';
 
 const ResumeBuilderList = () => {
   const navigate = useNavigate();
-  const { resumes, loadResumes, deleteResume, isLoading: appLoading } = useApp();
+  const { resumes, loadResumes, deleteResume, isLoading: appLoading, isSubscribed, subscriptionTier } = useApp();
   const [isDeleting, setIsDeleting] = useState(null);
   const [localResumes, setLocalResumes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Check if user has access to resume parsing feature (requires Pro tier)
+  const hasUploadAccess = isSubscribed && hasFeatureAccess(subscriptionTier, 'resume-parsing');
+  const requiredTier = getTierForFeature('resume-parsing');
+  const tierNames = {
+    'basic': 'Basic',
+    'pro': 'Pro',
+    'enterprise': 'Enterprise',
+  };
 
   useEffect(() => {
     const fetchResumes = async () => {
@@ -33,6 +43,12 @@ const ResumeBuilderList = () => {
   const handleCreateNew = () => {
     navigate('/dashboard/builder', { 
       state: { builder: 'new-resume' } 
+    });
+  };
+
+  const handleUploadResume = () => {
+    navigate('/dashboard/builder', { 
+      state: { builder: 'upload-resume' } 
     });
   };
 
@@ -100,22 +116,110 @@ const ResumeBuilderList = () => {
         </div>
       </div>
 
-      {/* Create New Resume Card */}
-      <div className="mb-8">
+      {/* Create New Resume and Upload Resume Cards */}
+      <div className="mb-8 grid gap-6 sm:grid-cols-2">
+        {/* Create New Resume Card */}
         <div
           onClick={handleCreateNew}
-          className="group relative cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-[var(--primary-color)] bg-gradient-to-br from-[var(--primary-color)]/10 via-[var(--secondary-color)]/10 to-[var(--accent-color)]/10 p-8 text-center transition-all hover:border-solid hover:shadow-lg dark:from-[var(--primary-color)]/20 dark:via-[var(--secondary-color)]/20 dark:to-[var(--accent-color)]/20"
+          className="group relative cursor-pointer overflow-hidden rounded-xl border border-blue-200 bg-white p-8 text-center transition-all hover:border-blue-400 hover:bg-blue-50/30 hover:shadow-xl hover:shadow-blue-500/10 dark:border-blue-800/50 dark:bg-gray-800/50 dark:hover:border-blue-600 dark:hover:bg-gray-800"
         >
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] shadow-lg transition-transform group-hover:scale-110">
-            <Plus className="h-10 w-10 text-white" />
+          {/* Icon */}
+          <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/25 transition-all group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-500/30">
+            <Plus className="h-8 w-8 text-white" />
           </div>
-          <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
-            Create New Resume Template
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Start building a professional resume from scratch with our AI-powered builder
-          </p>
+          
+          {/* Content */}
+          <div className="relative z-10">
+            <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
+              Create New Resume Template
+            </h3>
+            <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              Start building a professional resume from scratch with our AI-powered builder
+            </p>
+          </div>
+          
+          {/* Hover indicator */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 transform scale-x-0 transition-transform group-hover:scale-x-100" />
         </div>
+
+        {/* Upload Existing Resume Card */}
+        {hasUploadAccess ? (
+          <div
+            onClick={handleUploadResume}
+            className="group relative cursor-pointer overflow-hidden rounded-xl border border-green-200 bg-white p-8 text-center transition-all hover:border-green-400 hover:shadow-xl hover:shadow-green-500/10 dark:border-green-800/50 dark:bg-gray-800/50 dark:hover:border-green-600 dark:hover:bg-gray-800"
+          >
+            {/* Subtle background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 via-white to-emerald-50/30 opacity-0 transition-opacity group-hover:opacity-100 dark:from-green-950/20 dark:via-gray-900 dark:to-emerald-950/10" />
+            
+            {/* Icon */}
+            <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/25 transition-all group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-green-500/30">
+              <Upload className="h-8 w-8 text-white" />
+            </div>
+            
+            {/* Content */}
+            <div className="relative">
+              <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
+                Upload Existing Resume
+              </h3>
+              <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                Upload your existing resume (PDF, DOC, DOCX) and let AI extract and populate all fields automatically
+              </p>
+            </div>
+            
+            {/* Hover indicator */}
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-emerald-600 transform scale-x-0 transition-transform group-hover:scale-x-100" />
+          </div>
+        ) : (
+          <div className="group relative overflow-hidden rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center transition-all dark:border-gray-600 dark:bg-gray-800/50">
+            {/* Icon */}
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-200 dark:bg-gray-700">
+              <Lock className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+            </div>
+            
+            {/* Title with badge */}
+            <div className="mb-2 flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap justify-center">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Upload Existing Resume
+                </h3>
+                {requiredTier && (
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
+                    requiredTier === 'basic' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                    requiredTier === 'pro' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                  }`}>
+                    {tierNames[requiredTier] || requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)}
+                  </span>
+                )}
+              </div>
+            </div>
+            
+            {/* Description */}
+            <p className="mb-6 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              Upload your existing resume (PDF, DOC, DOCX) and let AI extract and populate all fields automatically
+            </p>
+            
+            {/* CTA Button */}
+            <Link
+              to="/dashboard/subscription"
+              className="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+            >
+              {(() => {
+                if (!isSubscribed || !subscriptionTier || subscriptionTier === 'free') {
+                  return 'Subscribe';
+                }
+                if (subscriptionTier === 'basic' && requiredTier === 'pro') {
+                  return 'Upgrade';
+                }
+                if (subscriptionTier === 'pro' && requiredTier === 'enterprise') {
+                  return 'Upgrade';
+                }
+                return 'Subscribe';
+              })()}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Existing Resumes */}
@@ -136,15 +240,42 @@ const ResumeBuilderList = () => {
             No resumes yet
           </h3>
           <p className="mb-6 text-sm text-gray-600 dark:text-gray-400">
-            Get started by creating your first resume template
+            Get started by creating your first resume template or uploading an existing one
           </p>
-          <button
-            onClick={handleCreateNew}
-            className="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-          >
-            <Plus className="h-5 w-5" />
-            Create Your First Resume
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={handleCreateNew}
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30"
+            >
+              <Plus className="h-5 w-5" />
+              Create Your First Resume
+            </button>
+            {hasUploadAccess ? (
+              <button
+                onClick={handleUploadResume}
+                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-green-500/20 transition-all hover:scale-105 hover:shadow-lg hover:shadow-green-500/30"
+              >
+                <Upload className="h-5 w-5" />
+                Upload Existing Resume
+              </button>
+            ) : (
+              <Link
+                to="/dashboard/subscription"
+                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30"
+              >
+                <Lock className="h-5 w-5" />
+                {(() => {
+                  if (!isSubscribed || !subscriptionTier || subscriptionTier === 'free') {
+                    return 'Subscribe to Upload';
+                  }
+                  if (subscriptionTier === 'basic' && requiredTier === 'pro') {
+                    return 'Upgrade to Pro';
+                  }
+                  return 'Upgrade to Upload';
+                })()}
+              </Link>
+            )}
+          </div>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

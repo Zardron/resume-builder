@@ -124,10 +124,10 @@ const SectionFontSizeDropdown = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+        className="flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors h-7 whitespace-nowrap"
         type="button"
       >
-        <Type className="w-4 h-4" />
+        <Type className="w-3.5 h-3.5" />
         Font Sizes
         <ChevronDown
           className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}

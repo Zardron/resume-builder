@@ -148,11 +148,11 @@ const ResumePreviewPanel = ({
         </div>
 
         <div className="w-full p-4 flex flex-col gap-3 dark:bg-gray-900">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex flex-nowrap items-center justify-between gap-1.5">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={handleTogglePublic}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all hover:opacity-80 cursor-pointer"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all hover:opacity-80 cursor-pointer h-7 whitespace-nowrap"
                 style={
                   isPublic
                     ? {
@@ -172,12 +172,12 @@ const ResumePreviewPanel = ({
               >
                 {isPublic ? (
                   <>
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-3.5 h-3.5" />
                     Public
                   </>
                 ) : (
                   <>
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="w-3.5 h-3.5" />
                     Private
                   </>
                 )}
@@ -186,7 +186,7 @@ const ResumePreviewPanel = ({
               <button
                 onClick={handleDownload}
                 disabled={isDownloadDisabled}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed h-7 whitespace-nowrap"
                 style={{
                   backgroundColor:
                     "rgba(var(--accent-color-rgb, 139, 92, 246), 0.1)",
@@ -198,9 +198,9 @@ const ResumePreviewPanel = ({
                 type="button"
               >
                 {isDownloading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 ) : (
-                  <Download className="w-4 h-4" />
+                  <Download className="w-3.5 h-3.5" />
                 )}
                 {downloadButtonLabel}
               </button>
@@ -208,7 +208,7 @@ const ResumePreviewPanel = ({
               <button
                 onClick={handleShare}
                 disabled={shareButtonDisabled}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors hover:opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed h-7 whitespace-nowrap"
                 style={{
                   backgroundColor:
                     "rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)",
@@ -219,11 +219,11 @@ const ResumePreviewPanel = ({
                 title={shareButtonTitle}
                 type="button"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-3.5 h-3.5" />
                 {shareButtonLabel}
               </button>
             </div>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5">
               <MarginPresetDropdown
                 presets={marginPresets}
                 currentPresetId={currentMarginPresetId}

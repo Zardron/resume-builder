@@ -19,6 +19,11 @@ const Builder = () => {
     return <ResumeBuilder />;
   }
   
+  // Show upload existing resume builder
+  if (state?.builder === 'upload-resume' || action === 'upload') {
+    return <ExistingResumeBuilder />;
+  }
+  
   // Show edit existing resume builder
   if (state?.builder === 'edit-resume' || state?.resumeId || resumeId || action === 'edit') {
     return <ExistingResumeBuilder />;
