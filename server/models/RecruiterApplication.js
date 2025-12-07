@@ -11,7 +11,6 @@ const recruiterApplicationSchema = new mongoose.Schema({
     required: true,
     trim: true,
     lowercase: true,
-    index: true,
   },
   company: {
     type: String,
@@ -61,7 +60,7 @@ const recruiterApplicationSchema = new mongoose.Schema({
 
 // Indexes for faster queries
 recruiterApplicationSchema.index({ status: 1, appliedAt: -1 });
-recruiterApplicationSchema.index({ email: 1 });
+recruiterApplicationSchema.index({ email: 1 }); // Index for email lookups
 
 export default mongoose.model('RecruiterApplication', recruiterApplicationSchema);
 

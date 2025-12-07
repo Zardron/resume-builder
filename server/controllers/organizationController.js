@@ -64,7 +64,7 @@ export const createOrganization = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Create organization error:', error);
+    logError('Create organization error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not create organization',
@@ -89,7 +89,7 @@ export const getOrganization = async (req, res) => {
       data: organization,
     });
   } catch (error) {
-    console.error('Get organization error:', error);
+    logError('Get organization error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not fetch organization',
@@ -128,7 +128,7 @@ export const updateOrganization = async (req, res) => {
       data: organization,
     });
   } catch (error) {
-    console.error('Update organization error:', error);
+    logError('Update organization error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not update organization',
@@ -152,7 +152,7 @@ export const getTeamMembers = async (req, res) => {
       data: teamMembers,
     });
   } catch (error) {
-    console.error('Get team members error:', error);
+    logError('Get team members error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not fetch team members',
@@ -222,7 +222,7 @@ export const inviteTeamMember = async (req, res) => {
       data: teamMember,
     });
   } catch (error) {
-    console.error('Invite team member error:', error);
+    logError('Invite team member error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not invite team member',
@@ -257,7 +257,7 @@ export const updateTeamMemberRole = async (req, res) => {
       data: teamMember,
     });
   } catch (error) {
-    console.error('Update team member error:', error);
+    logError('Update team member error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not update team member',
@@ -302,7 +302,7 @@ export const removeTeamMember = async (req, res) => {
       message: 'Team member removed',
     });
   } catch (error) {
-    console.error('Remove team member error:', error);
+    logError('Remove team member error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not remove team member',
@@ -353,7 +353,7 @@ export const getTeamActivity = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get team activity error:', error);
+    logError('Get team activity error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not fetch team activity',

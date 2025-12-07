@@ -110,7 +110,6 @@ const auditLogSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now,
-    index: true,
   },
 }, {
   timestamps: true,
@@ -121,9 +120,9 @@ auditLogSchema.index({ action: 1, timestamp: -1 });
 auditLogSchema.index({ resourceType: 1, timestamp: -1 });
 auditLogSchema.index({ userId: 1, timestamp: -1 });
 auditLogSchema.index({ resourceType: 1, resourceId: 1, timestamp: -1 });
-auditLogSchema.index({ timestamp: -1 }); // For time-based queries
 
 // Auto-delete records older than 365 days (1 year for compliance)
+// TTL index on timestamp (this also serves as the single-field index for time-based queries)
 auditLogSchema.index({ timestamp: 1 }, { expireAfterSeconds: 365 * 24 * 60 * 60 });
 
 const AuditLog = mongoose.model('AuditLog', auditLogSchema);

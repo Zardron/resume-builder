@@ -1,4 +1,4 @@
-import { logSecurityEvent, getClientIp } from '../utils/logger.js';
+import { logSecurityEvent, getClientIp, logError } from '../utils/logger.js';
 
 /**
  * Middleware to log all API requests with security context
@@ -73,7 +73,7 @@ export const requestLogger = (req, res, next) => {
         );
       } catch (error) {
         // Silently fail - don't break the request
-        console.error('Request logging error:', error.message);
+        logError('Request logging error', error);
       }
     });
 

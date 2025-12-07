@@ -1,10 +1,11 @@
 import sgMail from '@sendgrid/mail';
+import { logWarn, logError, logDebug } from '../utils/logger.js';
 
 // Initialize SendGrid
 if (process.env.SENDGRID_API_KEY) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 } else {
-  console.warn('⚠️  SENDGRID_API_KEY not set - email functionality will be disabled');
+  logWarn('SENDGRID_API_KEY not set - email functionality will be disabled');
 }
 
 // Get the from email address
@@ -12,8 +13,7 @@ const getFromEmail = () => {
   const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'resume.iq2025@gmail.com';
   
   if (!process.env.SENDGRID_FROM_EMAIL) {
-    console.warn(`⚠️  SENDGRID_FROM_EMAIL not set - using default: ${fromEmail}`);
-    console.warn('⚠️  Make sure this email is verified in your SendGrid account as a Sender Identity');
+    logWarn(`SENDGRID_FROM_EMAIL not set - using default: ${fromEmail}`);
   }
   
   return fromEmail;
@@ -41,26 +41,31 @@ export const sendEmail = async ({ to, subject, text, html, dynamicTemplateData }
     };
 
     await sgMail.send(msg);
-    console.log(`Email sent to ${to}`);
+    logDebug('Email sent successfully', { to });
     return { success: true };
   } catch (error) {
-    console.error('SendGrid error:', error);
+    const errorDetails = {
+      to,
+      from: getFromEmail(),
+      ...(error.response?.body && { responseBody: error.response.body }),
+    };
     
-    // Provide helpful error messages for common issues
+    // Check for sender identity errors
     if (error.response?.body?.errors) {
-      const errors = error.response.body.errors;
-      errors.forEach(err => {
-        if (err.field === 'from' && err.message.includes('verified Sender Identity')) {
-          console.error('\n❌ SENDGRID SENDER IDENTITY ERROR:');
-          console.error(`   The "from" email address (${getFromEmail()}) is not verified in SendGrid.`);
-          console.error('   To fix this:');
-          console.error('   1. Go to https://app.sendgrid.com/settings/sender_auth/senders/new');
-          console.error('   2. Verify the sender identity for:', getFromEmail());
-          console.error('   3. Or set SENDGRID_FROM_EMAIL to a verified email address in your .env file');
-          console.error('   4. See: https://sendgrid.com/docs/for-developers/sending-email/sender-identity/\n');
-        }
-      });
-      console.error('Error response body:', error.response.body);
+      const senderIdentityError = error.response.body.errors.find(
+        err => err.field === 'from' && err.message.includes('verified Sender Identity')
+      );
+      
+      if (senderIdentityError) {
+        logError('SendGrid sender identity not verified', error, {
+          ...errorDetails,
+          message: `The "from" email address (${getFromEmail()}) is not verified in SendGrid. Please verify it at https://app.sendgrid.com/settings/sender_auth/senders/new`,
+        });
+      } else {
+        logError('SendGrid error', error, errorDetails);
+      }
+    } else {
+      logError('SendGrid error', error, errorDetails);
     }
     
     throw error;
@@ -97,7 +102,7 @@ export const sendVerificationEmail = async (to, name, verificationUrl, verificat
       html: htmlTemplate,
     });
   } catch (error) {
-    console.error('Error sending verification email:', error);
+    logError('Error sending verification email', error, { to });
     throw error;
   }
 };

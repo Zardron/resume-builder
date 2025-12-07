@@ -4,6 +4,7 @@ import User from '../models/User.js';
 import { authenticate } from '../middleware/auth.js';
 import { addCredits } from './credits.js';
 import { CREDIT_PACKAGES } from '../config/pricing.js';
+import { logError } from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.get('/history', authenticate, async (req, res) => {
       data: { payments },
     });
   } catch (error) {
-    console.error('Get payments error:', error);
+    logError('Get payments error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch payments',
@@ -93,7 +94,7 @@ router.post('/credits', authenticate, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Purchase credits error:', error);
+    logError('Purchase credits error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to process payment',
@@ -122,7 +123,7 @@ router.get('/:id', authenticate, async (req, res) => {
       data: { payment },
     });
   } catch (error) {
-    console.error('Get payment error:', error);
+    logError('Get payment error', error, { paymentId: req.params.id, userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch payment',

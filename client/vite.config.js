@@ -5,4 +5,12 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  css: {
+    postcss: {
+      // PostCSS will handle charset declarations automatically
+    },
+  },
+  build: {
+    cssCodeSplit: false, // This can help with charset ordering
+  },
 });

@@ -106,7 +106,6 @@ export const initializeSocket = (server) => {
     });
   });
 
-  logInfo('Socket.io server initialized');
   return io;
 };
 

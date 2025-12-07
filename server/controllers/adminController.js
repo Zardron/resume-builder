@@ -8,6 +8,7 @@ import SecurityLog from '../models/SecurityLog.js';
 import AuditLog from '../models/AuditLog.js';
 import ClientLog from '../models/ClientLog.js';
 import Application from '../models/Application.js';
+import { logError } from '../utils/logger.js';
 import Payment from '../models/Payment.js';
 import Resume from '../models/Resume.js';
 import crypto from 'crypto';
@@ -132,7 +133,7 @@ export const createOrganizationWithMembers = async (req, res) => {
             });
             invited.push({ email: emailLower, fullName });
           } catch (emailError) {
-            console.error(`Email send failed for ${emailLower}:`, emailError);
+            logError(`Email send failed for ${emailLower}`, emailError);
             errors.push({
               email: emailLower,
               message: 'User created but email failed',
@@ -160,7 +161,7 @@ export const createOrganizationWithMembers = async (req, res) => {
 
         await member.save();
       } catch (err) {
-        console.error(`Error processing ${emailData.email}:`, err);
+        logError(`Error processing ${emailData.email}`, err);
         errors.push({
           email: emailData.email,
           message: err.message || 'Could not process user',
@@ -182,7 +183,7 @@ export const createOrganizationWithMembers = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Create org error:', err);
+    logError('Create org error', err);
     res.status(500).json({
       success: false,
       message: 'Something went wrong',
@@ -215,7 +216,7 @@ export const getAllOrganizations = async (req, res) => {
       data: orgs,
     });
   } catch (err) {
-    console.error('Get orgs error:', err);
+    logError('Get orgs error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch organizations',
@@ -250,7 +251,7 @@ export const getOrganizationDetails = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Get org error:', err);
+    logError('Get org error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch organization',
@@ -297,7 +298,7 @@ export const getAllRecruiters = async (req, res) => {
       data: result,
     });
   } catch (err) {
-    console.error('Get recruiters error:', err);
+    logError('Get recruiters error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch recruiters',
@@ -314,7 +315,7 @@ export const getSystemConfig = async (req, res) => {
       data: config,
     });
   } catch (err) {
-    console.error('Get config error:', err);
+    logError('Get config error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch config',
@@ -345,7 +346,7 @@ export const updateSystemConfig = async (req, res) => {
       data: config,
     });
   } catch (err) {
-    console.error('Update config error:', err);
+    logError('Update config error', err);
     res.status(500).json({
       success: false,
       message: 'Could not update config',
@@ -467,7 +468,7 @@ export const getLoginAttempts = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Get login attempts error:', err);
+    logError('Get login attempts error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch login attempts',
@@ -605,7 +606,7 @@ export const getSecurityLogs = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Get security logs error:', err);
+    logError('Get security logs error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch security logs',
@@ -728,7 +729,7 @@ export const getAuditLogs = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Get audit logs error:', err);
+    logError('Get audit logs error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch audit logs',
@@ -854,7 +855,7 @@ export const getClientLogs = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Get client logs error:', err);
+    logError('Get client logs error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch client logs',
@@ -883,7 +884,7 @@ export const createClientLog = async (req, res) => {
       message: 'Log recorded',
     });
   } catch (err) {
-    console.error('Create client log error:', err);
+    logError('Create client log error', err);
     res.status(500).json({
       success: false,
       message: 'Could not record log',
@@ -959,7 +960,7 @@ export const getAllUsers = async (req, res) => {
       data: result,
     });
   } catch (err) {
-    console.error('Get all users error:', err);
+    logError('Get all users error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch users',
@@ -1033,7 +1034,7 @@ export const toggleUserBan = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Toggle user ban error:', err);
+    logError('Toggle user ban error', err);
     res.status(500).json({
       success: false,
       message: 'Could not update user ban status',
@@ -1345,7 +1346,7 @@ export const getPlatformStats = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Get platform stats error:', err);
+    logError('Get platform stats error', err);
     res.status(500).json({
       success: false,
       message: 'Could not fetch platform statistics',

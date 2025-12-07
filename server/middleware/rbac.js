@@ -1,5 +1,6 @@
 import TeamMember from '../models/TeamMember.js';
 import Organization from '../models/Organization.js';
+import { logError } from '../utils/logger.js';
 
 // Middleware to check if user has required role in organization
 export const requireRole = (...allowedRoles) => {
@@ -55,7 +56,7 @@ export const requireRole = (...allowedRoles) => {
       req.teamMember = teamMember;
       next();
     } catch (error) {
-      console.error('RBAC middleware error:', error);
+      logError('RBAC middleware error', error, { userId: req.user?._id });
       res.status(500).json({
         success: false,
         message: 'Authorization error',
@@ -111,7 +112,7 @@ export const requirePermission = (permission) => {
       req.teamMember = teamMember;
       next();
     } catch (error) {
-      console.error('Permission check error:', error);
+      logError('Permission check error', error, { userId: req.user?._id });
       res.status(500).json({
         success: false,
         message: 'Authorization error',
@@ -158,7 +159,7 @@ export const ensureOrganizationAccess = async (req, res, next) => {
     req.organizationId = organizationId;
     next();
   } catch (error) {
-    console.error('Organization access check error:', error);
+    logError('Organization access check error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Authorization error',

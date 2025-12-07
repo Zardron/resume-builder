@@ -4,6 +4,7 @@ import Payment from '../models/Payment.js';
 import { authenticate } from '../middleware/auth.js';
 import { addCredits } from './credits.js';
 import { AI_SUBSCRIPTION_PLANS } from '../config/pricing.js';
+import { logError } from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -35,7 +36,7 @@ router.get('/status', authenticate, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get subscription error:', error);
+    logError('Get subscription error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch subscription',
@@ -129,7 +130,7 @@ router.post('/subscribe', authenticate, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Subscribe error:', error);
+    logError('Subscribe error', error, { userId: req.user._id, planId: req.body.planId });
     res.status(500).json({
       success: false,
       message: 'Failed to process subscription',
@@ -160,7 +161,7 @@ router.post('/cancel', authenticate, async (req, res) => {
       data: { subscription: user.subscription },
     });
   } catch (error) {
-    console.error('Cancel subscription error:', error);
+    logError('Cancel subscription error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to cancel subscription',
@@ -199,7 +200,7 @@ router.post('/reactivate', authenticate, async (req, res) => {
       data: { subscription: user.subscription },
     });
   } catch (error) {
-    console.error('Reactivate subscription error:', error);
+    logError('Reactivate subscription error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to reactivate subscription',
@@ -317,7 +318,7 @@ router.post('/upgrade', authenticate, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Upgrade subscription error:', error);
+    logError('Upgrade subscription error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to upgrade subscription',

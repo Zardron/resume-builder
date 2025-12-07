@@ -103,8 +103,7 @@ organizationSchema.pre('save', function(next) {
   next();
 });
 
-// Index for faster queries
-organizationSchema.index({ slug: 1 });
+// Note: slug already has unique: true which creates an index automatically
 
 export default mongoose.model('Organization', organizationSchema);
 

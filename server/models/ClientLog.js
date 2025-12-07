@@ -144,7 +144,6 @@ const clientLogSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now,
-    index: true,
   },
 }, {
   timestamps: true,
@@ -155,9 +154,9 @@ clientLogSchema.index({ eventType: 1, timestamp: -1 });
 clientLogSchema.index({ userId: 1, timestamp: -1 });
 clientLogSchema.index({ severity: 1, timestamp: -1 });
 clientLogSchema.index({ route: 1, timestamp: -1 });
-clientLogSchema.index({ timestamp: -1 }); // For time-based queries
 
 // Auto-delete records older than 30 days (client logs are more voluminous)
+// TTL index on timestamp (this also serves as the single-field index for time-based queries)
 clientLogSchema.index({ timestamp: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
 
 const ClientLog = mongoose.model('ClientLog', clientLogSchema);

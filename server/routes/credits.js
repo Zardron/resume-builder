@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/User.js';
 import CreditTransaction from '../models/CreditTransaction.js';
 import { authenticate } from '../middleware/auth.js';
+import { logError } from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get('/balance', authenticate, async (req, res) => {
       data: { credits: user.credits },
     });
   } catch (error) {
-    console.error('Get credits error:', error);
+    logError('Get credits error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch credits',
@@ -37,7 +38,7 @@ router.get('/transactions', authenticate, async (req, res) => {
       data: { transactions },
     });
   } catch (error) {
-    console.error('Get transactions error:', error);
+    logError('Get transactions error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch transactions',

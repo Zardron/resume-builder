@@ -2,6 +2,7 @@ import express from 'express';
 import Resume from '../models/Resume.js';
 import User from '../models/User.js';
 import { authenticate, optionalAuth } from '../middleware/auth.js';
+import { logError } from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.get('/', authenticate, async (req, res) => {
       data: { resumes },
     });
   } catch (error) {
-    console.error('Get resumes error:', error);
+    logError('Get resumes error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch resumes',
@@ -46,7 +47,7 @@ router.get('/:id', authenticate, async (req, res) => {
       data: { resume },
     });
   } catch (error) {
-    console.error('Get resume error:', error);
+    logError('Get resume error', error, { resumeId: req.params.id, userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch resume',
@@ -88,7 +89,7 @@ router.post('/', authenticate, async (req, res) => {
       data: { resume },
     });
   } catch (error) {
-    console.error('Create resume error:', error);
+    logError('Create resume error', error, { userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to create resume',
@@ -135,7 +136,7 @@ router.put('/:id', authenticate, async (req, res) => {
       data: { resume },
     });
   } catch (error) {
-    console.error('Update resume error:', error);
+    logError('Update resume error', error, { resumeId: req.params.id, userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to update resume',
@@ -164,7 +165,7 @@ router.delete('/:id', authenticate, async (req, res) => {
       message: 'Resume deleted successfully',
     });
   } catch (error) {
-    console.error('Delete resume error:', error);
+    logError('Delete resume error', error, { resumeId: req.params.id, userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to delete resume',
@@ -198,7 +199,7 @@ router.get('/public/:publicUrl', optionalAuth, async (req, res) => {
       data: { resume },
     });
   } catch (error) {
-    console.error('Get public resume error:', error);
+    logError('Get public resume error', error, { publicUrl: req.params.publicUrl });
     res.status(500).json({
       success: false,
       message: 'Failed to fetch resume',
@@ -239,7 +240,7 @@ router.post('/:id/duplicate', authenticate, async (req, res) => {
       data: { resume: duplicatedResume },
     });
   } catch (error) {
-    console.error('Duplicate resume error:', error);
+    logError('Duplicate resume error', error, { resumeId: req.params.id, userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to duplicate resume',

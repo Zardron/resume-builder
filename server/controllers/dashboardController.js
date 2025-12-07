@@ -3,6 +3,7 @@ import JobPosting from '../models/JobPosting.js';
 import Interview from '../models/Interview.js';
 import TeamMember from '../models/TeamMember.js';
 import Message from '../models/Message.js';
+import { logError } from '../utils/logger.js';
 import Conversation from '../models/Conversation.js';
 import User from '../models/User.js';
 
@@ -53,7 +54,7 @@ export const getRecruiterStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get recruiter stats error:', error);
+    logError('Get recruiter stats error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get recruiter stats',
@@ -107,7 +108,7 @@ export const getRecruiterPipeline = async (req, res) => {
       data: applicationsByStatus,
     });
   } catch (error) {
-    console.error('Get recruiter pipeline error:', error);
+    logError('Get recruiter pipeline error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get recruiter pipeline',
@@ -151,7 +152,7 @@ export const getRecruiterActivity = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get recruiter activity error:', error);
+    logError('Get recruiter activity error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get recruiter activity',
@@ -185,7 +186,7 @@ export const getRecruiterUpcomingInterviews = async (req, res) => {
       data: upcomingInterviews,
     });
   } catch (error) {
-    console.error('Get upcoming interviews error:', error);
+    logError('Get upcoming interviews error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get upcoming interviews',
@@ -246,7 +247,7 @@ export const getApplicantOverview = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get applicant overview error:', error);
+    logError('Get applicant overview error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get applicant overview',
@@ -313,7 +314,7 @@ export const getApplicantRecommendedJobs = async (req, res) => {
       data: jobs,
     });
   } catch (error) {
-    console.error('Get recommended jobs error:', error);
+    logError('Get recommended jobs error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get recommended jobs',
@@ -353,7 +354,7 @@ export const getApplicantApplications = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get applicant applications error:', error);
+    logError('Get applicant applications error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get applicant applications',
@@ -403,7 +404,7 @@ export const getApplicantStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get applicant stats error:', error);
+    logError('Get applicant stats error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get applicant stats',

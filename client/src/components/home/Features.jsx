@@ -131,12 +131,6 @@ const CORE_FEATURES = [
   },
 ];
 
-const PRODUCT_STATS = [
-  { label: 'Resumes generated', value: '12k+' },
-  { label: 'Templates optimized', value: '15' },
-  { label: 'Avg. time to export', value: '6 mins' },
-];
-
 const WORKFLOW_STEPS = [
   {
     title: 'Personalized onboarding',
@@ -175,21 +169,9 @@ const Features = () => (
       </p>
     </div>
 
-    <div className='mt-12 grid gap-6 sm:grid-cols-3 max-w-4xl mx-auto'>
-      {PRODUCT_STATS.map((stat) => (
-        <div
-          key={stat.label}
-          className='rounded-md border border-slate-200 bg-white px-6 py-5 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900'
-        >
-          <p className='text-2xl font-semibold text-[var(--primary-color)]'>{stat.value}</p>
-          <p className='mt-1 text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400'>{stat.label}</p>
-        </div>
-      ))}
-    </div>
-
     <div className='relative mt-14'>
       <div className='size-[520px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[320px] -z-10 bg-[#2563eb]/10 dark:bg-white/10' />
-      <div className='rounded-md border border-slate-200 bg-white/80 p-8 shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 md:p-12'>
+      <div className='container mx-auto rounded-md border border-slate-200 bg-white/80 p-8 shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 md:p-12'>
         <div className='grid gap-10 md:grid-cols-2 lg:grid-cols-3 md:gap-12'>
           {CORE_FEATURES.map((feature) => (
             <article key={feature.title} className='flex h-full flex-col items-start gap-4 text-left'>
@@ -206,7 +188,7 @@ const Features = () => (
       </div>
     </div>
 
-    <div className='mt-16 rounded-md border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900'>
+    <div className='container mx-auto mt-16 rounded-md border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900'>
       <h2 className='text-xl font-semibold text-slate-900 dark:text-slate-100 text-center'>
         A guided workflow from blank page to polished export
       </h2>

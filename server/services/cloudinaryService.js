@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
+import { logError, logDebug } from '../utils/logger.js';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -42,7 +43,7 @@ export const uploadFile = async (file, options = {}) => {
       throw new Error('Invalid file type. Expected Buffer, string (path), or Readable stream.');
     }
 
-    console.log(`✅ File uploaded successfully: ${result.public_id}`);
+    logDebug('File uploaded successfully', { public_id: result.public_id });
     return {
       success: true,
       url: result.secure_url,
@@ -54,7 +55,7 @@ export const uploadFile = async (file, options = {}) => {
       created_at: result.created_at,
     };
   } catch (error) {
-    console.error('❌ Cloudinary upload error:', error);
+    logError('Cloudinary upload error', error);
     throw error;
   }
 };
@@ -110,13 +111,13 @@ export const deleteFile = async (public_id, resource_type = 'image') => {
       resource_type,
     });
     
-    console.log(`✅ File deleted: ${public_id}`);
+    logDebug('File deleted', { public_id });
     return {
       success: result.result === 'ok',
       result: result.result,
     };
   } catch (error) {
-    console.error('❌ Cloudinary delete error:', error);
+    logError('Cloudinary delete error', error);
     throw error;
   }
 };

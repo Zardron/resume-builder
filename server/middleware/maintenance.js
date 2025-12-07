@@ -1,6 +1,7 @@
 import SystemConfig from '../models/SystemConfig.js';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { logError } from '../utils/logger.js';
 
 // Middleware to check maintenance mode - super admins can bypass
 export const checkMaintenanceMode = async (req, res, next) => {
@@ -53,7 +54,7 @@ export const checkMaintenanceMode = async (req, res, next) => {
       maintenanceMode: true,
     });
   } catch (error) {
-    console.error('Maintenance mode check error:', error);
+    logError('Maintenance mode check error', error);
     // On error, allow request to continue (fail open)
     // This prevents maintenance mode from breaking the system if there's a config error
     return next();

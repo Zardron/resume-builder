@@ -15,7 +15,7 @@ const updateUserSubscriptions = async () => {
     
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    logInfo('Connected to MongoDB');
+    console.log('Connected to MongoDB');
 
     // First, migrate any old 'premium' plans to 'enterprise' (since premium was the highest tier)
     const premiumMigrationResult = await User.updateMany(

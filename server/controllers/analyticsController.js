@@ -4,6 +4,7 @@ import Application from '../models/Application.js';
 import Interview from '../models/Interview.js';
 import TeamMember from '../models/TeamMember.js';
 import Message from '../models/Message.js';
+import { logError } from '../utils/logger.js';
 
 // Get analytics overview
 export const getOverview = async (req, res) => {
@@ -125,7 +126,7 @@ export const getOverview = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get analytics overview error:', error);
+    logError('Get analytics overview error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get analytics overview',
@@ -189,7 +190,7 @@ export const getHiringFunnel = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get hiring funnel error:', error);
+    logError('Get hiring funnel error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get hiring funnel',
@@ -243,7 +244,7 @@ export const getTimeToHire = async (req, res) => {
       data: timeToHireData,
     });
   } catch (error) {
-    console.error('Get time to hire error:', error);
+    logError('Get time to hire error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get time to hire analytics',
@@ -286,7 +287,7 @@ export const getSourceAnalytics = async (req, res) => {
       data: sourceData,
     });
   } catch (error) {
-    console.error('Get source analytics error:', error);
+    logError('Get source analytics error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get source analytics',
@@ -361,7 +362,7 @@ export const getTeamPerformance = async (req, res) => {
       data: performanceData,
     });
   } catch (error) {
-    console.error('Get team performance error:', error);
+    logError('Get team performance error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get team performance',
@@ -422,7 +423,7 @@ export const getJobPerformance = async (req, res) => {
       data: jobPerformance,
     });
   } catch (error) {
-    console.error('Get job performance error:', error);
+    logError('Get job performance error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get job performance',

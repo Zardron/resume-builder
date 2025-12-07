@@ -1,6 +1,7 @@
 import Interview from '../models/Interview.js';
 import Application from '../models/Application.js';
 import User from '../models/User.js';
+import { logError } from '../utils/logger.js';
 
 // Get all interviews
 export const getInterviews = async (req, res) => {
@@ -52,7 +53,7 @@ export const getInterviews = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get interviews error:', error);
+    logError('Get interviews error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get interviews',
@@ -101,7 +102,7 @@ export const getInterview = async (req, res) => {
       data: interview,
     });
   } catch (error) {
-    console.error('Get interview error:', error);
+    logError('Get interview error', error, { interviewId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get interview',
@@ -182,7 +183,7 @@ export const createInterview = async (req, res) => {
       data: interview,
     });
   } catch (error) {
-    console.error('Create interview error:', error);
+    logError('Create interview error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to schedule interview',
@@ -231,7 +232,7 @@ export const updateInterview = async (req, res) => {
       data: interview,
     });
   } catch (error) {
-    console.error('Update interview error:', error);
+    logError('Update interview error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to update interview',
@@ -269,7 +270,7 @@ export const confirmInterview = async (req, res) => {
       data: interview,
     });
   } catch (error) {
-    console.error('Confirm interview error:', error);
+    logError('Confirm interview error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to confirm interview',
@@ -316,7 +317,7 @@ export const rescheduleInterview = async (req, res) => {
       data: interview,
     });
   } catch (error) {
-    console.error('Reschedule interview error:', error);
+    logError('Reschedule interview error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to reschedule interview',
@@ -360,7 +361,7 @@ export const cancelInterview = async (req, res) => {
       data: interview,
     });
   } catch (error) {
-    console.error('Cancel interview error:', error);
+    logError('Cancel interview error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to cancel interview',
@@ -404,7 +405,7 @@ export const deleteInterview = async (req, res) => {
       message: 'Interview deleted successfully',
     });
   } catch (error) {
-    console.error('Delete interview error:', error);
+    logError('Delete interview error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to delete interview',
@@ -484,7 +485,7 @@ export const submitFeedback = async (req, res) => {
       data: interview,
     });
   } catch (error) {
-    console.error('Submit feedback error:', error);
+    logError('Submit feedback error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to submit feedback',
@@ -537,7 +538,7 @@ export const getCalendar = async (req, res) => {
       data: interviews,
     });
   } catch (error) {
-    console.error('Get calendar error:', error);
+    logError('Get calendar error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get calendar',

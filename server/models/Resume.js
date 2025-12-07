@@ -87,7 +87,7 @@ const resumeSchema = new mongoose.Schema({
 
 // Index for faster queries
 resumeSchema.index({ userId: 1, createdAt: -1 });
-resumeSchema.index({ publicUrl: 1 });
+// Note: publicUrl already has unique: true which creates an index automatically
 
 // Method to generate public URL
 resumeSchema.methods.generatePublicUrl = function() {

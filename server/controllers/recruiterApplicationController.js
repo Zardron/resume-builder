@@ -1,5 +1,6 @@
 import RecruiterApplication from '../models/RecruiterApplication.js';
 import { sendEmail } from '../services/emailService.js';
+import { logError } from '../utils/logger.js';
 
 // Create a new recruiter application
 export const createRecruiterApplication = async (req, res) => {
@@ -74,7 +75,7 @@ export const createRecruiterApplication = async (req, res) => {
         html: emailHtml,
       });
     } catch (emailError) {
-      console.error('Failed to send confirmation email:', emailError);
+      logError('Failed to send confirmation email', emailError);
       // Don't fail the request if email fails
     }
 
@@ -84,7 +85,7 @@ export const createRecruiterApplication = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Create recruiter application error:', error);
+    logError('Create recruiter application error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to submit recruiter application',
@@ -112,7 +113,7 @@ export const getRecruiterApplications = async (req, res) => {
       data: applications,
     });
   } catch (error) {
-    console.error('Get recruiter applications error:', error);
+    logError('Get recruiter applications error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get recruiter applications',
@@ -139,7 +140,7 @@ export const getRecruiterApplication = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Get recruiter application error:', error);
+    logError('Get recruiter application error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get recruiter application',
@@ -237,7 +238,7 @@ export const updateRecruiterApplicationStatus = async (req, res) => {
         html: emailHtml,
       });
     } catch (emailError) {
-      console.error('Failed to send status update email:', emailError);
+      logError('Failed to send status update email', emailError);
       // Don't fail the request if email fails
     }
 
@@ -247,7 +248,7 @@ export const updateRecruiterApplicationStatus = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Update recruiter application status error:', error);
+    logError('Update recruiter application status error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to update recruiter application status',
@@ -273,7 +274,7 @@ export const deleteRecruiterApplication = async (req, res) => {
       message: 'Recruiter application deleted successfully',
     });
   } catch (error) {
-    console.error('Delete recruiter application error:', error);
+    logError('Delete recruiter application error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to delete recruiter application',

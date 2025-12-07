@@ -2,6 +2,7 @@ import Application from '../models/Application.js';
 import JobPosting from '../models/JobPosting.js';
 import Resume from '../models/Resume.js';
 import User from '../models/User.js';
+import { logError } from '../utils/logger.js';
 
 export const getApplications = async (req, res) => {
   try {
@@ -49,7 +50,7 @@ export const getApplications = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get applications error:', error);
+    logError('Get applications error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not fetch applications',
@@ -95,7 +96,7 @@ export const getApplication = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Get application error:', error);
+    logError('Get application error', error, { applicationId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not fetch application',
@@ -174,7 +175,7 @@ export const createApplication = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Create application error:', error);
+    logError('Create application error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not submit application',
@@ -213,7 +214,7 @@ export const updateApplicationStatus = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Update application status error:', error);
+    logError('Update application status error', error, { applicationId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not update status',
@@ -254,7 +255,7 @@ export const addNote = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Add note error:', error);
+    logError('Add note error', error, { applicationId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not add note',
@@ -298,7 +299,7 @@ export const addTags = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Add tags error:', error);
+    logError('Add tags error', error, { applicationId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not add tags',
@@ -343,7 +344,7 @@ export const rateApplication = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Rate application error:', error);
+    logError('Rate application error', error, { applicationId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not rate application',
@@ -380,7 +381,7 @@ export const withdrawApplication = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error('Withdraw application error:', error);
+    logError('Withdraw application error', error, { applicationId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not withdraw application',
@@ -463,7 +464,7 @@ export const getAIMatch = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get AI match error:', error);
+    logError('Get AI match error', error, { applicationId: req.params.id, userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not get match score',
@@ -537,7 +538,7 @@ export const bulkAction = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Bulk action error:', error);
+    logError('Bulk action error', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Could not perform bulk action',

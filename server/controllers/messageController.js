@@ -1,6 +1,7 @@
 import Conversation from '../models/Conversation.js';
 import Message from '../models/Message.js';
 import Application from '../models/Application.js';
+import { logError } from '../utils/logger.js';
 
 // Get all conversations
 export const getConversations = async (req, res) => {
@@ -36,7 +37,7 @@ export const getConversations = async (req, res) => {
       data: conversationsWithUnread,
     });
   } catch (error) {
-    console.error('Get conversations error:', error);
+    logError('Get conversations error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get conversations',
@@ -79,7 +80,7 @@ export const getConversationById = async (req, res) => {
       data: conversation,
     });
   } catch (error) {
-    console.error('Get conversation error:', error);
+    logError('Get conversation error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get conversation',
@@ -149,7 +150,7 @@ export const getOrCreateConversation = async (req, res) => {
       data: conversation,
     });
   } catch (error) {
-    console.error('Get conversation error:', error);
+    logError('Get conversation error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get conversation',
@@ -212,7 +213,7 @@ export const getMessages = async (req, res) => {
       data: messages,
     });
   } catch (error) {
-    console.error('Get messages error:', error);
+    logError('Get messages error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get messages',
@@ -286,7 +287,7 @@ export const sendMessage = async (req, res) => {
       data: message,
     });
   } catch (error) {
-    console.error('Send message error:', error);
+    logError('Send message error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to send message',
@@ -330,7 +331,7 @@ export const markMessageAsRead = async (req, res) => {
       message: 'Message marked as read',
     });
   } catch (error) {
-    console.error('Mark message as read error:', error);
+    logError('Mark message as read error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to mark message as read',
@@ -379,7 +380,7 @@ export const getMessageTemplates = async (req, res) => {
       data: templates,
     });
   } catch (error) {
-    console.error('Get message templates error:', error);
+    logError('Get message templates error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to get message templates',
@@ -470,7 +471,7 @@ export const sendTemplateMessage = async (req, res) => {
       data: message,
     });
   } catch (error) {
-    console.error('Send template message error:', error);
+    logError('Send template message error:', error, { userId: req.user?._id });
     res.status(500).json({
       success: false,
       message: 'Failed to send template message',

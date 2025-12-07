@@ -3,6 +3,7 @@ import Resume from '../models/Resume.js';
 import User from '../models/User.js';
 import { authenticate } from '../middleware/auth.js';
 import { useCredits } from './credits.js';
+import { logError } from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -77,7 +78,7 @@ router.post('/:id', authenticate, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Download resume error:', error);
+    logError('Download resume error', error, { resumeId: req.params.id, userId: req.user._id });
     res.status(500).json({
       success: false,
       message: 'Failed to process download',

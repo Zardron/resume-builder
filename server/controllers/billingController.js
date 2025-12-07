@@ -2,6 +2,7 @@ import Organization from '../models/Organization.js';
 import Payment from '../models/Payment.js';
 import TeamMember from '../models/TeamMember.js';
 import { LEGACY_ORGANIZATION_BILLING_PLANS } from '../config/pricing.js';
+import { logError } from '../utils/logger.js';
 
 // Get subscription status
 export const getSubscription = async (req, res) => {
@@ -29,7 +30,7 @@ export const getSubscription = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Get subscription error:', error);
+    logError('Get subscription error', error, { orgId: req.params.orgId });
     res.status(500).json({
       success: false,
       message: 'Failed to get subscription',
@@ -94,7 +95,7 @@ export const getPlans = async (req, res) => {
       data: plans,
     });
   } catch (error) {
-    console.error('Get plans error:', error);
+    logError('Get plans error', error, { orgId: req.params.orgId });
     res.status(500).json({
       success: false,
       message: 'Failed to get plans',
@@ -197,7 +198,7 @@ export const subscribe = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Subscribe error:', error);
+    logError('Subscribe error', error, { orgId: req.params.orgId });
     res.status(500).json({
       success: false,
       message: 'Failed to subscribe',
@@ -263,7 +264,7 @@ export const updatePlan = async (req, res) => {
       data: organization.subscription,
     });
   } catch (error) {
-    console.error('Update plan error:', error);
+    logError('Update plan error', error, { orgId: req.params.orgId });
     res.status(500).json({
       success: false,
       message: 'Failed to update plan',
@@ -302,7 +303,7 @@ export const getInvoices = async (req, res) => {
       data: invoices,
     });
   } catch (error) {
-    console.error('Get invoices error:', error);
+    logError('Get invoices error', error, { orgId: req.params.orgId });
     res.status(500).json({
       success: false,
       message: 'Failed to get invoices',
@@ -343,7 +344,7 @@ export const getPaymentMethods = async (req, res) => {
       data: paymentMethods,
     });
   } catch (error) {
-    console.error('Get payment methods error:', error);
+    logError('Get payment methods error', error, { orgId: req.params.orgId });
     res.status(500).json({
       success: false,
       message: 'Failed to get payment methods',
@@ -385,7 +386,7 @@ export const addPaymentMethod = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Add payment method error:', error);
+    logError('Add payment method error', error, { orgId: req.params.orgId });
     res.status(500).json({
       success: false,
       message: 'Failed to add payment method',

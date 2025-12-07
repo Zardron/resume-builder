@@ -139,7 +139,6 @@ const securityLogSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now,
-    index: true,
   },
 }, {
   timestamps: true,
@@ -150,10 +149,10 @@ securityLogSchema.index({ eventType: 1, timestamp: -1 });
 securityLogSchema.index({ userId: 1, timestamp: -1 });
 securityLogSchema.index({ ipAddress: 1, timestamp: -1 });
 securityLogSchema.index({ severity: 1, timestamp: -1 });
-securityLogSchema.index({ timestamp: -1 }); // For time-based queries
 securityLogSchema.index({ eventType: 1, severity: 1, timestamp: -1 }); // Composite for filtering
 
 // Auto-delete records older than 90 days (adjust based on compliance requirements)
+// TTL index on timestamp (this also serves as the single-field index for time-based queries)
 securityLogSchema.index({ timestamp: 1 }, { expireAfterSeconds: 90 * 24 * 60 * 60 });
 
 const SecurityLog = mongoose.model('SecurityLog', securityLogSchema);

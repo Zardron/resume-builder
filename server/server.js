@@ -81,7 +81,7 @@ app.use('/api', apiRateLimiter);
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/resumeiqhub')
 .then(() => {
-  logInfo('Connected to MongoDB');
+  console.log('Connected to MongoDB');
 })
 .catch((error) => {
   logError('MongoDB connection error', error);
@@ -124,10 +124,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/recruiter-applications', recruiterApplicationRoutes);
 app.use('/api/logs', logsRoutes);
 app.use('/api/ai', aiRoutes);
-console.log('✅ Admin routes registered at /api/admin');
-console.log('✅ Recruiter application routes registered at /api/recruiter-applications');
-console.log('✅ Logs routes registered at /api/logs');
-console.log('✅ AI routes registered at /api/ai');
 
 // 404 handler
 app.use((req, res) => {
@@ -160,9 +156,8 @@ initializeSocket(server);
 
 // Start server
 server.listen(PORT, () => {
-  logInfo(`Server is running on port ${PORT}`);
-  logInfo(`API available at http://localhost:${PORT}/api`);
-  logInfo(`Socket.io server initialized`);
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`API available at http://localhost:${PORT}/api`);
 });
 
 export default app;

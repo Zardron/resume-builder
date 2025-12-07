@@ -44,7 +44,6 @@ const loginAttemptSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now,
-    index: true,
   },
 }, {
   timestamps: true,
@@ -54,9 +53,9 @@ const loginAttemptSchema = new mongoose.Schema({
 loginAttemptSchema.index({ email: 1, timestamp: -1 });
 loginAttemptSchema.index({ ipAddress: 1, timestamp: -1 });
 loginAttemptSchema.index({ success: 1, timestamp: -1 });
-loginAttemptSchema.index({ timestamp: -1 }); // For time-based queries
 
 // Auto-delete records older than 90 days
+// TTL index on timestamp (this also serves as the single-field index for time-based queries)
 loginAttemptSchema.index({ timestamp: 1 }, { expireAfterSeconds: 90 * 24 * 60 * 60 });
 
 const LoginAttempt = mongoose.model('LoginAttempt', loginAttemptSchema);
