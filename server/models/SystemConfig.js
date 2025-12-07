@@ -194,6 +194,46 @@ const systemConfigSchema = new mongoose.Schema({
       default: true,
     },
   },
+  // Log retention settings
+  logRetention: {
+    // Grace period before permanently deleting soft-deleted logs (in days)
+    softDeleteGracePeriod: {
+      type: Number,
+      default: 7,
+      min: 1,
+      max: 30,
+    },
+    // Retention periods for active logs (in days)
+    auditLogsDays: {
+      type: Number,
+      default: 365, // 1 year
+      min: 30,
+      max: 3650, // 10 years max
+    },
+    clientLogsDays: {
+      type: Number,
+      default: 30,
+      min: 7,
+      max: 365,
+    },
+    securityLogsDays: {
+      type: Number,
+      default: 90, // 3 months
+      min: 30,
+      max: 730, // 2 years max
+    },
+    loginAttemptsDays: {
+      type: Number,
+      default: 90,
+      min: 30,
+      max: 730,
+    },
+    // Enable automatic cleanup
+    enableAutoCleanup: {
+      type: Boolean,
+      default: true,
+    },
+  },
 }, {
   timestamps: true,
 });

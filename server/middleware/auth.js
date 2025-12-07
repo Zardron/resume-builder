@@ -47,6 +47,27 @@ export const authenticate = async (req, res, next) => {
       });
     }
 
+    // Check if user is banned
+    if (user.isBanned) {
+      // Log banned user access attempt
+      logSecurityEvent(
+        'authorization',
+        'Banned user attempted to access protected resource',
+        {
+          severity: 'high',
+          userId: user._id,
+          userEmail: user.email,
+          statusCode: 403,
+        },
+        req
+      ).catch(() => {});
+      
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Your account has been banned. Please contact support if you believe this is an error.' 
+      });
+    }
+
     req.user = user;
     next();
   } catch (error) {
@@ -101,6 +122,13 @@ export const optionalAuth = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await User.findById(decoded.userId).select('-password');
       if (user) {
+        // Check if user is banned - reject even for optional auth
+        if (user.isBanned) {
+          return res.status(403).json({ 
+            success: false, 
+            message: 'Your account has been banned. Please contact support if you believe this is an error.' 
+          });
+        }
         req.user = user;
       }
     }
