@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: 'How it works', href: '/#how-it-works' },
   { label: 'Pricing', href: '/#pricing' },
   { label: 'Testimonials', href: '/#testimonials' },
+  { label: 'Contact Support', href: '/#contact-support' },
 ];
 
 const Navbar = () => {
@@ -192,6 +193,15 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  const handleLogoClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsMenuOpen(false);
+    }
+    // Otherwise, let the Link handle navigation normally
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -256,7 +266,7 @@ const Navbar = () => {
   const isAdminOrRecruiterRoute = isAdminRoute || isRecruiterRoute;
   const sidebarWidths = {
     collapsed: isAdminOrRecruiterRoute ? '4.5rem' : '4rem',
-    expanded: isAdminOrRecruiterRoute ? '17rem' : '16rem'
+    expanded: isAdminOrRecruiterRoute ? '16rem' : '16rem'
   };
   
   // Get sidebar state from context (only if sidebar exists)
@@ -275,7 +285,7 @@ const Navbar = () => {
     ? `fixed ${topPosition} right-0 flex items-center justify-between px-4 md:pr-6 md:pl-2 transition-all duration-300 z-50 bg-white dark:bg-gray-900 h-16 border-b border-gray-200 dark:border-gray-700 box-border ${
         isMenuOpen ? 'hidden md:flex' : 'flex'
       }`
-    : `fixed ${topPosition} left-0 right-0 flex items-center justify-between px-4 md:px-16 transition-all z-50 bg-white dark:bg-gray-900 h-16 ${
+    : `fixed ${topPosition} left-0 right-0 flex items-center justify-between px-4 md:px-16 transition-all z-50 bg-white dark:bg-gray-900 h-16 shadow-md ${
         isMenuOpen ? 'hidden md:flex' : 'flex'
       }`;
 
@@ -299,7 +309,11 @@ const Navbar = () => {
       >
         <div className="flex items-center flex-1">
           {!hasSidebar && (
-            <Link to={isLoggedIn ? '/dashboard' : '/'} className="flex items-center gap-2 no-underline">
+            <Link 
+              to={isLoggedIn ? '/dashboard' : '/'} 
+              onClick={handleLogoClick}
+              className="flex items-center gap-2 no-underline"
+            >
               <img
                 src={LOGO}
                 alt="ResumeIQHub"
@@ -441,10 +455,14 @@ const Navbar = () => {
         <div className={`flex flex-col h-full ${isLoggedIn ? 'justify-between' : 'justify-end'}`}>
           <div>
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 mb-4">
-              <div className="flex items-center gap-2">
+              <Link 
+                to={isLoggedIn ? '/dashboard' : '/'} 
+                onClick={handleLogoClick}
+                className="flex items-center gap-2 no-underline"
+              >
                 <img src={LOGO} alt="ResumeIQHub" className="w-8 h-8" />
                 <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 animate-gradient bg-[length:200%_auto] block">ResumeIQHub</span>
-              </div>
+              </Link>
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"

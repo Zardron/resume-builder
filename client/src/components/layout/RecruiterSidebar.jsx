@@ -146,7 +146,7 @@ const RecruiterSidebar = () => {
     <aside 
       className="fixed left-0 top-0 h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 z-40 shadow-sm"
       style={{ 
-        width: isCollapsed ? '4.5rem' : '17rem',
+        width: isCollapsed ? '4.5rem' : '16rem',
         transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >

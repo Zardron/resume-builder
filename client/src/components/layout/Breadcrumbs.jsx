@@ -1,12 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight, Home } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
+import { useSidebar } from '../../contexts/SidebarContext';
 
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(x => x);
   const { user } = useAppSelector((state) => state.auth);
   const userRole = user?.role || '';
+  const { isCollapsed } = useSidebar();
 
   // Filter out "admin" and "recruiter" from breadcrumbs
   const filteredPathnames = pathnames.filter(path => path !== 'admin' && path !== 'recruiter');
@@ -35,14 +37,14 @@ const Breadcrumbs = () => {
   if (filteredPathnames.length === 0) return null;
 
   return (
-    <div className="w-full border-b border-gray-200 dark:border-gray-700">
+    <div className={`w-full fixed top-16 ${isCollapsed ? 'left-16' : 'left-60'} right-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 z-0`}>
       <nav
         className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 py-3 px-6 overflow-x-auto"
         aria-label="Breadcrumb"
       >
         <Link
           to="/"
-          className="flex items-center hover:text-[var(--primary-color)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 rounded"
+          className="flex items-center hover:text-(--primary-color) transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 rounded"
           aria-label="Home"
         >
           <Home className="h-4 w-4" />

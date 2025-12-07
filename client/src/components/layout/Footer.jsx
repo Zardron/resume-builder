@@ -25,9 +25,9 @@ const SOCIAL_LINKS = [
 
 const Footer = ({ className = '' }) => (
   <footer 
-    className={`w-full bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-slate-300 ${className}`}
+    className={`w-full max-w-full bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-slate-300 overflow-x-hidden ${className}`}
   >
-    <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center justify-center text-center">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col items-center justify-center text-center w-full">
       <a href="/" className="flex items-center justify-center gap-2 mb-6">
         <img src={LOGO} alt="ResumeIQHub" className="h-8" />
         <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-500 animate-gradient bg-[length:200%_auto]" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ResumeIQHub</span>
@@ -55,8 +55,8 @@ const Footer = ({ className = '' }) => (
       </div>
     </div>
 
-    <div className="border-t border-slate-200 dark:border-slate-700">
-      <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-slate-600 dark:text-slate-400">
+    <div className="border-t border-slate-200 dark:border-slate-700 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 text-center text-xs sm:text-sm text-slate-600 dark:text-slate-400 w-full">
         <a href="/" className="hover:opacity-80 transition font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-500 animate-gradient bg-[length:200%_auto]" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           ResumeIQHub
         </a>{' '}

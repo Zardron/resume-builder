@@ -3,7 +3,8 @@ import {
   LayoutDashboard, FileText, CreditCard, Settings, 
   User, Sparkles, Briefcase, Users, Calendar, 
   MessageSquare, BarChart3, Building2, UserPlus,
-  PanelLeftClose, PanelLeftOpen, LogOut, Moon, Sun
+  PanelLeftClose, PanelLeftOpen, LogOut, Moon, Sun,
+  HelpCircle
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { logoutUser } from '../../store/slices/authSlice';
@@ -43,111 +44,166 @@ const DashboardSidebar = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Applicant menu items
-  const applicantMenuItems = [
+  // Applicant menu items organized by category
+  const applicantMenuCategories = [
     {
-      label: 'Dashboard',
-      path: '/dashboard',
-      icon: LayoutDashboard,
-      exact: true
+      label: 'Main',
+      items: [
+        {
+          label: 'Dashboard',
+          path: '/dashboard',
+          icon: LayoutDashboard,
+          exact: true
+        }
+      ]
     },
     {
-      label: 'Resume Builder',
-      path: '/dashboard/builder',
-      icon: FileText
+      label: 'Resume & Applications',
+      items: [
+        {
+          label: 'Resume Builder',
+          path: '/dashboard/builder',
+          icon: FileText
+        },
+        {
+          label: 'My Applications',
+          path: '/dashboard/applicant/applications',
+          icon: Briefcase
+        }
+      ]
     },
     {
-      label: 'My Applications',
-      path: '/dashboard/applicant/applications',
-      icon: Briefcase
+      label: 'Job Search',
+      items: [
+        {
+          label: 'Browse Jobs',
+          path: '/dashboard/applicant/jobs',
+          icon: Users
+        },
+        {
+          label: 'Interviews',
+          path: '/dashboard/applicant/interviews',
+          icon: Calendar
+        }
+      ]
     },
     {
-      label: 'Browse Jobs',
-      path: '/dashboard/applicant/jobs',
-      icon: Users
+      label: 'Communication',
+      items: [
+        {
+          label: 'Messages',
+          path: '/dashboard/applicant/messages',
+          icon: MessageSquare
+        }
+      ]
     },
     {
-      label: 'Interviews',
-      path: '/dashboard/applicant/interviews',
-      icon: Calendar
-    },
-    {
-      label: 'Messages',
-      path: '/dashboard/applicant/messages',
-      icon: MessageSquare
-    },
-    {
-      label: 'Credits',
-      path: '/dashboard/purchase',
-      icon: Sparkles
-    },
-    {
-      label: 'Subscription',
-      path: '/dashboard/subscription',
-      icon: CreditCard
+      label: 'Billing & Support',
+      items: [
+        {
+          label: 'Credits',
+          path: '/dashboard/purchase',
+          icon: Sparkles
+        },
+        {
+          label: 'Subscription',
+          path: '/dashboard/subscription',
+          icon: CreditCard
+        },
+        {
+          label: 'Help & Support',
+          path: '/dashboard/applicant/support',
+          icon: HelpCircle
+        }
+      ]
     }
   ];
 
-  // Recruiter/Admin menu items
-  const recruiterMenuItems = [
+  // Recruiter/Admin menu items organized by category
+  const recruiterMenuCategories = [
     {
-      label: 'Dashboard',
-      path: '/dashboard/recruiter',
-      icon: LayoutDashboard,
-      exact: true
+      label: 'Main',
+      items: [
+        {
+          label: 'Dashboard',
+          path: '/dashboard/recruiter',
+          icon: LayoutDashboard,
+          exact: true
+        }
+      ]
     },
     {
-      label: 'Job Postings',
-      path: '/dashboard/recruiter/jobs',
-      icon: Briefcase,
-      allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
+      label: 'Recruitment',
+      items: [
+        {
+          label: 'Job Postings',
+          path: '/dashboard/recruiter/jobs',
+          icon: Briefcase,
+          allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
+        },
+        {
+          label: 'Candidates',
+          path: '/dashboard/recruiter/candidates',
+          icon: Users,
+          allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
+        },
+        {
+          label: 'Interviews',
+          path: '/dashboard/recruiter/interviews',
+          icon: Calendar,
+          allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
+        }
+      ]
     },
     {
-      label: 'Candidates',
-      path: '/dashboard/recruiter/candidates',
-      icon: Users,
-      allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
+      label: 'Communication',
+      items: [
+        {
+          label: 'Messages',
+          path: '/dashboard/recruiter/messages',
+          icon: MessageSquare,
+          allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
+        }
+      ]
     },
     {
-      label: 'Interviews',
-      path: '/dashboard/recruiter/interviews',
-      icon: Calendar,
-      allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
-    },
-    {
-      label: 'Messages',
-      path: '/dashboard/recruiter/messages',
-      icon: MessageSquare,
-      allowedRoles: ['admin', 'manager', 'recruiter'] // Organization Admin, Recruiter Manager, Recruiter
-    },
-    // Analytics removed - now integrated into dashboard
-    {
-      label: 'Team',
-      path: '/dashboard/recruiter/team',
-      icon: UserPlus,
-      allowedRoles: ['admin', 'manager', 'super_admin'] // Organization Admin, Recruiter Manager, Super Admin
-    },
-    {
-      label: 'Organization',
-      path: '/dashboard/recruiter/organization',
-      icon: Building2,
-      allowedRoles: ['admin', 'super_admin'] // Organization Admin, Super Admin
+      label: 'Team & Organization',
+      items: [
+        {
+          label: 'Team',
+          path: '/dashboard/recruiter/team',
+          icon: UserPlus,
+          allowedRoles: ['admin', 'manager', 'super_admin'] // Organization Admin, Recruiter Manager, Super Admin
+        },
+        {
+          label: 'Organization',
+          path: '/dashboard/recruiter/organization',
+          icon: Building2,
+          allowedRoles: ['admin', 'super_admin'] // Organization Admin, Super Admin
+        }
+      ]
     },
     {
       label: 'Billing',
-      path: '/dashboard/recruiter/billing',
-      icon: CreditCard,
-      allowedRoles: ['admin'] // Only Organization Admin
+      items: [
+        {
+          label: 'Billing',
+          path: '/dashboard/recruiter/billing',
+          icon: CreditCard,
+          allowedRoles: ['admin'] // Only Organization Admin
+        }
+      ]
     }
   ];
 
-  // Determine which menu items to show (without Profile and Settings - they go in bottom menu)
-  let menuItems = [];
+  // Determine which menu categories to show (without Profile and Settings - they go in bottom menu)
+  let menuCategories = [];
   
   if (isRecruiter) {
-    // Show recruiter menu based on role permissions
-    menuItems = [
-      ...recruiterMenuItems.filter(item => {
+    // Show recruiter menu categories based on role permissions
+    menuCategories = recruiterMenuCategories.map(category => ({
+      ...category,
+      items: category.items.filter(item => {
         // Check if item has allowedRoles and user role is in the list
         if (item.allowedRoles) {
           return item.allowedRoles.includes(userRole);
@@ -158,12 +214,10 @@ const DashboardSidebar = () => {
         }
         return true;
       })
-    ];
+    })).filter(category => category.items.length > 0); // Only show categories with visible items
   } else {
-    // Show applicant menu
-    menuItems = [
-      ...applicantMenuItems
-    ];
+    // Show applicant menu categories
+    menuCategories = applicantMenuCategories;
   }
 
   return (
@@ -222,78 +276,114 @@ const DashboardSidebar = () => {
         </div>
         
         {/* Navigation - Scrollable */}
-        <nav className="flex-1 overflow-y-auto py-4 px-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-          <div className="space-y-1">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.path);
-              
-              return (
-                <div
-                  key={item.path}
-                  className={`relative group ${
-                    isCollapsed ? "flex justify-center" : ""
-                  }`}
-                >
-                  <NavLink
-                    to={item.path}
-                    end={item.exact}
-                    className={({ isActive: navActive }) =>
-                      `flex items-center ${
-                        isCollapsed ? "justify-center" : ""
-                      } rounded-md ${
-                        isCollapsed
-                          ? "py-2 px-2 w-10 h-10"
-                          : "py-2.5 px-3 w-full"
-                      } text-sm font-medium transition-all duration-200 relative ${
-                        navActive || active
-                          ? isCollapsed
-                            ? "bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400"
-                            : "bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
-                      }`
-                    }
-                    title={isCollapsed ? item.label : ""}
+        <nav className="flex-1 overflow-y-auto py-2 px-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+          <div className="space-y-2.5">
+            {menuCategories.map((category, categoryIndex) => (
+              <div key={category.label} className="space-y-0.5">
+                {/* Category Label */}
+                {!isCollapsed && (
+                  <div
+                    className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"
+                    style={{
+                      display: isCollapsed ? "none" : "block",
+                      opacity: isCollapsed ? 0 : 1,
+                      transition:
+                        "opacity 200ms ease-in-out",
+                    }}
                   >
-                    <Icon className="h-5 w-5 flex-shrink-0 transition-transform group-hover:scale-110" />
-                    <span
-                      className="ml-3 flex-1 whitespace-nowrap"
-                      style={{
-                        display: isCollapsed ? "none" : "block",
-                        opacity: isCollapsed ? 0 : 1,
-                        width: isCollapsed ? 0 : "auto",
-                        overflow: "hidden",
-                        transition:
-                          "opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
-                      }}
-                    >
-                      {item.label}
-                    </span>
+                    {category.label}
+                  </div>
+                )}
+                
+                {/* Category Items */}
+                <div className="space-y-0.5">
+                  {category.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = isActive(item.path);
+                    
+                    return (
+                      <div
+                        key={item.path}
+                        className={`relative group ${
+                          isCollapsed ? "flex justify-center" : ""
+                        }`}
+                      >
+                        <NavLink
+                          to={item.path}
+                          end={item.exact}
+                          className={({ isActive: navActive }) =>
+                            `flex items-center ${
+                              isCollapsed ? "justify-center" : ""
+                            } rounded-md ${
+                              isCollapsed
+                                ? "py-2 px-2 w-10 h-10"
+                                : "py-1.5 px-3 w-full"
+                            } text-sm font-medium transition-all duration-200 relative ${
+                              navActive || active
+                                ? isCollapsed
+                                  ? "bg-gray-100 dark:bg-gray-700/50 text-blue-600 dark:text-blue-400"
+                                  : "bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 shadow-sm"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                            }`
+                          }
+                          title={isCollapsed ? item.label : ""}
+                        >
+                          <Icon className="h-5 w-5 flex-shrink-0 transition-transform group-hover:scale-110" />
+                          <span
+                            className="ml-3 flex-1 whitespace-nowrap"
+                            style={{
+                              display: isCollapsed ? "none" : "block",
+                              opacity: isCollapsed ? 0 : 1,
+                              width: isCollapsed ? 0 : "auto",
+                              overflow: "hidden",
+                              transition:
+                                "opacity 200ms ease-in-out, width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+                            }}
+                          >
+                            {item.label}
+                          </span>
 
-                    {active && !isCollapsed && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
-                    )}
+                          {active && !isCollapsed && (
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-400 rounded-r-full" />
+                          )}
 
-                    {isCollapsed && (
-                      <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
-                        {item.label}
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
+                          {isCollapsed && (
+                            <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+                              {item.label}
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full border-4 border-transparent border-r-gray-900 dark:border-r-gray-700" />
+                            </div>
+                          )}
+                        </NavLink>
                       </div>
-                    )}
-                  </NavLink>
+                    );
+                  })}
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </nav>
       
       {/* Bottom Menu Section */}
       <div className="mt-auto border-t border-gray-200 dark:border-gray-700">
         <div
-          className={`p-2 space-y-1 ${
+          className={`p-1.5 space-y-0.5 ${
             isCollapsed ? "flex flex-col items-center" : ""
           }`}
         >
+          {/* Account Category Label */}
+          {!isCollapsed && (
+            <div
+              className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"
+              style={{
+                display: isCollapsed ? "none" : "block",
+                opacity: isCollapsed ? 0 : 1,
+                transition:
+                  "opacity 200ms ease-in-out",
+              }}
+            >
+              Account
+            </div>
+          )}
           {/* Profile */}
           <NavLink
             to="/dashboard/profile"
@@ -301,7 +391,7 @@ const DashboardSidebar = () => {
               `flex items-center ${
                 isCollapsed ? "justify-center" : ""
               } rounded-md ${
-                isCollapsed ? "py-2 px-2 w-10 h-10" : "py-2.5 px-3 w-full"
+                isCollapsed ? "py-2 px-2 w-10 h-10" : "py-1.5 px-3 w-full"
               } text-sm font-medium transition-all duration-200 relative group ${
                 isActive
                   ? isCollapsed
@@ -341,7 +431,7 @@ const DashboardSidebar = () => {
               `flex items-center ${
                 isCollapsed ? "justify-center" : ""
               } rounded-md ${
-                isCollapsed ? "py-2 px-2 w-10 h-10" : "py-2.5 px-3 w-full"
+                isCollapsed ? "py-2 px-2 w-10 h-10" : "py-1.5 px-3 w-full"
               } text-sm font-medium transition-all duration-200 relative group ${
                 isActive
                   ? isCollapsed
@@ -380,7 +470,7 @@ const DashboardSidebar = () => {
               className={`flex items-center ${
                 isCollapsed ? "justify-center" : ""
               } rounded-md ${
-                isCollapsed ? "py-2 px-2 w-10 h-10" : "py-2.5 px-3 w-full"
+                isCollapsed ? "py-2 px-2 w-10 h-10" : "py-1.5 px-3 w-full"
               } text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200 group relative`}
             >
               <Moon className="h-5 w-5 flex-shrink-0 dark:hidden" />
@@ -423,7 +513,7 @@ const DashboardSidebar = () => {
             } flex items-center ${
               isCollapsed ? "justify-center" : ""
             } rounded-md ${
-              isCollapsed ? "py-2 px-2" : "py-2.5 px-3"
+              isCollapsed ? "py-2 px-2" : "py-1.5 px-3"
             } text-sm font-medium text-[var(--error-color)] hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200 group relative`}
             title={isCollapsed ? "Logout" : ""}
           >
