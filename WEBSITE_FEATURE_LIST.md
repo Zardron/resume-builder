@@ -845,7 +845,6 @@ Build professional resumes with AI assistance, discover personalized job opportu
 ✅ Application history
 
 ### Organization Features (15+)
-✅ Team management
 ✅ Role and permission control
 ✅ Billing and subscriptions
 ✅ Organization branding
