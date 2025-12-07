@@ -45,6 +45,14 @@ const loginAttemptSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  
+  // Status (for soft delete)
+  status: {
+    type: String,
+    enum: ['active', 'deleted'],
+    default: 'active',
+    index: true,
+  },
 }, {
   timestamps: true,
 });
