@@ -63,16 +63,17 @@ const Layout = () => {
           className="flex-1 relative z-10 flex flex-col min-h-0 overflow-y-auto"
           style={{ 
             marginLeft: showSidebar ? (isCollapsed ? '4rem' : '16rem') : '0',
+            paddingTop: '4rem',
             transition: 'margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)',
             willChange: showSidebar ? 'margin-left' : 'auto'
           }}
           role="main" 
           tabIndex={-1}
         >
-          <div className="w-full">
+          <div className="w-full relative z-0">
             <Breadcrumbs />
           </div>
-          <div className="w-full flex-1">
+          <div className="flex-1 flex flex-col overflow-x-hidden">
             <Outlet />
           </div>
         </main>

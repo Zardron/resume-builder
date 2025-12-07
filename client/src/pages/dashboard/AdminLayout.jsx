@@ -14,7 +14,7 @@ const AdminLayout = () => {
         <main 
           className="flex-1 flex flex-col"
           style={{ 
-            marginLeft: isCollapsed ? '4.5rem' : '17rem',
+            marginLeft: isCollapsed ? '4.5rem' : '16rem',
             paddingTop: '2rem',
             transition: 'margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)',
             willChange: 'margin-left'

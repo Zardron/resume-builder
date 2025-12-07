@@ -326,7 +326,7 @@ export const getSystemConfig = async (req, res) => {
 
 export const updateSystemConfig = async (req, res) => {
   try {
-    const { general, security, notifications, integrations } = req.body;
+    const { general, security, notifications, integrations, logRetention } = req.body;
     
     let config = await SystemConfig.findOne();
     if (!config) {
@@ -337,6 +337,7 @@ export const updateSystemConfig = async (req, res) => {
     if (security) config.security = { ...config.security, ...security };
     if (notifications) config.notifications = { ...config.notifications, ...notifications };
     if (integrations) config.integrations = { ...config.integrations, ...integrations };
+    if (logRetention) config.logRetention = { ...config.logRetention, ...logRetention };
 
     await config.save();
 
@@ -375,7 +376,9 @@ export const getLoginAttempts = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     // Build query
-    const query = {};
+    const query = {
+      status: { $ne: 'deleted' } // Exclude deleted logs
+    };
 
     if (email) {
       query.email = { $regex: email, $options: 'i' };
@@ -505,7 +508,9 @@ export const getSecurityLogs = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     // Build query
-    const query = {};
+    const query = {
+      status: { $ne: 'deleted' } // Exclude deleted logs
+    };
 
     if (eventType) {
       query.eventType = eventType;
@@ -639,7 +644,9 @@ export const getAuditLogs = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     // Build query
-    const query = {};
+    const query = {
+      status: { $ne: 'deleted' } // Exclude deleted logs
+    };
 
     if (action) {
       query.action = action;
@@ -761,7 +768,9 @@ export const getClientLogs = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     // Build query
-    const query = {};
+    const query = {
+      status: { $ne: 'deleted' } // Exclude deleted logs
+    };
 
     if (eventType) {
       query.eventType = eventType;
@@ -1012,6 +1021,17 @@ export const toggleUserBan = async (req, res) => {
     user.isBanned = isBanned;
     await user.save();
 
+    // If user is being banned, emit socket event to logout the user if they're online
+    if (isBanned) {
+      try {
+        const socketService = await getSocketService();
+        socketService.emitUserBanned(userId);
+      } catch (error) {
+        // Silently fail if socket service is not available
+        logError('Failed to emit user ban event', error);
+      }
+    }
+
     // Log the action
     const { logAuditEvent } = await import('../utils/logger.js');
     await logAuditEvent(
@@ -1038,6 +1058,99 @@ export const toggleUserBan = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Could not update user ban status',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Get log statistics
+ */
+export const getLogStatistics = async (req, res) => {
+  try {
+    const { getLogStatistics } = await import('../services/logCleanupService.js');
+    const stats = await getLogStatistics();
+    
+    res.json({
+      success: true,
+      data: stats,
+    });
+  } catch (err) {
+    logError('Get log statistics error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not fetch log statistics',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Manual cleanup of soft-deleted logs
+ */
+export const cleanupSoftDeletedLogs = async (req, res) => {
+  try {
+    const { cleanupSoftDeletedLogs } = await import('../services/logCleanupService.js');
+    const result = await cleanupSoftDeletedLogs();
+    
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    await logAuditEvent(
+      'delete',
+      'LogCleanup',
+      {
+        userId: req.user._id,
+        description: `Manual cleanup: Permanently deleted ${result.deleted.total} soft-deleted logs`,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully cleaned up ${result.deleted.total} soft-deleted logs`,
+      data: result.deleted,
+    });
+  } catch (err) {
+    logError('Cleanup soft-deleted logs error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not cleanup logs',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Manual cleanup of old active logs
+ */
+export const cleanupOldActiveLogs = async (req, res) => {
+  try {
+    const { logType } = req.body || {};
+    const { cleanupOldActiveLogs } = await import('../services/logCleanupService.js');
+    const result = await cleanupOldActiveLogs(logType || 'all');
+    
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    await logAuditEvent(
+      'delete',
+      'LogCleanup',
+      {
+        userId: req.user._id,
+        description: `Manual cleanup: Permanently deleted ${result.deleted.total} old active logs`,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully cleaned up ${result.deleted.total} old active logs`,
+      data: result.deleted,
+    });
+  } catch (err) {
+    logError('Cleanup old active logs error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not cleanup logs',
       error: err.message,
     });
   }
@@ -1350,6 +1463,522 @@ export const getPlatformStats = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Could not fetch platform statistics',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Delete (soft delete) a login attempt
+ */
+export const deleteLoginAttempt = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const attempt = await LoginAttempt.findById(id);
+    if (!attempt) {
+      return res.status(404).json({
+        success: false,
+        message: 'Login attempt not found',
+      });
+    }
+
+    attempt.status = 'deleted';
+    await attempt.save();
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    await logAuditEvent(
+      'delete',
+      'LoginAttempt',
+      {
+        userId: req.user._id,
+        resourceId: id,
+        description: `Deleted login attempt for ${attempt.email}`,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: 'Login attempt deleted successfully',
+    });
+  } catch (err) {
+    logError('Delete login attempt error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not delete login attempt',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Delete (soft delete) a security log
+ */
+export const deleteSecurityLog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const log = await SecurityLog.findById(id);
+    if (!log) {
+      return res.status(404).json({
+        success: false,
+        message: 'Security log not found',
+      });
+    }
+
+    log.status = 'deleted';
+    await log.save();
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    await logAuditEvent(
+      'delete',
+      'SecurityLog',
+      {
+        userId: req.user._id,
+        resourceId: id,
+        description: `Deleted security log: ${log.eventType} (${log.severity})`,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: 'Security log deleted successfully',
+    });
+  } catch (err) {
+    logError('Delete security log error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not delete security log',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Delete (soft delete) an audit log
+ */
+export const deleteAuditLog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const log = await AuditLog.findById(id);
+    if (!log) {
+      return res.status(404).json({
+        success: false,
+        message: 'Audit log not found',
+      });
+    }
+
+    log.status = 'deleted';
+    await log.save();
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    await logAuditEvent(
+      'delete',
+      'AuditLog',
+      {
+        userId: req.user._id,
+        resourceId: id,
+        description: `Deleted audit log: ${log.action} on ${log.resourceType}`,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: 'Audit log deleted successfully',
+    });
+  } catch (err) {
+    logError('Delete audit log error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not delete audit log',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Delete (soft delete) a client log
+ */
+export const deleteClientLog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const log = await ClientLog.findById(id);
+    if (!log) {
+      return res.status(404).json({
+        success: false,
+        message: 'Client log not found',
+      });
+    }
+
+    log.status = 'deleted';
+    await log.save();
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    await logAuditEvent(
+      'delete',
+      'ClientLog',
+      {
+        userId: req.user._id,
+        resourceId: id,
+        description: `Deleted client log: ${log.eventType} (${log.severity})`,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: 'Client log deleted successfully',
+    });
+  } catch (err) {
+    logError('Delete client log error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not delete client log',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Bulk delete login attempts by date range
+ */
+export const bulkDeleteLoginAttempts = async (req, res) => {
+  try {
+    const { days, startDate, endDate } = req.query;
+    
+    let query = {
+      status: { $ne: 'deleted' },
+    };
+
+    // If custom date range is provided
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include the entire end date
+      
+      query.timestamp = {
+        $gte: start,
+        $lte: end,
+      };
+    } else if (days !== undefined) {
+      // Use days parameter (for preset options)
+      const daysNum = parseInt(days, 10);
+      
+      if (daysNum < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid days parameter',
+        });
+      }
+
+      const cutoffDate = new Date();
+      if (daysNum > 0) {
+        cutoffDate.setDate(cutoffDate.getDate() - daysNum);
+      }
+      cutoffDate.setHours(0, 0, 0, 0);
+
+      query.timestamp = { $gte: cutoffDate };
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Either days or startDate/endDate must be provided',
+      });
+    }
+
+    const result = await LoginAttempt.updateMany(
+      query,
+      {
+        $set: { status: 'deleted' },
+      }
+    );
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    const description = startDate && endDate
+      ? `Bulk deleted ${result.modifiedCount} login attempts from ${startDate} to ${endDate}`
+      : `Bulk deleted ${result.modifiedCount} login attempts from past ${days} day(s)`;
+    
+    await logAuditEvent(
+      'delete',
+      'LoginAttempt',
+      {
+        userId: req.user._id,
+        description,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${result.modifiedCount} login attempt(s)`,
+      deletedCount: result.modifiedCount,
+    });
+  } catch (err) {
+    logError('Bulk delete login attempts error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not bulk delete login attempts',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Bulk delete security logs by date range
+ */
+export const bulkDeleteSecurityLogs = async (req, res) => {
+  try {
+    const { days, startDate, endDate } = req.query;
+    
+    let query = {
+      status: { $ne: 'deleted' },
+    };
+
+    // If custom date range is provided
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include the entire end date
+      
+      query.timestamp = {
+        $gte: start,
+        $lte: end,
+      };
+    } else if (days !== undefined) {
+      // Use days parameter (for preset options)
+      const daysNum = parseInt(days, 10);
+      
+      if (daysNum < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid days parameter',
+        });
+      }
+
+      const cutoffDate = new Date();
+      if (daysNum > 0) {
+        cutoffDate.setDate(cutoffDate.getDate() - daysNum);
+      }
+      cutoffDate.setHours(0, 0, 0, 0);
+
+      query.timestamp = { $gte: cutoffDate };
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Either days or startDate/endDate must be provided',
+      });
+    }
+
+    const result = await SecurityLog.updateMany(
+      query,
+      {
+        $set: { status: 'deleted' },
+      }
+    );
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    const description = startDate && endDate
+      ? `Bulk deleted ${result.modifiedCount} security logs from ${startDate} to ${endDate}`
+      : `Bulk deleted ${result.modifiedCount} security logs from past ${days} day(s)`;
+    
+    await logAuditEvent(
+      'delete',
+      'SecurityLog',
+      {
+        userId: req.user._id,
+        description,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${result.modifiedCount} security log(s)`,
+      deletedCount: result.modifiedCount,
+    });
+  } catch (err) {
+    logError('Bulk delete security logs error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not bulk delete security logs',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Bulk delete audit logs by date range
+ */
+export const bulkDeleteAuditLogs = async (req, res) => {
+  try {
+    const { days, startDate, endDate } = req.query;
+    
+    let query = {
+      status: { $ne: 'deleted' },
+    };
+
+    // If custom date range is provided
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include the entire end date
+      
+      query.timestamp = {
+        $gte: start,
+        $lte: end,
+      };
+    } else if (days !== undefined) {
+      // Use days parameter (for preset options)
+      const daysNum = parseInt(days, 10);
+      
+      if (daysNum < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid days parameter',
+        });
+      }
+
+      const cutoffDate = new Date();
+      if (daysNum > 0) {
+        cutoffDate.setDate(cutoffDate.getDate() - daysNum);
+      }
+      cutoffDate.setHours(0, 0, 0, 0);
+
+      query.timestamp = { $gte: cutoffDate };
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Either days or startDate/endDate must be provided',
+      });
+    }
+
+    const result = await AuditLog.updateMany(
+      query,
+      {
+        $set: { status: 'deleted' },
+      }
+    );
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    const description = startDate && endDate
+      ? `Bulk deleted ${result.modifiedCount} audit logs from ${startDate} to ${endDate}`
+      : `Bulk deleted ${result.modifiedCount} audit logs from past ${days} day(s)`;
+    
+    await logAuditEvent(
+      'delete',
+      'AuditLog',
+      {
+        userId: req.user._id,
+        description,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${result.modifiedCount} audit log(s)`,
+      deletedCount: result.modifiedCount,
+    });
+  } catch (err) {
+    logError('Bulk delete audit logs error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not bulk delete audit logs',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * Bulk delete client logs by date range
+ */
+export const bulkDeleteClientLogs = async (req, res) => {
+  try {
+    const { days, startDate, endDate } = req.query;
+    
+    let query = {
+      status: { $ne: 'deleted' },
+    };
+
+    // If custom date range is provided
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include the entire end date
+      
+      query.timestamp = {
+        $gte: start,
+        $lte: end,
+      };
+    } else if (days !== undefined) {
+      // Use days parameter (for preset options)
+      const daysNum = parseInt(days, 10);
+      
+      if (daysNum < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid days parameter',
+        });
+      }
+
+      const cutoffDate = new Date();
+      if (daysNum > 0) {
+        cutoffDate.setDate(cutoffDate.getDate() - daysNum);
+      }
+      cutoffDate.setHours(0, 0, 0, 0);
+
+      query.timestamp = { $gte: cutoffDate };
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Either days or startDate/endDate must be provided',
+      });
+    }
+
+    const result = await ClientLog.updateMany(
+      query,
+      {
+        $set: { status: 'deleted' },
+      }
+    );
+
+    // Log the action
+    const { logAuditEvent } = await import('../utils/logger.js');
+    const description = startDate && endDate
+      ? `Bulk deleted ${result.modifiedCount} client logs from ${startDate} to ${endDate}`
+      : `Bulk deleted ${result.modifiedCount} client logs from past ${days} day(s)`;
+    
+    await logAuditEvent(
+      'delete',
+      'ClientLog',
+      {
+        userId: req.user._id,
+        description,
+      },
+      req
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${result.modifiedCount} client log(s)`,
+      deletedCount: result.modifiedCount,
+    });
+  } catch (err) {
+    logError('Bulk delete client logs error', err);
+    res.status(500).json({
+      success: false,
+      message: 'Could not bulk delete client logs',
       error: err.message,
     });
   }

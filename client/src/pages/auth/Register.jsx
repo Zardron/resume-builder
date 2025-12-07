@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftIcon } from 'lucide-react';
 import InputField from '../../components/forms/InputField';
-import SelectField from '../../components/forms/SelectField';
+import AutoCompleteField from '../../components/forms/AutoCompleteField';
+import DropDownField from '../../components/forms/DropDownField';
 import AuthSidebar from '../../components/layout/AuthSidebar';
 import ThemeSwitcher from '../../utils/ThemeSwitcher';
 import TermsModal from '../../components/ui/TermsModal';
@@ -216,7 +217,7 @@ const Register = () => {
                         : 'bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700'
                     }`}
                   >
-                    Team / Organization
+                    Organization
                   </button>
                 </div>
               </div>
@@ -280,7 +281,7 @@ const Register = () => {
                     onChange={(value) => handleInputChange('organizationName', value)}
                   />
 
-                  <SelectField
+                  <DropDownField
                     placeholder="Industry (Optional)"
                     icon="briefcase"
                     name="industry"
@@ -309,7 +310,7 @@ const Register = () => {
                     ]}
                   />
 
-                  <SelectField
+                  <DropDownField
                     placeholder="Company Size"
                     icon="building"
                     name="size"

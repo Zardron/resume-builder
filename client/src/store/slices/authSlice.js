@@ -96,11 +96,26 @@ export const loginUser = createAsyncThunk(
         requiresVerification: response.requiresVerification || false,
       });
     } catch (error) {
-      // Handle 403 status (email not verified)
-      // Check both the error object and response status
+      // Check for ban error FIRST (before verification check)
+      const isBanError = 
+        error.isBanned === true ||
+        (error.status === 403 && error.message && typeof error.message === 'string' && (
+          error.message.toLowerCase().includes('banned') || 
+          error.message.toLowerCase().includes('ban')
+        ));
+      
+      if (isBanError) {
+        return rejectWithValue({
+          message: error.message || 'Your account has been banned. Please contact support if you believe this is an error.',
+          requiresVerification: false,
+          isBanned: true,
+        });
+      }
+      
+      // Handle 403 status (email not verified) - only if not a ban error
       const isVerificationError = 
         error.requiresVerification === true ||
-        error.status === 403 ||
+        (error.status === 403 && !isBanError) ||
         (error.response && error.response.requiresVerification === true) ||
         (error.message && typeof error.message === 'string' && (
           error.message.toLowerCase().includes('verify') || 

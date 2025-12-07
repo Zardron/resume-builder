@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, Mail, UserPlus, X, Plus, Loader2, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
 import { adminAPI } from '../../services/api';
 import InputField from '../../components/forms/InputField';
-import SelectField from '../../components/forms/SelectField';
+import DropDownField from '../../components/forms/DropDownField';
 import { useAppSelector } from '../../store/hooks';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 
@@ -312,7 +312,7 @@ const CreateTeamOrganizationAccount = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Company Size
               </label>
-              <SelectField
+              <DropDownField
                 value={organizationData.size}
                 onChange={(value) => handleOrganizationChange('size', value)}
                 options={[
@@ -346,7 +346,7 @@ const CreateTeamOrganizationAccount = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Subscription Plan
               </label>
-              <SelectField
+              <DropDownField
                 value={organizationData.subscriptionPlan}
                 onChange={(value) => handleOrganizationChange('subscriptionPlan', value)}
                 options={[
@@ -446,7 +446,7 @@ const CreateTeamOrganizationAccount = () => {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Role
                     </label>
-                    <SelectField
+                    <DropDownField
                       value={member.role}
                       onChange={(value) => handleMemberChange(member.id, 'role', value)}
                       options={[

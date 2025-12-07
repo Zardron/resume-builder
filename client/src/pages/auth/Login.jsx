@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftIcon, Eye, EyeOff } from 'lucide-react';
 import InputField from '../../components/forms/InputField';
@@ -19,7 +19,7 @@ const REMEMBER_ME_KEY = 'rememberedEmail';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const { state, search } = useLocation();
   const fromHome = state?.fromHome || false;
   const dispatch = useAppDispatch();
   
@@ -36,6 +36,56 @@ const Login = () => {
     }
   }, []);
 
+  // Show ban message if redirected due to ban
+  useEffect(() => {
+    const urlParams = new URLSearchParams(search);
+    const hasBannedParam = urlParams.get('banned') === 'true';
+    const banMessage = state?.message || (hasBannedParam
+      ? 'Your account has been banned. Please contact support if you believe this is an error.'
+      : null);
+    
+    // If banned param is present, clear any previous sessionStorage flag to allow showing notification
+    // This handles the case where user is redirected after being banned
+    const banNotificationKey = 'ban_notification_shown';
+    if (hasBannedParam) {
+      // Clear the flag when banned param is present (user was redirected)
+      sessionStorage.removeItem(banNotificationKey);
+    }
+    
+    const alreadyShown = sessionStorage.getItem(banNotificationKey);
+    
+    if (banMessage && !alreadyShown && !banNotificationShownRef.current) {
+      banNotificationShownRef.current = true;
+      sessionStorage.setItem(banNotificationKey, 'true');
+      
+      // Use setTimeout to ensure Redux store is ready and notification can render
+      setTimeout(() => {
+        dispatch(addNotification({
+          type: 'error',
+          title: 'Account Banned',
+          message: banMessage,
+          duration: 0, // Don't auto-dismiss
+          action: {
+            label: 'Appeal Ban',
+            href: '/contact-support',
+          },
+        }));
+      }, 100);
+      
+      // Clear the banned param from URL after notification is dispatched
+      if (hasBannedParam) {
+        setTimeout(() => {
+          urlParams.delete('banned');
+          const newSearch = urlParams.toString();
+          navigate(
+            { search: newSearch ? `?${newSearch}` : '' },
+            { replace: true, state: state ? { ...state, message: undefined } : undefined }
+          );
+        }, 200);
+      }
+    }
+  }, [state, search, dispatch, navigate]);
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: false, password: false });
   const [rememberMe, setRememberMe] = useState(false);
@@ -44,6 +94,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [requiresVerification, setRequiresVerification] = useState(false);
   const [isResendingVerification, setIsResendingVerification] = useState(false);
+  const banNotificationShownRef = useRef(false);
 
   const handleInputChange = (name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -154,16 +205,43 @@ const Login = () => {
         const redirectTo = state?.from?.pathname || '/dashboard';
         navigate(redirectTo, { replace: true });
       } catch (error) {
+        // When using .unwrap(), the rejected value from rejectWithValue is thrown directly
+        // So error IS the object directly: { message, requiresVerification, email, isBanned }
+        const errorObj = typeof error === 'object' ? error : { message: error };
+        
+        // Check if user is banned FIRST (before verification check)
+        const isBanError = 
+          errorObj.isBanned === true ||
+          (errorObj.message && typeof errorObj.message === 'string' && (
+            errorObj.message.toLowerCase().includes('banned') || 
+            errorObj.message.toLowerCase().includes('ban')
+          ));
+        
+        if (isBanError) {
+          // Only show notification if not already shown
+          if (!banNotificationShownRef.current) {
+            banNotificationShownRef.current = true;
+            dispatch(addNotification({
+              type: 'error',
+              title: 'Account Banned',
+              message: errorObj.message || 'Your account has been banned. Please contact support if you believe this is an error.',
+              duration: 5000, 
+              action: {
+                label: 'Contact Support',
+                href: '/contact-support',
+              },
+            }));
+          }
+          setErrorMessage(errorObj.message || 'Your account has been banned.');
+          setIsLoading(false);
+          return;
+        }
+        
         // Preserve email address on error - capture it immediately
         const currentEmail = formData.email;
         const currentPassword = formData.password;
         
-        // Check if error is due to unverified email
-        // When using .unwrap(), the rejected value from rejectWithValue is thrown directly
-        // So error IS the object directly: { message, requiresVerification, email }
-        const errorObj = typeof error === 'object' ? error : { message: error };
-        
-        // Check for verification error
+        // Check if error is due to unverified email (only if not a ban error)
         const isVerificationError = 
           errorObj.requiresVerification === true ||
           (errorObj.message && typeof errorObj.message === 'string' && (

@@ -43,11 +43,19 @@ router.put('/system-config', adminController.updateSystemConfig);
 
 // Login attempts routes
 router.get('/login-attempts', adminController.getLoginAttempts);
+router.delete('/login-attempts/:id', adminController.deleteLoginAttempt);
+router.delete('/login-attempts', adminController.bulkDeleteLoginAttempts);
 
 // Security logging routes
 router.get('/security-logs', adminController.getSecurityLogs);
+router.delete('/security-logs/:id', adminController.deleteSecurityLog);
+router.delete('/security-logs', adminController.bulkDeleteSecurityLogs);
 router.get('/audit-logs', adminController.getAuditLogs);
+router.delete('/audit-logs/:id', adminController.deleteAuditLog);
+router.delete('/audit-logs', adminController.bulkDeleteAuditLogs);
 router.get('/client-logs', adminController.getClientLogs);
+router.delete('/client-logs/:id', adminController.deleteClientLog);
+router.delete('/client-logs', adminController.bulkDeleteClientLogs);
 
 // User management routes
 router.get('/users', adminController.getAllUsers);
@@ -55,6 +63,11 @@ router.patch('/users/:userId/ban', adminController.toggleUserBan);
 
 // Platform statistics route
 router.get('/platform-stats', adminController.getPlatformStats);
+
+// Log management routes
+router.get('/logs/statistics', adminController.getLogStatistics);
+router.post('/logs/cleanup/soft-deleted', adminController.cleanupSoftDeletedLogs);
+router.post('/logs/cleanup/old-active', adminController.cleanupOldActiveLogs);
 
 export default router;
 

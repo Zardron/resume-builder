@@ -362,6 +362,16 @@ router.post('/login', authRateLimiter, async (req, res) => {
       });
     }
 
+    // Check if user is banned
+    if (user.isBanned) {
+      logSecurity('Login attempt by banned user', { userId: user._id, email: emailValidation.value });
+      await saveLoginAttempt(emailValidation.value, user._id, req, false, 'user_banned');
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been banned. Please contact support if you believe this is an error.',
+      });
+    }
+
     // Check maintenance mode - allow super admins to login even during maintenance
     const systemConfig = await SystemConfig.getConfig();
     if (systemConfig.general.maintenanceMode && user.role !== 'super_admin') {
