@@ -100,7 +100,7 @@ const EmailInputField = ({
           ref={inputRef}
           type="email"
           placeholder={placeholder}
-          className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs outline-none text-sm w-full h-full px-4 py-3"
+          className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs outline-none text-sm w-full h-full py-3"
           autoComplete="off"
           value={value || ''}
           onChange={(e) => handleInputChange(e.target.value)}

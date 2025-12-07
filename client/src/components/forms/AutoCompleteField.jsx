@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Building2, Briefcase } from 'lucide-react';
+import { ChevronDown, Building2, Briefcase, Tag } from 'lucide-react';
 
 const ICON_MAP = {
   building: Building2,
   briefcase: Briefcase,
+  tag: Tag,
+  category: Tag,
 };
 
 const iconClassName = 'w-4 h-4 text-gray-500/80 dark:text-gray-300';
 
-const SelectField = ({
+const AutoCompleteField = ({
   placeholder,
   value,
   onChange,
@@ -79,6 +81,9 @@ const SelectField = ({
   };
 
   const displayValue = getDisplayValue();
+  
+  // Show selected value when dropdown is open but search term is empty, otherwise show search term
+  const inputValue = isOpen ? (searchTerm || displayValue) : displayValue;
 
   return (
     <div className="relative w-full" ref={containerRef}>
@@ -99,8 +104,8 @@ const SelectField = ({
           ref={inputRef}
           type="text"
           placeholder={placeholder}
-          className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs outline-none text-sm w-full h-full px-4 py-3 cursor-pointer"
-          value={isOpen ? searchTerm : displayValue}
+          className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs outline-none text-sm w-full h-full py-3 cursor-pointer"
+          value={inputValue}
           onChange={handleInputChange}
           onFocus={handleFocus}
           readOnly={!isOpen}
@@ -128,8 +133,8 @@ const SelectField = ({
                   onClick={() => handleSelect(option)}
                   className={`w-full text-left px-4 py-2.5 text-sm rounded-md transition-colors ${
                     isSelected
-                      ? 'bg-[var(--primary-color)] bg-opacity-10 text-[var(--primary-color)] font-medium'
-                      : 'text-gray-900 dark:text-gray-100 hover:bg-[var(--primary-color)] hover:bg-opacity-10'
+                      ? 'bg-[var(--primary-color)] text-white font-medium'
+                      : 'text-gray-900 dark:text-slate-100 hover:bg-[var(--primary-color)]/10 hover:bg-opacity-10'
                   }`}
                 >
                   {label}
@@ -143,5 +148,4 @@ const SelectField = ({
   );
 };
 
-export default SelectField;
-
+export default AutoCompleteField;

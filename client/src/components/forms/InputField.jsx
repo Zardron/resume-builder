@@ -49,6 +49,7 @@ const InputField = ({
   options, // Array of options for autocomplete
   getOptionLabel, // Function to get display label from option (for objects)
   getOptionValue, // Function to get value from option (for objects)
+  required = false,
 }) => {
   const IconComponent = icon ? ICON_MAP[icon] : null;
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -148,7 +149,7 @@ const InputField = ({
           id={id || name}
           type={type}
           placeholder={placeholder}
-          className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs outline-none text-sm w-full h-full px-4 py-3"
+          className="relative bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs outline-none text-sm w-full h-full py-3"
           autoComplete={autoComplete || (type === 'email' ? 'email' : 'off')}
           inputMode={inputMode}
           value={value || ''}
@@ -157,6 +158,7 @@ const InputField = ({
           onFocus={handleFocus}
           onKeyDown={handleKeyDown}
           name={name}
+          required={required}
         />
 
         {options && (
