@@ -11,6 +11,7 @@ import TemplateShowcase from '../../components/home/TemplateShowcase';
 import Pricing from '../../components/home/Pricing';
 import TestimonialForm from '../../components/home/TestimonialForm';
 import { TestimonialsProvider } from '../../components/home/testimonials/TestimonialsContext';
+import ContactSupportSection from '../../components/home/ContactSupportSection';
 import BackgroundEffects from '../../components/common/BackgroundEffects';
 import SkipToContent from '../../components/common/SkipToContent';
 
@@ -41,7 +42,7 @@ const Home = () => {
       <BackgroundEffects />
       <Banner />
       <Navbar />
-      <main id="main-content" tabIndex={-1}>
+      <main id="main-content" tabIndex={-1} className="overflow-x-hidden w-full max-w-full">
       <HeroSection />
       <Features />
       <TemplateShowcase />
@@ -51,13 +52,14 @@ const Home = () => {
         <Testimonials />
         <TestimonialForm />
       </TestimonialsProvider>
+      <ContactSupportSection />
       </main>
       <Footer />
 
       {hasScrolled && (
         <button
           onClick={scrollToTop}
-          className={`fixed bottom-8 right-6 p-2 border border-[var(--primary-color)] bg-white/90 hover:bg-white text-gray-900 rounded-md shadow-md transition-all duration-300 cursor-pointer ${
+          className={`fixed bottom-4 sm:bottom-8 right-4 sm:right-6 p-2 border border-[var(--primary-color)] bg-white/90 hover:bg-white text-gray-900 rounded-md shadow-md transition-all duration-300 cursor-pointer z-50 ${
             isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
           aria-label="Scroll to top"

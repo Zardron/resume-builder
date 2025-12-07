@@ -1,7 +1,9 @@
 import Conversation from '../models/Conversation.js';
 import Message from '../models/Message.js';
 import Application from '../models/Application.js';
+import User from '../models/User.js';
 import { logError } from '../utils/logger.js';
+import { emitNewMessage, emitConversationUpdate } from '../services/socketService.js';
 
 // Get all conversations
 export const getConversations = async (req, res) => {
@@ -84,6 +86,143 @@ export const getConversationById = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to get conversation',
+      error: error.message,
+    });
+  }
+};
+
+// Create a new conversation
+export const createConversation = async (req, res) => {
+  try {
+    const { recipientId, applicationId, organizationId } = req.body;
+    const user = req.user;
+
+    let finalRecipientId = recipientId;
+    let finalOrganizationId = organizationId;
+
+    // If applicationId is provided, get the application and determine recipient
+    if (applicationId && !recipientId) {
+      const application = await Application.findById(applicationId)
+        .populate('applicantId')
+        .populate('organizationId');
+
+      if (!application) {
+        return res.status(404).json({
+          success: false,
+          message: 'Application not found',
+        });
+      }
+
+      // Check access
+      const isApplicant = application.applicantId._id.toString() === user._id.toString();
+      const isRecruiter = application.organizationId._id.toString() === user.organizationId?.toString();
+
+      if (!isApplicant && !isRecruiter) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied',
+        });
+      }
+
+      finalOrganizationId = application.organizationId._id;
+
+      // If user is applicant, find a recruiter from the organization
+      if (isApplicant) {
+        const recruiter = await User.findOne({
+          organizationId: application.organizationId._id,
+          userType: 'recruiter',
+          role: { $in: ['recruiter', 'admin'] },
+        });
+
+        if (!recruiter) {
+          return res.status(404).json({
+            success: false,
+            message: 'No recruiter found for this organization',
+          });
+        }
+
+        finalRecipientId = recruiter._id;
+      } else {
+        // If user is recruiter, the recipient is the applicant
+        finalRecipientId = application.applicantId._id;
+      }
+    }
+
+    if (!finalRecipientId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Recipient ID is required',
+      });
+    }
+
+    // Check if recipient exists
+    const recipient = await User.findById(finalRecipientId);
+    if (!recipient) {
+      return res.status(404).json({
+        success: false,
+        message: 'Recipient not found',
+      });
+    }
+
+    // Determine roles
+    const userRole = user.userType === 'recruiter' ? 'recruiter' : 'applicant';
+    const recipientRole = recipient.userType === 'recruiter' ? 'recruiter' : 'applicant';
+
+    // Check if conversation already exists
+    let conversation = await Conversation.findOne({
+      'participants.userId': { $all: [user._id, finalRecipientId] },
+      ...(applicationId && { 'relatedTo.applicationId': applicationId }),
+    });
+
+    if (conversation) {
+      // Populate before returning
+      await conversation.populate('participants.userId', 'fullName email profile.avatar');
+      return res.json({
+        success: true,
+        data: conversation,
+        existing: true,
+      });
+    }
+
+    // Create new conversation
+    conversation = new Conversation({
+      participants: [
+        {
+          userId: user._id,
+          role: userRole,
+          ...(user.organizationId && { organizationId: user.organizationId }),
+        },
+        {
+          userId: finalRecipientId,
+          role: recipientRole,
+          ...(finalOrganizationId && { organizationId: finalOrganizationId }),
+        },
+      ],
+      relatedTo: applicationId
+        ? {
+            type: 'application',
+            applicationId,
+          }
+        : {
+            type: 'general',
+          },
+    });
+
+    await conversation.save();
+
+    // Populate for response
+    await conversation.populate('participants.userId', 'fullName email profile.avatar');
+
+    res.status(201).json({
+      success: true,
+      data: conversation,
+      existing: false,
+    });
+  } catch (error) {
+    logError('Create conversation error:', error, { userId: req.user?._id });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create conversation',
       error: error.message,
     });
   }
@@ -275,11 +414,21 @@ export const sendMessage = async (req, res) => {
 
     await message.save();
 
+    // Populate sender info for response
+    await message.populate('senderId', 'fullName email profile.avatar');
+
     // Update conversation
     conversation.lastMessageAt = new Date();
     const currentUnread = conversation.unreadCount.get(recipient.userId.toString()) || 0;
     conversation.unreadCount.set(recipient.userId.toString(), currentUnread + 1);
     await conversation.save();
+
+    // Emit socket event for real-time update
+    emitNewMessage(conversationId, message.toObject());
+    emitConversationUpdate(conversationId, {
+      lastMessageAt: conversation.lastMessageAt,
+      unreadCount: Object.fromEntries(conversation.unreadCount),
+    });
 
     res.status(201).json({
       success: true,
@@ -324,6 +473,11 @@ export const markMessageAsRead = async (req, res) => {
     if (conversation) {
       conversation.unreadCount.set(req.user._id.toString(), 0);
       await conversation.save();
+      
+      // Emit socket event for real-time update
+      emitConversationUpdate(message.conversationId.toString(), {
+        unreadCount: Object.fromEntries(conversation.unreadCount),
+      });
     }
 
     res.json({

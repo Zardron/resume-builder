@@ -9,7 +9,7 @@ const spotlightAvatars = [
 
 const InfoPanel = () => {
   return (
-    <div className="relative overflow-hidden rounded-md border border-white/60 bg-white/80 p-10 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/80">
+    <div className="relative overflow-hidden rounded-md border border-white/60 bg-white/80 p-4 sm:p-6 md:p-10 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/80">
       <div className="relative z-10 flex h-full flex-col justify-between gap-10">
         <div className="space-y-4">
           <span className="inline-flex items-center rounded-md border border-sky-500/20 bg-sky-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-sky-600 dark:border-sky-400/30 dark:bg-sky-500/15 dark:text-sky-300">

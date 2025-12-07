@@ -116,7 +116,7 @@ const HeroSection = () => (
           Where Talent Meets Opportunity
         </h1>
         <p className="text-center md:text-left text-sm text-slate-600 dark:text-slate-300 max-w-lg mt-2">
-          The complete recruitment SaaS platform that seamlessly connects recruiters and job seekers. Build professional resumes with AI assistance, post jobs, screen candidates, schedule interviews, and make hiring decisions—all in one unified platform.
+          The complete recruitment SaaS platform that seamlessly connects recruiters and job seekers. Build professional resumes with 16+ templates and 20+ AI features, post and manage jobs, screen candidates with AI matching, schedule interviews, collaborate with your team, and make data-driven hiring decisions—all in one unified platform.
         </p>
 
         <div className="flex items-center gap-4 mt-8 text-sm">
@@ -151,7 +151,7 @@ const HeroSection = () => (
           Thousands of companies hire smarter, and job seekers find opportunities faster
         </h2>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-          ResumeIQHub unifies resume building, job posting, candidate screening, interview scheduling, messaging, and analytics into a single streamlined platform—so you can focus on what matters: connecting talent with opportunity.
+          ResumeIQHub unifies AI-powered resume building with 16+ templates and 20+ AI features, job posting and management, AI candidate matching and screening, interview scheduling with calendar integration, real-time messaging, team collaboration, and comprehensive analytics into a single streamlined platform—so you can focus on what matters: connecting talent with opportunity.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3 md:grid-cols-5">

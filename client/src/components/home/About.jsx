@@ -6,7 +6,7 @@ const features = [
   {
     title: "For Recruiters & Hiring Teams",
     description:
-      "Transform your hiring process with AI-powered candidate matching, streamlined pipeline management, collaborative team workflows, and comprehensive analytics that help you hire faster and smarter.",
+      "Transform your hiring process with AI-powered candidate matching, streamlined pipeline management, collaborative team workflows, unlimited job postings (Professional+ plans), interview scheduling with calendar integration, real-time messaging, and comprehensive analytics that help you hire faster and smarter.",
     svg: (
       <svg
         width="24"
@@ -28,7 +28,7 @@ const features = [
   {
     title: "For Job Seekers",
     description:
-      "Build professional resumes with AI assistance, discover personalized job opportunities, track your applications in real-time, and communicate directly with recruiters—all in one platform.",
+      "Build professional resumes with 16+ ATS-optimized templates and 20+ AI features including resume parsing, ATS optimization, content enhancement, and grammar checking. Discover personalized job opportunities, apply with one click, track your applications in real-time, schedule interviews, and communicate directly with recruiters—all in one platform.",
     svg: (
       <svg
         width="24"
@@ -50,7 +50,7 @@ const features = [
   {
     title: "Unified Platform Benefits",
     description:
-      "All-in-one solution combining resume building, job posting, candidate screening, interview scheduling, messaging, analytics, team collaboration, and billing—no need for multiple tools.",
+      "All-in-one solution combining AI-powered resume building with 16+ templates and 20+ AI features, job posting and discovery, AI candidate matching and screening, interview scheduling with calendar integration, real-time messaging, comprehensive analytics, team collaboration, and flexible billing options—no need for multiple tools.",
     svg: (
       <svg
         width="24"
@@ -81,7 +81,7 @@ const About = () => {
           How ResumeIQHub works
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2 max-w-2xl mx-auto">
-          A comprehensive recruitment SaaS platform that seamlessly connects recruiters and job seekers. The platform combines professional resume building with advanced hiring management tools, creating a complete ecosystem for talent acquisition and career development.
+          ResumeIQHub is a comprehensive recruitment SaaS platform that seamlessly connects recruiters and job seekers. The platform combines professional resume building with 16+ templates and 20+ AI features, job posting and management, AI-powered candidate matching, interview scheduling, real-time messaging, team collaboration, and comprehensive analytics—creating a complete ecosystem for talent acquisition and career development.
         </p>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-12 px-4 md:px-0 py-10">
           <div className="w-full md:w-1/2">
@@ -94,7 +94,7 @@ const About = () => {
           <div className="w-full md:w-1/2">
             <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">Complete Recruitment Platform</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8">
-              ResumeIQHub offers 18+ comprehensive modules including resume building, job posting, application management, interview scheduling, messaging, analytics, team collaboration, billing, and more. Everything you need from resume to hire in one unified platform.
+              ResumeIQHub offers comprehensive modules including AI-powered resume building with 16+ templates and 20+ AI features, job posting and management, application tracking, AI candidate matching and screening, interview scheduling with calendar integration, real-time messaging, team collaboration, analytics and reporting, billing and subscriptions, and more. Everything you need from resume building to hiring decisions in one unified platform.
             </p>
 
             <div className="flex flex-col gap-6 mt-6">

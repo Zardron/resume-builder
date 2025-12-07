@@ -15,8 +15,8 @@ const FeedbackFormCard = ({
   onRatingLeave,
 }) => {
   return (
-    <div className="relative rounded-md border border-white/70 bg-white/90 p-8 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/80">
-      <form onSubmit={onSubmit} className="flex h-full flex-col gap-4">
+    <div className="relative rounded-md border border-white/70 bg-white/90 p-4 sm:p-6 md:p-8 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/80 w-full max-w-full overflow-x-hidden">
+      <form onSubmit={onSubmit} className="flex h-full flex-col gap-4 w-full">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <label

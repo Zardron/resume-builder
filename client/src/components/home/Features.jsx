@@ -6,7 +6,7 @@ const CORE_FEATURES = [
   {
     title: 'AI-Powered Resume Builder',
     description:
-      'Build professional resumes with 16+ templates, AI writing assistance, skill extraction, and ATS-friendly formatting. Export to PDF or DOCX with one click.',
+      'Create professional resumes with 16+ ATS-optimized templates, 20+ AI features including content enhancement, resume parsing, ATS optimization, and grammar checking. Export to PDF or DOCX with unlimited drafts and one-click export.',
     svg: (
       <svg
         width="28"
@@ -31,7 +31,7 @@ const CORE_FEATURES = [
   {
     title: 'Job Posting & Management',
     description:
-      'Create comprehensive job postings with screening configuration, status management, and analytics. Post unlimited jobs with advanced filtering and discovery features.',
+      'Create comprehensive job postings with detailed descriptions, screening criteria, and status management. Post unlimited jobs (Professional+ plans), manage multiple listings, track application sources, and get real-time analytics on job performance.',
     svg: (
       <svg
         width="28"
@@ -49,7 +49,7 @@ const CORE_FEATURES = [
   {
     title: 'AI Candidate Matching',
     description:
-      'Smart candidate-job matching with intelligent screening, match scores (0-100), and personalized recommendations for both recruiters and applicants.',
+      'Intelligent candidate-job matching with AI-powered screening, match scores (0-100), skill extraction, and personalized recommendations. Automatically parse resumes, extract skills and experience, and provide detailed match breakdowns for recruiters.',
     svg: (
       <svg
         width="28"
@@ -74,7 +74,7 @@ const CORE_FEATURES = [
   {
     title: 'Interview Scheduling',
     description:
-      'Schedule and manage interviews with calendar integration, multiple interviewer support, video conferencing links, and automated reminders.',
+      'Streamline interview coordination with calendar integration, multiple interviewer support, panel interviews, video conferencing links (Zoom/Teams/Meet), automated reminders, timezone handling, and interview feedback collection.',
     svg: (
       <svg
         width="28"
@@ -92,7 +92,7 @@ const CORE_FEATURES = [
   {
     title: 'Real-Time Messaging',
     description:
-      'Communicate seamlessly with application-linked conversations, file attachments, message templates, and notifications across email, in-app, and SMS.',
+      'Seamless communication with application-linked conversations, file attachments, message templates, read receipts, and multi-channel notifications. Keep all candidate communication organized within each application context.',
     svg: (
       <svg
         width="28"
@@ -115,7 +115,7 @@ const CORE_FEATURES = [
   {
     title: 'Analytics & Reporting',
     description:
-      'Comprehensive analytics with hiring funnel visualization, time-to-hire metrics, source analytics, team performance tracking, and custom reports.',
+      'Comprehensive analytics dashboard with hiring funnel visualization, time-to-hire metrics, source analytics, team performance tracking, candidate pipeline insights, job posting performance, and custom report generation.',
     svg: (
       <svg
         width="28"
@@ -133,27 +133,27 @@ const CORE_FEATURES = [
 
 const WORKFLOW_STEPS = [
   {
-    title: 'Personalized onboarding',
-    description: 'Import an old resume or answer a few prompts to get a tailored starting point in under two minutes.',
+    title: 'For Job Seekers',
+    description: 'Build your resume with AI assistance, discover personalized job opportunities, apply with one click, track applications in real-time, and communicate directly with recruiters.',
   },
   {
-    title: 'Live editing & insights',
-    description: 'Every keystroke updates your preview, readability score, and keyword coverage without manual refreshes.',
+    title: 'For Recruiters',
+    description: 'Post jobs, receive applications with AI match scores, screen candidates through your pipeline, schedule interviews, collaborate with your team, and make data-driven hiring decisions.',
   },
   {
-    title: 'Collaborative review',
-    description: 'Share a private link or invite mentors to leave inline comments before you finalize your export.',
+    title: 'AI-Powered Features',
+    description: 'Leverage 20+ AI features including resume parsing, ATS optimization, candidate matching, content enhancement, grammar checking, and interview preparation tools.',
   },
   {
-    title: 'One-click export',
-    description: 'Download pixel-perfect PDFs or generate shareable portfolio links straight from the builder.',
+    title: 'Complete Platform',
+    description: 'Everything from resume building to job applications, candidate screening to interviews, messaging to analytics—all unified in one streamlined platform for both recruiters and job seekers.',
   },
 ];
 
 const Features = () => (
   <section
     id='features'
-    className='relative mt-24'
+    className='relative mt-24 px-4 sm:px-6 md:px-8'
     aria-labelledby='features-heading'
   >
     <div className='text-center max-w-3xl mx-auto'>
@@ -165,13 +165,13 @@ const Features = () => (
         Complete recruitment platform for recruiters and job seekers
       </h1>
       <p className='mt-3 text-sm text-slate-500 dark:text-slate-400 md:text-base'>
-        ResumeIQHub combines professional resume building with advanced hiring management tools. From AI-powered resume creation to job posting, candidate screening, interview scheduling, messaging, and comprehensive analytics—everything you need in one unified platform.
+        ResumeIQHub is the all-in-one recruitment SaaS platform combining professional resume building with advanced hiring management. Features include 16+ resume templates, 20+ AI-powered tools, job posting and management, AI candidate matching, interview scheduling, real-time messaging, team collaboration, and comprehensive analytics—everything recruiters and job seekers need in one unified platform.
       </p>
     </div>
 
     <div className='relative mt-14'>
       <div className='size-[520px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[320px] -z-10 bg-[#2563eb]/10 dark:bg-white/10' />
-      <div className='container mx-auto rounded-md border border-slate-200 bg-white/80 p-8 shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 md:p-12'>
+      <div className='max-w-7xl mx-auto rounded-md border border-slate-200 bg-white/80 p-4 sm:p-6 md:p-8 lg:p-12 shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60'>
         <div className='grid gap-10 md:grid-cols-2 lg:grid-cols-3 md:gap-12'>
           {CORE_FEATURES.map((feature) => (
             <article key={feature.title} className='flex h-full flex-col items-start gap-4 text-left'>
@@ -188,9 +188,9 @@ const Features = () => (
       </div>
     </div>
 
-    <div className='container mx-auto mt-16 rounded-md border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900'>
+    <div className='max-w-7xl mx-auto mt-16 rounded-md border border-slate-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900'>
       <h2 className='text-xl font-semibold text-slate-900 dark:text-slate-100 text-center'>
-        A guided workflow from blank page to polished export
+        Streamlined workflows for recruiters and job seekers
       </h2>
       <div className='mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-4'>
         {WORKFLOW_STEPS.map((step) => (
@@ -203,8 +203,9 @@ const Features = () => (
       <div className='mt-8 rounded-md border border-dashed border-slate-300 px-6 py-5 text-center text-sm text-slate-600 dark:border-slate-600 dark:text-slate-300'>
         <p className='font-semibold mb-2'>All-in-One Recruitment Solution</p>
         <p>
-          ResumeIQHub keeps everything synced—from resume building to job applications, candidate screening to interviews, 
-          messaging to analytics—all in one unified platform that streamlines the entire hiring process for recruiters and job seekers alike.
+          ResumeIQHub keeps everything synced—from AI-powered resume building with 16+ templates and 20+ AI features, to job posting and discovery, 
+          AI candidate matching and screening, interview scheduling with calendar integration, real-time messaging, team collaboration, 
+          and comprehensive analytics—all in one unified platform that streamlines the entire hiring process for recruiters and job seekers alike.
         </p>
       </div>
     </div>
