@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
 
 const Toast = ({ notification, onRemove }) => {
-  const { id, type = 'info', title, message, duration = 5000 } = notification;
+  const { id, type = 'info', title, message, duration = 5000, action } = notification;
 
   useEffect(() => {
     if (duration > 0) {
@@ -49,6 +50,29 @@ const Toast = ({ notification, onRemove }) => {
         )}
         {message && (
           <p className="text-sm">{message}</p>
+        )}
+        {action && (
+          <div className="mt-2">
+            {action.href ? (
+              <Link
+                to={action.href}
+                onClick={() => action.onClick && action.onClick()}
+                className="text-sm font-medium underline hover:no-underline"
+              >
+                {action.label}
+              </Link>
+            ) : (
+              <button
+                onClick={() => {
+                  action.onClick && action.onClick();
+                  onRemove(id);
+                }}
+                className="text-sm font-medium underline hover:no-underline"
+              >
+                {action.label}
+              </button>
+            )}
+          </div>
         )}
       </div>
       <button

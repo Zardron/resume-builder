@@ -6,12 +6,11 @@ const GlobalBackground = () => {
   
   return (
     <svg
-      className="size-full fixed top-0 left-0 -z-10 opacity-[0.08] pointer-events-none"
-      width="1440"
-      height="720"
+      className="fixed top-0 left-0 w-screen h-screen -z-10 opacity-[0.08] pointer-events-none"
       viewBox="0 0 1440 720"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid slice"
     >
       <path stroke={stroke} strokeOpacity="1" d="M-15.227 702.342H1439.7" />
       <circle cx="711.819" cy="372.562" r="308.334" stroke={stroke} strokeOpacity="1" />

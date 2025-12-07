@@ -16,6 +16,7 @@ import {
   CheckSquare,
   Shield,
   Monitor,
+  Database,
 } from 'lucide-react';
 
 // SideNavData - Centralized navigation data based on RolePermissions.md
@@ -59,17 +60,7 @@ const superAdminNavItems = [
     allowedRoles: ['super_admin'],
   },
   {
-    label: 'Team Management',
-    path: '/dashboard/admin/team',
-    icon: UserPlus,
-    allowedRoles: ['super_admin'],
-    submenu: [
-      { label: 'All Teams', path: '/dashboard/admin/team' },
-      { label: 'Manage Organizations', path: '/dashboard/admin/team?view=organizations' },
-    ],
-  },
-  {
-    label: 'Organization Management',
+    label: 'Organization',
     path: '/dashboard/admin/organization',
     icon: Building2,
     allowedRoles: ['super_admin'],
@@ -116,6 +107,12 @@ const superAdminNavItems = [
     label: 'Client Logs',
     path: '/dashboard/admin/client-logs',
     icon: Monitor,
+    allowedRoles: ['super_admin'],
+  },
+  {
+    label: 'Log Management',
+    path: '/dashboard/admin/log-management',
+    icon: Database,
     allowedRoles: ['super_admin'],
   },
   {
@@ -180,16 +177,6 @@ const organizationAdminNavItems = [
     path: '/dashboard/recruiter/analytics',
     icon: BarChart3,
     allowedRoles: ['admin'],
-  },
-  {
-    label: 'Team Management',
-    path: '/dashboard/recruiter/team',
-    icon: UserPlus,
-    allowedRoles: ['admin'],
-    submenu: [
-      { label: 'All Members', path: '/dashboard/recruiter/team' },
-      { label: 'Invite Members', path: '/dashboard/recruiter/team?action=invite' },
-    ],
   },
   {
     label: 'Organization Settings',
@@ -264,16 +251,6 @@ const recruiterManagerNavItems = [
     submenu: [
       { label: 'Team Reports', path: '/dashboard/recruiter/analytics' },
       { label: 'Performance', path: '/dashboard/recruiter/analytics?view=performance' },
-    ],
-  },
-  {
-    label: 'Team Management',
-    path: '/dashboard/recruiter/team',
-    icon: UserPlus,
-    allowedRoles: ['manager'],
-    submenu: [
-      { label: 'My Team', path: '/dashboard/recruiter/team' },
-      { label: 'Manage Recruiters', path: '/dashboard/recruiter/team?view=recruiters' },
     ],
   },
 ];
