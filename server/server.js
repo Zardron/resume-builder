@@ -30,7 +30,9 @@ import adminRoutes from './routes/admin.js';
 import recruiterApplicationRoutes from './routes/recruiterApplications.js';
 import logsRoutes from './routes/logs.js';
 import aiRoutes from './routes/ai.js';
+import supportRoutes from './routes/support.js';
 import { requestLogger, suspiciousActivityDetector } from './middleware/requestLogger.js';
+import { initializeScheduledTasks } from './utils/scheduledTasks.js';
 
 // Validate environment variables before starting
 loadAndValidateEnv();
@@ -80,8 +82,12 @@ app.use('/api', apiRateLimiter);
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/resumeiqhub')
-.then(() => {
-  console.log('Connected to MongoDB');
+.then(async () => {
+  logInfo('Connected to MongoDB');
+  logInfo(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Initialize scheduled tasks after database connection
+  initializeScheduledTasks();
 })
 .catch((error) => {
   logError('MongoDB connection error', error);
@@ -124,6 +130,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/recruiter-applications', recruiterApplicationRoutes);
 app.use('/api/logs', logsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/support', supportRoutes);
 
 // 404 handler
 app.use((req, res) => {
