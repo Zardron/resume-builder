@@ -76,14 +76,34 @@ const apiRequest = async (endpoint, options = {}) => {
           }
         }
       }
-      // Handle 403 (forbidden) - might be email verification required
-      // Also check message for verification keywords as fallback
+      // Handle 403 (forbidden) - check for ban or email verification
+      const isBanError = response.status === 403 && data.message && (
+        data.message.toLowerCase().includes('banned') || 
+        data.message.toLowerCase().includes('ban')
+      );
+      
       const isVerificationError = 
         data.requiresVerification === true ||
-        (response.status === 403 && data.message && (
+        (response.status === 403 && !isBanError && data.message && (
           data.message.toLowerCase().includes('verify') || 
           data.message.toLowerCase().includes('verification')
         ));
+      
+      // Handle ban error - logout user and redirect
+      if (isBanError) {
+        removeToken();
+        const error = new Error(data.message || 'Your account has been banned');
+        error.status = response.status;
+        error.isBanned = true;
+        error.response = data;
+        // Redirect to login page with ban message
+        if (window.location.pathname !== '/sign-in') {
+          // Clear sessionStorage flag so Login page can show notification after redirect
+          sessionStorage.removeItem('ban_notification_shown');
+          window.location.href = '/sign-in?banned=true';
+        }
+        throw error;
+      }
       
       if (isVerificationError) {
         const error = new Error(data.message || 'Email verification required');
@@ -642,22 +662,30 @@ export const interviewsAPI = {
 export const messagesAPI = {
   getConversations: async () => {
     const response = await apiRequest('/messages/conversations');
-    return response.data?.conversations || [];
+    return response.data || [];
+  },
+
+  createConversation: async (conversationData) => {
+    const response = await apiRequest('/messages/conversations', {
+      method: 'POST',
+      body: JSON.stringify(conversationData),
+    });
+    return response.data;
   },
 
   getConversationById: async (id) => {
     const response = await apiRequest(`/messages/conversations/${id}`);
-    return response.data?.conversation;
+    return response.data;
   },
 
   getOrCreateConversation: async (applicationId) => {
-    const response = await apiRequest(`/messages/conversations/${applicationId}`);
-    return response.data?.conversation;
+    const response = await apiRequest(`/messages/conversations/application/${applicationId}`);
+    return response.data;
   },
 
   getMessages: async (conversationId) => {
     const response = await apiRequest(`/messages/conversations/${conversationId}/messages`);
-    return response.data?.messages || [];
+    return response.data || [];
   },
 
   sendMessage: async (conversationId, messageData) => {
@@ -665,7 +693,7 @@ export const messagesAPI = {
       method: 'POST',
       body: JSON.stringify(messageData),
     });
-    return response.data?.message;
+    return response.data;
   },
 
   markAsRead: async (messageId) => {
@@ -904,6 +932,121 @@ export const adminAPI = {
     return response.data;
   },
 
+  deleteLoginAttempt: async (id) => {
+    const response = await apiRequest(`/admin/login-attempts/${id}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  deleteSecurityLog: async (id) => {
+    const response = await apiRequest(`/admin/security-logs/${id}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  deleteAuditLog: async (id) => {
+    const response = await apiRequest(`/admin/audit-logs/${id}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  deleteClientLog: async (id) => {
+    const response = await apiRequest(`/admin/client-logs/${id}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  bulkDeleteLoginAttempts: async (days, startDate = null, endDate = null) => {
+    const params = new URLSearchParams();
+    if (days !== null) {
+      params.append('days', days);
+    }
+    if (startDate) {
+      params.append('startDate', startDate);
+    }
+    if (endDate) {
+      params.append('endDate', endDate);
+    }
+    const response = await apiRequest(`/admin/login-attempts?${params.toString()}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  bulkDeleteSecurityLogs: async (days, startDate = null, endDate = null) => {
+    const params = new URLSearchParams();
+    if (days !== null) {
+      params.append('days', days);
+    }
+    if (startDate) {
+      params.append('startDate', startDate);
+    }
+    if (endDate) {
+      params.append('endDate', endDate);
+    }
+    const response = await apiRequest(`/admin/security-logs?${params.toString()}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  bulkDeleteAuditLogs: async (days, startDate = null, endDate = null) => {
+    const params = new URLSearchParams();
+    if (days !== null) {
+      params.append('days', days);
+    }
+    if (startDate) {
+      params.append('startDate', startDate);
+    }
+    if (endDate) {
+      params.append('endDate', endDate);
+    }
+    const response = await apiRequest(`/admin/audit-logs?${params.toString()}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  bulkDeleteClientLogs: async (days, startDate = null, endDate = null) => {
+    const params = new URLSearchParams();
+    if (days !== null) {
+      params.append('days', days);
+    }
+    if (startDate) {
+      params.append('startDate', startDate);
+    }
+    if (endDate) {
+      params.append('endDate', endDate);
+    }
+    const response = await apiRequest(`/admin/client-logs?${params.toString()}`, {
+      method: 'DELETE',
+    });
+    return response;
+  },
+
+  getLogStatistics: async () => {
+    const response = await apiRequest('/admin/logs/statistics');
+    return response.data;
+  },
+
+  cleanupSoftDeletedLogs: async () => {
+    const response = await apiRequest('/admin/logs/cleanup/soft-deleted', {
+      method: 'POST',
+    });
+    return response.data;
+  },
+
+  cleanupOldActiveLogs: async () => {
+    const response = await apiRequest('/admin/logs/cleanup/old-active', {
+      method: 'POST',
+    });
+    return response.data;
+  },
+
   getAllUsers: async () => {
     const response = await apiRequest('/admin/users');
     return response.data || [];
@@ -1111,6 +1254,73 @@ export const aiAPI = {
       method: 'POST',
       body: JSON.stringify({ fileContent, fileType }),
     });
+    return response.data;
+  },
+};
+
+// Support API
+export const supportAPI = {
+  // Create a new support ticket
+  createTicket: async (ticketData) => {
+    const response = await apiRequest('/support/tickets', {
+      method: 'POST',
+      body: JSON.stringify(ticketData),
+    });
+    return response.data;
+  },
+
+  // Get user's support tickets
+  getUserTickets: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = `/support/tickets${queryString ? `?${queryString}` : ''}`;
+    const response = await apiRequest(endpoint);
+    return response.data || [];
+  },
+
+  // Get a specific ticket by ID
+  getTicketById: async (ticketId) => {
+    const response = await apiRequest(`/support/tickets/${ticketId}`);
+    return response.data;
+  },
+
+  // Add a response to a ticket
+  addResponse: async (ticketId, message) => {
+    const response = await apiRequest(`/support/tickets/${ticketId}/response`, {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    });
+    return response.data;
+  },
+
+  // Admin: Get all tickets
+  getAllTickets: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = `/support/admin/tickets${queryString ? `?${queryString}` : ''}`;
+    const response = await apiRequest(endpoint);
+    return response.data || [];
+  },
+
+  // Admin: Update ticket status
+  updateTicketStatus: async (ticketId, status) => {
+    const response = await apiRequest(`/support/admin/tickets/${ticketId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+    return response.data;
+  },
+
+  // Admin: Add internal note
+  addInternalNote: async (ticketId, note) => {
+    const response = await apiRequest(`/support/admin/tickets/${ticketId}/notes`, {
+      method: 'POST',
+      body: JSON.stringify({ note }),
+    });
+    return response.data;
+  },
+
+  // Admin: Get ticket statistics
+  getTicketStatistics: async () => {
+    const response = await apiRequest('/support/admin/statistics');
     return response.data;
   },
 };

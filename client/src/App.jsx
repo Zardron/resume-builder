@@ -28,6 +28,7 @@ const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
 const VerifyEmail = lazy(() => import('./pages/auth/VerifyEmail'));
 const RecruiterBenefits = lazy(() => import('./pages/public/RecruiterBenefits'));
+const ContactSupport = lazy(() => import('./pages/public/ContactSupport'));
 const ApplyAsRecruiter = lazy(() => import('./pages/auth/ApplyAsRecruiter'));
 const NotFound = lazy(() => import('./pages/public/NotFound'));
 
@@ -64,6 +65,7 @@ const LoginAttempts = lazy(() => import('./pages/admin/LoginAttempts'));
 const SecurityLogs = lazy(() => import('./pages/admin/SecurityLogs'));
 const AuditLogs = lazy(() => import('./pages/admin/AuditLogs'));
 const ClientLogs = lazy(() => import('./pages/admin/ClientLogs'));
+const LogManagement = lazy(() => import('./pages/admin/LogManagement'));
 
 // Applicant pages
 const ApplicantDashboard = lazy(() => import('./pages/applicant/ApplicantDashboard'));
@@ -75,6 +77,7 @@ const MyInterviews = lazy(() => import('./pages/applicant/MyInterviews'));
 const ApplicantInterviewDetail = lazy(() => import('./pages/applicant/InterviewDetail'));
 const Messages = lazy(() => import('./pages/applicant/Messages'));
 const ApplicantConversation = lazy(() => import('./pages/applicant/Conversation'));
+const HelpSupport = lazy(() => import('./pages/applicant/HelpSupport'));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -298,11 +301,16 @@ const App = () => (
             </ProtectedRoute>
           } />
           {/* Client Logs - Super Admin only */}
-          <Route path="client-logs" element={
-            <ProtectedRoute allowedRoles={['super_admin']}>
-              <ClientLogs />
-            </ProtectedRoute>
-          } />
+            <Route path="client-logs" element={
+              <ProtectedRoute allowedRoles={['super_admin']}>
+                <ClientLogs />
+              </ProtectedRoute>
+            } />
+            <Route path="log-management" element={
+              <ProtectedRoute allowedRoles={['super_admin']}>
+                <LogManagement />
+              </ProtectedRoute>
+            } />
           {/* Create Recruiter Account - Super Admin only */}
           <Route path="create-recruiter-account" element={
             <ProtectedRoute allowedRoles={['super_admin']}>
@@ -365,6 +373,11 @@ const App = () => (
             <ApplicantConversation />
           </ProtectedRoute>
         } />
+        <Route path="support" element={
+          <ProtectedRoute>
+            <HelpSupport />
+          </ProtectedRoute>
+        } />
       </Route>
 
       <Route path="/sign-in" element={
@@ -380,6 +393,7 @@ const App = () => (
       } />
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/recruiter-benefits" element={<RecruiterBenefits />} />
+      <Route path="/contact-support" element={<ContactSupport />} />
       <Route path="/apply-recruiter" element={<ApplyAsRecruiter />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { store } from './store/store';
@@ -26,12 +26,29 @@ if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
 }
 
 const AppContainer = () => {
+  const location = useLocation();
+  const isAdminLoginRoute = location.pathname === '/admin-login';
+  
   const [showLoader, setShowLoader] = useState(() => {
     if (typeof window === 'undefined') return true;
+    // Don't show loader for admin-login route
+    if (window.location.pathname === '/admin-login') return false;
     return sessionStorage.getItem('resumeBuilderHasVisited') !== 'true';
   });
   const [isLoaderRendered, setIsLoaderRendered] = useState(showLoader);
   const previousOverflowRef = useRef();
+
+  // Hide loader if on admin-login route
+  useEffect(() => {
+    if (isAdminLoginRoute) {
+      if (showLoader) {
+        setShowLoader(false);
+      }
+      if (isLoaderRendered) {
+        setIsLoaderRendered(false);
+      }
+    }
+  }, [isAdminLoginRoute, showLoader, isLoaderRendered]);
 
   useEffect(() => {
     if (!showLoader) {
@@ -82,13 +99,16 @@ const AppContainer = () => {
     return undefined;
   }, [isLoaderRendered]);
 
+  // Don't render loader on admin-login route
+  const shouldShowLoader = isLoaderRendered && !isAdminLoginRoute;
+
   return (
     <>
-      {isLoaderRendered && <FullScreenLoader isExiting={!showLoader} />}
+      {shouldShowLoader && <FullScreenLoader isExiting={!showLoader} />}
       <div
         className="app-shell"
-        aria-hidden={showLoader}
-        style={showLoader ? { visibility: 'hidden' } : undefined}
+        aria-hidden={showLoader && !isAdminLoginRoute}
+        style={showLoader && !isAdminLoginRoute ? { visibility: 'hidden' } : undefined}
       >
         <App />
       </div>
