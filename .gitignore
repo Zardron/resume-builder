@@ -16,7 +16,8 @@ build/
 .env
 .env.local
 .env.*.local
-/server/.env.backup
+.env.backup
+**/.env.backup
 
 # IDE and Editor files
 .vscode/
